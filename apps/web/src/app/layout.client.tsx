@@ -7,7 +7,6 @@ import { routes } from "./routeList";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
 import {
-	createTheme,
 	CssBaseline,
 	ThemeProvider,
 	useMediaQuery,
@@ -15,12 +14,7 @@ import {
 } from "@mui/material";
 import MobileNavigationLayout from "@/components/navigation/MobileNavigationLayout";
 import { LocalPreferencesProvider } from "@/providers/LocalPreferencesProvider";
-
-const ptheme = createTheme({
-	colorSchemes: {
-		dark: true,
-	},
-});
+import globalTheme from "../theme";
 
 export default function LayoutClient({ children }: { children: ReactNode }) {
 	const router = useRouter();
@@ -32,7 +26,7 @@ export default function LayoutClient({ children }: { children: ReactNode }) {
 	};
 
 	return (
-		<ThemeProvider theme={ptheme}>
+		<ThemeProvider theme={globalTheme}>
 			<LocalPreferencesProvider>
 				<ConvexClientProvider>
 					<CssBaseline />

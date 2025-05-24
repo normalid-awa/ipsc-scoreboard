@@ -3,6 +3,14 @@ import LayoutClient from "./layout.client";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import LayoutServer from "./layout.server";
+import { Roboto } from "next/font/google";
+
+const roboto = Roboto({
+	weight: ["300", "400", "500", "700"],
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-roboto",
+});
 
 export const metadata: Metadata = {
 	title: "Create Next App",
@@ -16,7 +24,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<ConvexAuthNextjsServerProvider>
-			<html lang="en">
+			<html
+				lang="en"
+				className={roboto.variable}
+				suppressHydrationWarning
+			>
 				<body>
 					<LayoutServer>
 						<LayoutClient>{children}</LayoutClient>
