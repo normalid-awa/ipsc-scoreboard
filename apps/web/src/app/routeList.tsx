@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
+import { Route as NextRoute } from "next";
 import { Home } from "@mui/icons-material";
 
 export interface Route {
-	path: string;
+	path: NextRoute;
 	icon: ReactNode;
 	name: string;
 }
