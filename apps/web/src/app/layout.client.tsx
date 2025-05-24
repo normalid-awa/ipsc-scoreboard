@@ -6,8 +6,21 @@ import { ReactNode } from "react";
 import { routes } from "./routeList";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
-import { CssBaseline, useMediaQuery, useTheme } from "@mui/material";
+import {
+	createTheme,
+	CssBaseline,
+	ThemeProvider,
+	useMediaQuery,
+	useTheme,
+} from "@mui/material";
 import MobileNavigationLayout from "@/components/navigation/MobileNavigationLayout";
+import { LocalPreferencesProvider } from "@/providers/LocalPreferencesProvider";
+
+const ptheme = createTheme({
+	colorSchemes: {
+		dark: true,
+	},
+});
 
 export default function LayoutClient({ children }: { children: ReactNode }) {
 	const router = useRouter();
@@ -19,19 +32,24 @@ export default function LayoutClient({ children }: { children: ReactNode }) {
 	};
 
 	return (
-		<div>
-			<ConvexClientProvider>
-				<CssBaseline />
-				{mobileLayout ? (
-					<MobileNavigationLayout routes={routes} navTo={navTo}>
-						{children}
-					</MobileNavigationLayout>
-				) : (
-					<WideScreenNavigationLayout routes={routes} navTo={navTo}>
-						{children}
-					</WideScreenNavigationLayout>
-				)}
-			</ConvexClientProvider>
-		</div>
+		<ThemeProvider theme={ptheme}>
+			<LocalPreferencesProvider>
+				<ConvexClientProvider>
+					<CssBaseline />
+					{mobileLayout ? (
+						<MobileNavigationLayout routes={routes} navTo={navTo}>
+							{children}
+						</MobileNavigationLayout>
+					) : (
+						<WideScreenNavigationLayout
+							routes={routes}
+							navTo={navTo}
+						>
+							{children}
+						</WideScreenNavigationLayout>
+					)}
+				</ConvexClientProvider>
+			</LocalPreferencesProvider>
+		</ThemeProvider>
 	);
 }
