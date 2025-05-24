@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import LayoutClient from "./layout.client";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
+import LayoutServer from "./layout.server";
 
 export const metadata: Metadata = {
 	title: "Create Next App",
@@ -17,7 +18,9 @@ export default function RootLayout({
 		<ConvexAuthNextjsServerProvider>
 			<html lang="en">
 				<body>
-					<LayoutClient>{children}</LayoutClient>
+					<LayoutServer>
+						<LayoutClient>{children}</LayoutClient>
+					</LayoutServer>
 				</body>
 			</html>
 		</ConvexAuthNextjsServerProvider>
