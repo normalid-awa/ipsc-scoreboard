@@ -24,7 +24,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<ConvexAuthNextjsServerProvider>
-			<html lang="en" className={roboto.variable}>
+			<html
+				lang="en"
+				className={roboto.variable}
+				suppressHydrationWarning
+			>
 				<body>
 					<LayoutServer>
 						<LayoutClient>{children}</LayoutClient>
