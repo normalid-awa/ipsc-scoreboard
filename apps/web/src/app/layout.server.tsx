@@ -6,7 +6,7 @@ export default function LayoutServer({ children }: { children: ReactNode }) {
 	return (
 		<>
 			<InitColorSchemeScript attribute="class" />
-			<AppRouterCacheProvider>{children} </AppRouterCacheProvider>;
+			<AppRouterCacheProvider>{children} </AppRouterCacheProvider>
 		</>
 	);
 }
