@@ -1,8 +1,9 @@
 "use client";
 
-import { useAuthActions } from "@convex-dev/auth/react";
+import { useAuthActions, useAuthToken } from "@convex-dev/auth/react";
 import { GitHub, Google } from "@mui/icons-material";
 import { Button, CircularProgress, Modal, Stack } from "@mui/material";
+import { useConvexAuth } from "convex/react";
 import { ReactElement, useState } from "react";
 
 type Provider = "github" | "google";
@@ -31,6 +32,7 @@ function OAuthLoginButton(props: OAuthLoginButtonProps) {
 }
 
 export default function LoginPage() {
+	const { isAuthenticated, isLoading } = useConvexAuth();
 	const [loading, setLoading] = useState(false);
 	const { signIn } = useAuthActions();
 
@@ -47,6 +49,8 @@ export default function LoginPage() {
 				<CircularProgress />
 			</Modal>
 			<Stack>
+				<p>{isAuthenticated ? "Authenticated" : "Not authenticated"}</p>
+				<p>{isLoading ? "Loading" : "Not loading"}</p>
 				<OAuthLoginButton
 					provider="github"
 					signIn={handleProviderSignIn}

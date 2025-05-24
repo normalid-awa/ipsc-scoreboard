@@ -16,6 +16,7 @@
 		"typescript": "^5.8.3"
 	},
 	"dependencies": {
+		"@auth/core": "^0.37.0",
 		"@convex-dev/auth": "^0.0.86",
 		"convex": "^1.23.0"
 	}
