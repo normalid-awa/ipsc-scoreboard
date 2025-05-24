@@ -1,5 +1,6 @@
 "use client";
 
+import { useColorScheme } from "@mui/material";
 import {
 	createContext,
 	ReactNode,
@@ -8,10 +9,10 @@ import {
 	useState,
 } from "react";
 
-enum ThemeType {
-	Dark,
-	System,
-	Light,
+export enum ThemeType {
+	Dark = "dark",
+	System = "system",
+	Light = "light",
 }
 
 export interface LocalPreferencesContextType {
@@ -46,6 +47,7 @@ export function LocalPreferencesProvider({
 }: {
 	children: ReactNode;
 }) {
+	const { setMode } = useColorScheme();
 	const [theme, setTheme] = useState(ThemeType.System);
 
 	useEffect(() => {
@@ -54,7 +56,8 @@ export function LocalPreferencesProvider({
 
 	useEffect(() => {
 		localStorage.setItem("theme", JSON.stringify(theme));
-	}, [theme]);
+		setMode(theme);
+	}, [theme, setMode]);
 
 	return (
 		<LocalPreferencesContext.Provider

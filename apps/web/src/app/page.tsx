@@ -1,4 +1,5 @@
 "use client";
+import ThemeSwitches from "@/components/ThemeSwitches";
 import { api } from "@ipsc-scoreboard/backend/convex/_generated/api.js";
 import { useConvexAuth, useQuery } from "convex/react";
 
@@ -7,6 +8,7 @@ export default function Home() {
 	const { isAuthenticated } = useConvexAuth();
 	return (
 		<div>
+			<ThemeSwitches />
 			{isAuthenticated ? (
 				<p>You are authenticated</p>
 			) : (
