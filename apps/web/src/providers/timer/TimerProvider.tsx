@@ -8,6 +8,13 @@ import {
 	useState,
 } from "react";
 
+export const OscillatorTypeMap: OscillatorType[] = [
+	"sawtooth",
+	"sine",
+	"square",
+	"triangle",
+] as const;
+
 export interface TimerSetting {
 	/**
 	 * whether to randomize the countdown time or not

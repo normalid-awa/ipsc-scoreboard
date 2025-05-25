@@ -1,5 +1,10 @@
 import { ReactNode } from "react";
-import { Timer, TimerSetting, TimerSettingProps } from "../TimerProvider";
+import {
+	OscillatorTypeMap,
+	Timer,
+	TimerSetting,
+	TimerSettingProps,
+} from "../TimerProvider";
 
 const SERVICE_UUID = "812c3d3c-7af6-45e9-a873-edce7a58096a";
 
@@ -21,13 +26,6 @@ const TIME_SYNC_CHARACTERISTIC_UUID = "c29094c8-63f1-4305-8e5f-9b106e6720b8";
  * For indicator (client send notification to stopplate and the led will flash)
  */
 const INDICATOR_CHARACTERISTIC_UUID = "7a7da618-756e-4717-a3f5-364eb48ea9b1";
-
-const OscillatorTypeMap: OscillatorType[] = [
-	"sawtooth",
-	"sine",
-	"square",
-	"triangle",
-] as const;
 
 interface StopplateSettingDTO {
 	sensorTriggerThreshold: number;
