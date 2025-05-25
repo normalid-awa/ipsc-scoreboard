@@ -107,13 +107,14 @@ export class DragonCustomWirelessStopplate extends Timer<DragonCustomsWirelessSt
 			},
 			async () => {
 				await this.disconnect();
+				this.dispatchDisconnectEvent();
 			},
 		);
 	}
 
 	private reconnect = async (): Promise<void> => {
 		if (this.isConnected) await this.tryToConnect();
-		this.dispatchConnectEvent();
+		// this.dispatchConnectEvent();
 	};
 
 	private async setupDevice(): Promise<void> {
@@ -147,8 +148,9 @@ export class DragonCustomWirelessStopplate extends Timer<DragonCustomsWirelessSt
 	}
 
 	async disconnect() {
-		this.gattServer?.disconnect();
 		this.isConnected = false;
+		this.gattServer?.disconnect();
+		this.dispatchDisconnectEvent();
 	}
 
 	private onHit = () => {
