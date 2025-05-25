@@ -168,6 +168,47 @@ const StyledGridItem = (props: GridProps) => {
 const breakSignal = Symbol("break");
 const countdownBreakEvent = new CustomEvent(breakSignal.toString());
 
+class Buzzer {
+	private static instance: Buzzer | null = null;
+
+	private context: AudioContext;
+
+	private constructor() {
+		this.context = new AudioContext();
+	}
+
+	public static getInstance(): Buzzer {
+		if (Buzzer.instance === null) {
+			Buzzer.instance = new Buzzer();
+		}
+		return Buzzer.instance;
+	}
+
+	public beep(
+		frequency: number,
+		durationInS: number,
+		waveform: OscillatorType,
+	): void {
+		const oscillator = this.context.createOscillator();
+		oscillator.connect(this.context.destination);
+		navigator.vibrate(durationInS * 1000);
+		oscillator.type = waveform;
+		oscillator.frequency.value = frequency;
+		oscillator.start();
+		setTimeout(() => {
+			oscillator.stop();
+		}, durationInS * 1000);
+	}
+}
+
+export function beep(
+	frequency: number,
+	durationInS: number,
+	waveform: OscillatorType,
+) {
+	Buzzer.getInstance().beep(frequency, durationInS, waveform);
+}
+
 export default function Timer() {
 	const [displayTime, setDisplayTime] = useState(0);
 	const [timings, setTimings] = useState<number[]>([]);
@@ -226,16 +267,7 @@ export default function Timer() {
 		await new Promise((resolve) => setTimeout(resolve, randomTime * 1000));
 		if (countdownBreak) return;
 
-		navigator.vibrate(duration);
-		const context = new AudioContext();
-		const oscillator = context.createOscillator();
-		oscillator.type = waveform;
-		oscillator.frequency.value = frequency;
-		oscillator.connect(context.destination);
-		oscillator.start();
-		setTimeout(function () {
-			oscillator.stop();
-		}, duration);
+		beep(frequency, duration, waveform);
 
 		clearInterval(intervalId);
 		setDisplayTime(0);
