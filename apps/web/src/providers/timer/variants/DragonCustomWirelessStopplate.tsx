@@ -211,7 +211,7 @@ export class DragonCustomWirelessStopplate extends Timer<DragonCustomsWirelessSt
 			randomizeTimerCountdownTime: setting.randomizeCountdownTime,
 			timerConstantCountdownTime: setting.countdownTime * 1000,
 			timerCountdownTimeRandomMax: setting.randomCountdownTimeMax * 1000,
-			timerCountdownTimeRandomMin: setting.randomCountdownTimeMi * 1000,
+			timerCountdownTimeRandomMin: setting.randomCountdownTimeMin * 1000,
 			buzzerFrequency: setting.buzzerFrequency,
 			buzzerTime: setting.buzzerDuration * 1000,
 			buzzerWaveformEnum: OscillatorTypeMap.indexOf(
