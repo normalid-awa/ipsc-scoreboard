@@ -77,6 +77,16 @@ export abstract class Timer<T extends TimerSetting> {
 	abstract renderSettingWidget(props: TimerSettingProps<T>): ReactNode;
 }
 
+interface StopplateMap {
+	[k: string]: () => Promise<new () => Timer<TimerSetting>>;
+}
+
+export const stopplateMap: StopplateMap = {
+	"DragonCustom wireless stopplate": async () =>
+		(await import("./variants/DragonCustomWirelessStopplate"))
+			.DragonCustomWirelessStopplate,
+} as const;
+
 export interface TimerContextType {
 	isConnected: boolean;
 	timer: Timer<TimerSetting>;
