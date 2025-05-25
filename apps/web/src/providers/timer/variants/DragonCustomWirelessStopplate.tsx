@@ -84,6 +84,7 @@ export class DragonCustomWirelessStopplate extends Timer<DragonCustomsWirelessSt
 			alert(
 				"If you're using Apple's device (iOS, iPadOS) please install `Bluefy` browser",
 			);
+			this.dispatchDisconnectEvent();
 			return;
 		}
 
