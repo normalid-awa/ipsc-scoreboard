@@ -46,7 +46,7 @@ export interface TimerSettingProps<T extends TimerSetting> {
 
 export type HitCallback = (time: number) => void;
 
-enum TimerEvent {
+export enum TimerEvent {
 	Disconnect = "TimerDisconnect",
 	Connect = "TimerConnect",
 	Hit = "TimerHit",
@@ -89,7 +89,7 @@ export const timerMap: TimerMap = {
 
 export interface TimerContextType {
 	isConnected: boolean;
-	timer: Timer<TimerSetting>;
+	timer?: Timer<TimerSetting>;
 	setTimer: (timer: Timer<TimerSetting>) => void;
 }
 
