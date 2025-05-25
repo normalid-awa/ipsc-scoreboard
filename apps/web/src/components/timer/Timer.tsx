@@ -145,6 +145,7 @@ export default function Timer() {
 		clear: false,
 		review: false,
 	});
+	const [recivedData, setRecivedData] = useState(false);
 
 	const StyledGridItem = (props: GridProps) => {
 		const { children, ...rest } = props;
@@ -158,6 +159,7 @@ export default function Timer() {
 	};
 
 	const OnHit = () => {
+		if (!recivedData) return;
 		const newTime = Date.now() / 10000;
 		const newTimings = [...timings, newTime];
 		setTimings(newTimings);
@@ -179,6 +181,7 @@ export default function Timer() {
 			clear: true,
 			review: false,
 		});
+		setRecivedData(true);
 	};
 
 	const OnClear = () => {
@@ -197,6 +200,7 @@ export default function Timer() {
 			clear: false,
 			review: true,
 		});
+		setRecivedData(false);
 	};
 
 	const OnMenu = () => {};
