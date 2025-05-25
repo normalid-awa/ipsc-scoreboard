@@ -15,6 +15,7 @@ import {
 import MobileNavigationLayout from "@/components/navigation/MobileNavigationLayout";
 import { LocalPreferencesProvider } from "@/providers/LocalPreferencesProvider";
 import globalTheme from "../theme";
+import { TimerProvider } from "@/providers/timer/TimerProvider";
 
 export default function LayoutClient({ children }: { children: ReactNode }) {
 	const router = useRouter();
@@ -29,19 +30,24 @@ export default function LayoutClient({ children }: { children: ReactNode }) {
 		<ThemeProvider theme={globalTheme}>
 			<LocalPreferencesProvider>
 				<ConvexClientProvider>
-					<CssBaseline />
-					{mobileLayout ? (
-						<MobileNavigationLayout routes={routes} navTo={navTo}>
-							{children}
-						</MobileNavigationLayout>
-					) : (
-						<WideScreenNavigationLayout
-							routes={routes}
-							navTo={navTo}
-						>
-							{children}
-						</WideScreenNavigationLayout>
-					)}
+					<TimerProvider>
+						<CssBaseline />
+						{mobileLayout ? (
+							<MobileNavigationLayout
+								routes={routes}
+								navTo={navTo}
+							>
+								{children}
+							</MobileNavigationLayout>
+						) : (
+							<WideScreenNavigationLayout
+								routes={routes}
+								navTo={navTo}
+							>
+								{children}
+							</WideScreenNavigationLayout>
+						)}
+					</TimerProvider>
 				</ConvexClientProvider>
 			</LocalPreferencesProvider>
 		</ThemeProvider>
