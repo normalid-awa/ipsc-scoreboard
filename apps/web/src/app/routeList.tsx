@@ -6,6 +6,7 @@ export interface Route {
 	path: NextRoute;
 	icon: ReactNode;
 	name: string;
+	shouldBeShow?: () => boolean;
 }
 
 export const routes: Route[] = [
