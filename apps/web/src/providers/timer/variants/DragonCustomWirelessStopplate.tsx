@@ -87,11 +87,18 @@ export class DragonCustomWirelessStopplate extends Timer<DragonCustomsWirelessSt
 			return;
 		}
 
-		this.device = await navigator.bluetooth.requestDevice({
-			filters: [{ services: [SERVICE_UUID] }],
-		});
-		this.device.addEventListener("gattserverdisconnected", this.reconnect);
-		await this.tryToConnect();
+		try {
+			this.device = await navigator.bluetooth.requestDevice({
+				filters: [{ services: [SERVICE_UUID] }],
+			});
+			this.device.addEventListener(
+				"gattserverdisconnected",
+				this.reconnect,
+			);
+			await this.tryToConnect();
+		} catch {
+			this.dispatchDisconnectEvent();
+		}
 	}
 
 	private async tryToConnect() {
