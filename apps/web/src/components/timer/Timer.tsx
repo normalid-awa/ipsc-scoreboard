@@ -121,23 +121,26 @@ function ButtonGroup(props: ButtonGroupProps) {
 }
 
 function HitLog({ timings }: { timings: number[] }) {
+	const reversedTimings = timings.toReversed();
 	return (
 		<Box sx={{ p: 1 }}>
 			<Typography variant="h5">Hit Log:</Typography>
 			<Paper sx={{ m: 1 }}>
 				<List>
 					<TransitionGroup>
-						{timings.toReversed().map((time, i) => (
+						{reversedTimings.map((time, i) => (
 							<Collapse key={i}>
 								<ListItemButton>
 									<ListItemAvatar>
-										<Avatar>#{timings.length - i}</Avatar>
+										<Avatar>#{i + 1}</Avatar>
 									</ListItemAvatar>
 									<ListItemText
 										primary={`Time: ${time.toFixed(2)}s`}
-										secondary={`Split: ${(i > 0
-											? timings[i] - timings[i - 1]
-											: 0
+										secondary={`Split: ${(i ==
+										reversedTimings.length - 1
+											? 0
+											: reversedTimings[i] -
+												reversedTimings[i + 1]
 										).toFixed(2)}s`}
 									/>
 								</ListItemButton>
@@ -283,10 +286,9 @@ export default function Timer() {
 					<TimeDisplay
 						time={displayTime}
 						split={
-							timings.length > 0
+							currentIndex > 0
 								? timings[currentIndex] -
-										timings[currentIndex - 1] ||
-									timings[currentIndex]
+									timings[currentIndex - 1]
 								: 0
 						}
 						shot={timings.length > 0 ? currentIndex + 1 : 0}
