@@ -142,8 +142,8 @@ export default function Timer() {
 	const [disableState, setDisableState] = useState({
 		menu: false,
 		start: false,
-		clear: false,
-		review: false,
+		clear: true,
+		review: true,
 	});
 	const [recivedData, setRecivedData] = useState(false);
 
@@ -191,6 +191,9 @@ export default function Timer() {
 			clear: true,
 			review: true,
 		});
+		setTimings([]);
+		setCurrentIndex(0);
+		setDisplayTime(0);
 	};
 
 	const OnReview = () => {
