@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { TransitionGroup } from "react-transition-group";
+import TimerMenuDialog from "./Menu";
 
 interface TimeDisplayProps {
 	time: number;
@@ -179,6 +180,7 @@ export default function Timer() {
 		break: true,
 	});
 	const [recivedData, setRecivedData] = useState(false);
+	const [menuOpen, setMenuOpen] = useState(false);
 
 	const OnHit = () => {
 		if (!recivedData) return;
@@ -272,43 +274,52 @@ export default function Timer() {
 	};
 
 	//TODO: Implement menu
-	const OnMenu = () => {};
+	const OnMenu = () => {
+		setMenuOpen(true);
+	};
 
 	const OnBreak = () => {
 		dispatchEvent(countdownBreakEvent);
 	};
 
 	return (
-		<Grid container spacing={2}>
-			<StyledGridItem size={{ xs: 12, md: 6 }}>
-				<TimeDisplay
-					time={displayTime}
-					split={
-						currentIndex > 0
-							? timings[currentIndex] - timings[currentIndex - 1]
-							: 0
-					}
-					shot={timings.length > 0 ? currentIndex + 1 : 0}
-					totalShots={timings.length}
-				/>
-			</StyledGridItem>
-			<StyledGridItem size={{ xs: 12, md: 6 }}>
-				<ButtonGroup
-					disableClear={disableState.clear}
-					disableMenu={disableState.menu}
-					disableReview={disableState.review}
-					disableStart={disableState.start}
-					disableBreak={disableState.break}
-					onClearClick={OnClear}
-					onMenuClick={OnMenu}
-					onReviewClick={OnReview}
-					onStartClick={OnStart}
-					onBreakClick={OnBreak}
-				/>
-			</StyledGridItem>
-			<StyledGridItem size={{ xs: 12 }}>
-				<HitLog timings={timings} />
-			</StyledGridItem>
-		</Grid>
+		<>
+			<TimerMenuDialog
+				open={menuOpen}
+				onClose={() => setMenuOpen(false)}
+			/>
+			<Grid container spacing={2}>
+				<StyledGridItem size={{ xs: 12, md: 6 }}>
+					<TimeDisplay
+						time={displayTime}
+						split={
+							currentIndex > 0
+								? timings[currentIndex] -
+									timings[currentIndex - 1]
+								: 0
+						}
+						shot={timings.length > 0 ? currentIndex + 1 : 0}
+						totalShots={timings.length}
+					/>
+				</StyledGridItem>
+				<StyledGridItem size={{ xs: 12, md: 6 }}>
+					<ButtonGroup
+						disableClear={disableState.clear}
+						disableMenu={disableState.menu}
+						disableReview={disableState.review}
+						disableStart={disableState.start}
+						disableBreak={disableState.break}
+						onClearClick={OnClear}
+						onMenuClick={OnMenu}
+						onReviewClick={OnReview}
+						onStartClick={OnStart}
+						onBreakClick={OnBreak}
+					/>
+				</StyledGridItem>
+				<StyledGridItem size={{ xs: 12 }}>
+					<HitLog timings={timings} />
+				</StyledGridItem>
+			</Grid>
+		</>
 	);
 }
