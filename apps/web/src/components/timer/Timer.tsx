@@ -279,40 +279,36 @@ export default function Timer() {
 	};
 
 	return (
-		<>
-			<button onClick={OnHit}>+</button>
-			<Grid container spacing={2}>
-				<StyledGridItem size={{ xs: 12, md: 6 }}>
-					<TimeDisplay
-						time={displayTime}
-						split={
-							currentIndex > 0
-								? timings[currentIndex] -
-									timings[currentIndex - 1]
-								: 0
-						}
-						shot={timings.length > 0 ? currentIndex + 1 : 0}
-						totalShots={timings.length}
-					/>
-				</StyledGridItem>
-				<StyledGridItem size={{ xs: 12, md: 6 }}>
-					<ButtonGroup
-						disableClear={disableState.clear}
-						disableMenu={disableState.menu}
-						disableReview={disableState.review}
-						disableStart={disableState.start}
-						disableBreak={disableState.break}
-						onClearClick={OnClear}
-						onMenuClick={OnMenu}
-						onReviewClick={OnReview}
-						onStartClick={OnStart}
-						onBreakClick={OnBreak}
-					/>
-				</StyledGridItem>
-				<StyledGridItem size={{ xs: 12 }}>
-					<HitLog timings={timings} />
-				</StyledGridItem>
-			</Grid>
-		</>
+		<Grid container spacing={2}>
+			<StyledGridItem size={{ xs: 12, md: 6 }}>
+				<TimeDisplay
+					time={displayTime}
+					split={
+						currentIndex > 0
+							? timings[currentIndex] - timings[currentIndex - 1]
+							: 0
+					}
+					shot={timings.length > 0 ? currentIndex + 1 : 0}
+					totalShots={timings.length}
+				/>
+			</StyledGridItem>
+			<StyledGridItem size={{ xs: 12, md: 6 }}>
+				<ButtonGroup
+					disableClear={disableState.clear}
+					disableMenu={disableState.menu}
+					disableReview={disableState.review}
+					disableStart={disableState.start}
+					disableBreak={disableState.break}
+					onClearClick={OnClear}
+					onMenuClick={OnMenu}
+					onReviewClick={OnReview}
+					onStartClick={OnStart}
+					onBreakClick={OnBreak}
+				/>
+			</StyledGridItem>
+			<StyledGridItem size={{ xs: 12 }}>
+				<HitLog timings={timings} />
+			</StyledGridItem>
+		</Grid>
 	);
 }
