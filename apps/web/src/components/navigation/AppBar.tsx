@@ -60,7 +60,7 @@ export default function AppBar(props: AppBarProps) {
 					<Menu />
 				</IconButton>
 				<Typography variant="h6" noWrap component="div">
-					Mini variant drawer
+					IPSC Scoreboard
 				</Typography>
 			</Toolbar>
 		</StyledAppBar>
