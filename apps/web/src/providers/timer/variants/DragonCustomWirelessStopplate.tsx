@@ -79,9 +79,15 @@ export class DragonCustomWirelessStopplate extends Timer<DragonCustomsWirelessSt
 	async connect() {
 		if (!(await navigator.bluetooth.getAvailability())) {
 			alert("Your browser does not support Web Bluetooth.");
+			//shown to ios device
 			alert(
-				"If you're using Apple's device (iOS, iPadOS) please install `Bluefy` browser, as WkWebView (Apple's browser engine) does not support Web Bluetooth.",
+				"If you're using Apple's device (iOS, iPadOS) please install `Bluefy` browser, as WkWebView (Apple's browser engine) does not support Web Bluetooth while Apple forces all third-party browsers to use their own engine which is stupid.",
 			);
+			if (/iPad|iPhone|iPod/.test(navigator.platform)) {
+				alert(
+					"Furthur info: https://bugs.webkit.org/show_bug.cgi?id=101034, where Apple stated that they will not support Web Bluetooth in WkWebView.",
+				);
+			}
 			this.dispatchDisconnectEvent();
 			return;
 		}
