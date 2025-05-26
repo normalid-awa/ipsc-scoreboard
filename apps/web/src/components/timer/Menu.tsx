@@ -306,7 +306,11 @@ export default function TimerMenuDialog(props: TimerMenuDialogProps) {
 									</Typography>
 								</AccordionSummary>
 								<AccordionDetails>
-									{timer?.renderSettingWidget()}
+									{timer?.renderSettingWidget({
+										settingData: settings,
+										setSettingData: (v) =>
+											setSettings({ ...settings, ...v }),
+									})}
 								</AccordionDetails>
 							</Accordion>
 						</Stack>
