@@ -15,8 +15,14 @@ import {
 	Paper,
 	Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TransitionGroup } from "react-transition-group";
+import TimerMenuDialog from "./Menu";
+import {
+	HitEvent,
+	TimerEvent,
+	useTimer,
+} from "@/providers/timer/TimerProvider";
 
 interface TimeDisplayProps {
 	time: number;
@@ -167,7 +173,49 @@ const StyledGridItem = (props: GridProps) => {
 const breakSignal = Symbol("break");
 const countdownBreakEvent = new CustomEvent(breakSignal.toString());
 
+class Buzzer {
+	private static instance: Buzzer | null = null;
+
+	private context: AudioContext;
+
+	private constructor() {
+		this.context = new AudioContext();
+	}
+
+	public static getInstance(): Buzzer {
+		if (Buzzer.instance === null) {
+			Buzzer.instance = new Buzzer();
+		}
+		return Buzzer.instance;
+	}
+
+	public beep(
+		frequency: number,
+		durationInS: number,
+		waveform: OscillatorType,
+	): void {
+		const oscillator = this.context.createOscillator();
+		oscillator.connect(this.context.destination);
+		navigator.vibrate(durationInS * 1000);
+		oscillator.type = waveform;
+		oscillator.frequency.value = frequency;
+		oscillator.start();
+		setTimeout(() => {
+			oscillator.stop();
+		}, durationInS * 1000);
+	}
+}
+
+export function beep(
+	frequency: number,
+	durationInS: number,
+	waveform: OscillatorType,
+) {
+	Buzzer.getInstance().beep(frequency, durationInS, waveform);
+}
+
 export default function Timer() {
+	const { isConnected, timer } = useTimer();
 	const [displayTime, setDisplayTime] = useState(0);
 	const [timings, setTimings] = useState<number[]>([]);
 	const [currentIndex, setCurrentIndex] = useState(0);
@@ -179,17 +227,29 @@ export default function Timer() {
 		break: true,
 	});
 	const [recivedData, setRecivedData] = useState(false);
+	const [menuOpen, setMenuOpen] = useState(false);
 
-	const OnHit = () => {
-		if (!recivedData) return;
-		const newTime = Date.now() / 10000;
-		const newTimings = [...timings, newTime];
-		setTimings(newTimings);
-		setCurrentIndex(newTimings.length - 1);
-		setDisplayTime(newTime);
-	};
+	useEffect(() => {
+		addEventListener(TimerEvent.Hit, OnHit);
+		return () => {
+			removeEventListener(TimerEvent.Hit, OnHit);
+		};
+	});
+
+	const OnHit = useCallback(
+		(e: HitEvent) => {
+			if (!recivedData) return;
+			const newTime = e.detail ?? 0;
+			const newTimings = [...timings, newTime];
+			setTimings(newTimings);
+			setCurrentIndex(newTimings.length - 1);
+			setDisplayTime(newTime);
+		},
+		[timings, recivedData],
+	);
 
 	const OnStart = async () => {
+		if (!timer) return;
 		setDisableState({
 			menu: true,
 			start: true,
@@ -197,19 +257,26 @@ export default function Timer() {
 			review: true,
 			break: false,
 		});
-		const duration = 1000;
-		const frequency = 1024;
-		const waveform = "sine";
-		const min = 1;
-		const max = 4;
-		let countdownBreak = false;
-		const randomTime = Math.random() * (max - min) + min;
+		const setting = await timer.getSetting();
+		const duration = setting.buzzerDuration;
+		const frequency = setting.buzzerFrequency;
+		const waveform = setting.buzzerWaveform;
+		let countdownTime;
+		if (setting.randomizeCountdownTime) {
+			const min = setting.randomCountdownTimeMin;
+			const max = setting.randomCountdownTimeMax;
+			countdownTime = Math.random() * (max - min) + min;
+		} else {
+			countdownTime = setting.countdownTime;
+		}
+
 		const startTime = Date.now();
+		let countdownBreak = false;
 		const intervalId = setInterval(() => {
-			setDisplayTime(randomTime - (Date.now() - startTime) / 1000);
+			setDisplayTime(countdownTime - (Date.now() - startTime) / 1000);
 		}, 1);
 
-		addEventListener(breakSignal.toString(), () => {
+		function breakHandler() {
 			countdownBreak = true;
 			clearInterval(intervalId);
 			setDisableState({
@@ -219,21 +286,18 @@ export default function Timer() {
 				review: true,
 				break: true,
 			});
-		});
+		}
 
-		await new Promise((resolve) => setTimeout(resolve, randomTime * 1000));
+		addEventListener(breakSignal.toString(), breakHandler);
+		await new Promise((resolve) =>
+			setTimeout(resolve, countdownTime * 1000),
+		);
+		removeEventListener(breakSignal.toString(), breakHandler);
 		if (countdownBreak) return;
 
-		navigator.vibrate(duration);
-		const context = new AudioContext();
-		const oscillator = context.createOscillator();
-		oscillator.type = waveform;
-		oscillator.frequency.value = frequency;
-		oscillator.connect(context.destination);
-		oscillator.start();
-		setTimeout(function () {
-			oscillator.stop();
-		}, duration);
+		beep(frequency, duration, waveform);
+		timer.start();
+		setRecivedData(true);
 
 		clearInterval(intervalId);
 		setDisplayTime(0);
@@ -244,7 +308,6 @@ export default function Timer() {
 			review: false,
 			break: true,
 		});
-		setRecivedData(true);
 	};
 
 	const OnClear = () => {
@@ -269,46 +332,68 @@ export default function Timer() {
 			break: true,
 		});
 		setRecivedData(false);
+		timer?.review();
 	};
 
 	//TODO: Implement menu
-	const OnMenu = () => {};
+	const OnMenu = () => {
+		setMenuOpen(true);
+	};
 
 	const OnBreak = () => {
 		dispatchEvent(countdownBreakEvent);
 	};
 
 	return (
-		<Grid container spacing={2}>
-			<StyledGridItem size={{ xs: 12, md: 6 }}>
-				<TimeDisplay
-					time={displayTime}
-					split={
-						currentIndex > 0
-							? timings[currentIndex] - timings[currentIndex - 1]
-							: 0
-					}
-					shot={timings.length > 0 ? currentIndex + 1 : 0}
-					totalShots={timings.length}
-				/>
-			</StyledGridItem>
-			<StyledGridItem size={{ xs: 12, md: 6 }}>
-				<ButtonGroup
-					disableClear={disableState.clear}
-					disableMenu={disableState.menu}
-					disableReview={disableState.review}
-					disableStart={disableState.start}
-					disableBreak={disableState.break}
-					onClearClick={OnClear}
-					onMenuClick={OnMenu}
-					onReviewClick={OnReview}
-					onStartClick={OnStart}
-					onBreakClick={OnBreak}
-				/>
-			</StyledGridItem>
-			<StyledGridItem size={{ xs: 12 }}>
-				<HitLog timings={timings} />
-			</StyledGridItem>
-		</Grid>
+		<>
+			<TimerMenuDialog
+				open={menuOpen}
+				onClose={() => setMenuOpen(false)}
+			/>
+			<Grid container spacing={2}>
+				<StyledGridItem size={{ xs: 12, md: 6 }}>
+					<TimeDisplay
+						time={displayTime}
+						split={
+							currentIndex > 0
+								? timings[currentIndex] -
+									timings[currentIndex - 1]
+								: 0
+						}
+						shot={timings.length > 0 ? currentIndex + 1 : 0}
+						totalShots={timings.length}
+					/>
+				</StyledGridItem>
+				<StyledGridItem size={{ xs: 12, md: 6 }}>
+					{isConnected ? (
+						<ButtonGroup
+							disableClear={disableState.clear}
+							disableMenu={disableState.menu}
+							disableReview={disableState.review}
+							disableStart={disableState.start}
+							disableBreak={disableState.break}
+							onClearClick={OnClear}
+							onMenuClick={OnMenu}
+							onReviewClick={OnReview}
+							onStartClick={OnStart}
+							onBreakClick={OnBreak}
+						/>
+					) : (
+						<Button
+							variant="contained"
+							size="large"
+							fullWidth
+							sx={{ height: 80 }}
+							onClick={OnMenu}
+						>
+							Menu
+						</Button>
+					)}
+				</StyledGridItem>
+				<StyledGridItem size={{ xs: 12 }}>
+					<HitLog timings={timings} />
+				</StyledGridItem>
+			</Grid>
+		</>
 	);
 }
