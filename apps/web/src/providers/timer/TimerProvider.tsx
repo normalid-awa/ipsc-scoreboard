@@ -75,9 +75,7 @@ export abstract class Timer<T extends TimerSetting> {
 		window.dispatchEvent(new CustomEvent(TimerEvent.Disconnect));
 	}
 	protected dispatchHitEvent(time: number) {
-		window.dispatchEvent(
-			new CustomEvent(TimerEvent.Hit, { detail: { time } }),
-		);
+		window.dispatchEvent(new CustomEvent(TimerEvent.Hit, { detail: time }));
 	}
 
 	abstract getSetting(): Promise<T>;

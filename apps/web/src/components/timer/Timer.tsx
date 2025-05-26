@@ -15,9 +15,14 @@ import {
 	Paper,
 	Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TransitionGroup } from "react-transition-group";
 import TimerMenuDialog from "./Menu";
+import {
+	HitEvent,
+	TimerEvent,
+	useTimer,
+} from "@/providers/timer/TimerProvider";
 
 interface TimeDisplayProps {
 	time: number;
@@ -210,6 +215,7 @@ export function beep(
 }
 
 export default function Timer() {
+	const { timer } = useTimer();
 	const [displayTime, setDisplayTime] = useState(0);
 	const [timings, setTimings] = useState<number[]>([]);
 	const [currentIndex, setCurrentIndex] = useState(0);
@@ -223,16 +229,27 @@ export default function Timer() {
 	const [recivedData, setRecivedData] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 
-	const OnHit = () => {
-		if (!recivedData) return;
-		const newTime = Date.now() / 10000;
-		const newTimings = [...timings, newTime];
-		setTimings(newTimings);
-		setCurrentIndex(newTimings.length - 1);
-		setDisplayTime(newTime);
-	};
+	useEffect(() => {
+		addEventListener(TimerEvent.Hit, OnHit);
+		return () => {
+			removeEventListener(TimerEvent.Hit, OnHit);
+		};
+	});
+
+	const OnHit = useCallback(
+		(e: HitEvent) => {
+			if (!recivedData) return;
+			const newTime = e.detail ?? 0;
+			const newTimings = [...timings, newTime];
+			setTimings(newTimings);
+			setCurrentIndex(newTimings.length - 1);
+			setDisplayTime(newTime);
+		},
+		[timings, recivedData],
+	);
 
 	const OnStart = async () => {
+		if (!timer) return;
 		setDisableState({
 			menu: true,
 			start: true,
@@ -240,19 +257,26 @@ export default function Timer() {
 			review: true,
 			break: false,
 		});
-		const duration = 1000;
-		const frequency = 1024;
-		const waveform = "sine";
-		const min = 1;
-		const max = 4;
-		let countdownBreak = false;
-		const randomTime = Math.random() * (max - min) + min;
+		const setting = await timer.getSetting();
+		const duration = setting.buzzerDuration;
+		const frequency = setting.buzzerFrequency;
+		const waveform = setting.buzzerWaveform;
+		let countdownTime;
+		if (setting.randomizeCountdownTime) {
+			const min = setting.randomCountdownTimeMin;
+			const max = setting.randomCountdownTimeMax;
+			countdownTime = Math.random() * (max - min) + min;
+		} else {
+			countdownTime = setting.countdownTime;
+		}
+
 		const startTime = Date.now();
+		let countdownBreak = false;
 		const intervalId = setInterval(() => {
-			setDisplayTime(randomTime - (Date.now() - startTime) / 1000);
+			setDisplayTime(countdownTime - (Date.now() - startTime) / 1000);
 		}, 1);
 
-		addEventListener(breakSignal.toString(), () => {
+		function breakHandler() {
 			countdownBreak = true;
 			clearInterval(intervalId);
 			setDisableState({
@@ -262,12 +286,18 @@ export default function Timer() {
 				review: true,
 				break: true,
 			});
-		});
+		}
 
-		await new Promise((resolve) => setTimeout(resolve, randomTime * 1000));
+		addEventListener(breakSignal.toString(), breakHandler);
+		await new Promise((resolve) =>
+			setTimeout(resolve, countdownTime * 1000),
+		);
+		removeEventListener(breakSignal.toString(), breakHandler);
 		if (countdownBreak) return;
 
 		beep(frequency, duration, waveform);
+		timer.start();
+		setRecivedData(true);
 
 		clearInterval(intervalId);
 		setDisplayTime(0);
@@ -278,7 +308,6 @@ export default function Timer() {
 			review: false,
 			break: true,
 		});
-		setRecivedData(true);
 	};
 
 	const OnClear = () => {
@@ -303,6 +332,7 @@ export default function Timer() {
 			break: true,
 		});
 		setRecivedData(false);
+		timer?.review();
 	};
 
 	//TODO: Implement menu
