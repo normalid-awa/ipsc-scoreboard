@@ -5,6 +5,8 @@ import {
 	TimerSetting,
 	TimerSettingProps,
 } from "../TimerProvider";
+import { Stack } from "@mui/material";
+import InputSlider from "@/components/inputs/InputSlider";
 
 const SERVICE_UUID = "812c3d3c-7af6-45e9-a873-edce7a58096a";
 
@@ -205,7 +207,7 @@ export class DragonCustomWirelessStopplate extends Timer<DragonCustomsWirelessSt
 			randomCountdownTimeMin: data.timerCountdownTimeRandomMin / 1000,
 			debounceTime: data.debounceTime,
 			sensorTriggerThreshold: data.sensorTriggerThreshold,
-			indicatorDuration: data.indicatorSleepTime,
+			indicatorDuration: data.indicatorSleepTime / 1000,
 		};
 	}
 
@@ -213,7 +215,7 @@ export class DragonCustomWirelessStopplate extends Timer<DragonCustomsWirelessSt
 		const value: StopplateSettingDTO = {
 			sensorTriggerThreshold: setting.sensorTriggerThreshold,
 			debounceTime: setting.debounceTime,
-			indicatorSleepTime: setting.indicatorDuration,
+			indicatorSleepTime: setting.indicatorDuration * 1000,
 			randomizeTimerCountdownTime: setting.randomizeCountdownTime,
 			timerConstantCountdownTime: setting.countdownTime * 1000,
 			timerCountdownTimeRandomMax: setting.randomCountdownTimeMax * 1000,
@@ -232,10 +234,39 @@ export class DragonCustomWirelessStopplate extends Timer<DragonCustomsWirelessSt
 	renderSettingWidget(
 		props: TimerSettingProps<DragonCustomsWirelessStopplateSetting>,
 	): ReactNode {
+		const setSetting = (key: string) => (value: number | number[]) => {
+			props.setSettingData({ [key]: value });
+		};
 		return (
-			<>
-				<h1>qweeqw{JSON.stringify(props)}</h1>
-			</>
+			<Stack>
+				<InputSlider
+					label="Indicator Duration"
+					max={30}
+					min={1}
+					step={1}
+					unit="s"
+					value={props.settingData.indicatorDuration ?? 0}
+					onChange={setSetting("indicatorDuration")}
+				/>
+				<InputSlider
+					label="Debounce Time"
+					max={300}
+					min={1}
+					step={1}
+					unit="ms"
+					value={props.settingData.debounceTime ?? 0}
+					onChange={setSetting("debounceTime")}
+				/>
+				<InputSlider
+					label="Sensor Trigger Threshold"
+					max={1000}
+					min={1}
+					step={1}
+					unit="dB' ms ^-2"
+					value={props.settingData.sensorTriggerThreshold ?? 0}
+					onChange={setSetting("sensorTriggerThreshold")}
+				/>
+			</Stack>
 		);
 	}
 }
