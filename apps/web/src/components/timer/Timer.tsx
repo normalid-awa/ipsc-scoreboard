@@ -215,7 +215,7 @@ export function beep(
 }
 
 export default function Timer() {
-	const { timer } = useTimer();
+	const { isConnected, timer } = useTimer();
 	const [displayTime, setDisplayTime] = useState(0);
 	const [timings, setTimings] = useState<number[]>([]);
 	const [currentIndex, setCurrentIndex] = useState(0);
@@ -365,18 +365,30 @@ export default function Timer() {
 					/>
 				</StyledGridItem>
 				<StyledGridItem size={{ xs: 12, md: 6 }}>
-					<ButtonGroup
-						disableClear={disableState.clear}
-						disableMenu={disableState.menu}
-						disableReview={disableState.review}
-						disableStart={disableState.start}
-						disableBreak={disableState.break}
-						onClearClick={OnClear}
-						onMenuClick={OnMenu}
-						onReviewClick={OnReview}
-						onStartClick={OnStart}
-						onBreakClick={OnBreak}
-					/>
+					{isConnected ? (
+						<ButtonGroup
+							disableClear={disableState.clear}
+							disableMenu={disableState.menu}
+							disableReview={disableState.review}
+							disableStart={disableState.start}
+							disableBreak={disableState.break}
+							onClearClick={OnClear}
+							onMenuClick={OnMenu}
+							onReviewClick={OnReview}
+							onStartClick={OnStart}
+							onBreakClick={OnBreak}
+						/>
+					) : (
+						<Button
+							variant="contained"
+							size="large"
+							fullWidth
+							sx={{ height: 80 }}
+							onClick={OnMenu}
+						>
+							Menu
+						</Button>
+					)}
 				</StyledGridItem>
 				<StyledGridItem size={{ xs: 12 }}>
 					<HitLog timings={timings} />
