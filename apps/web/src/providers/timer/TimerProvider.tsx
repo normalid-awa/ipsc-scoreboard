@@ -59,6 +59,8 @@ export enum TimerEvent {
 	Hit = "TimerHit",
 }
 
+export type HitEvent = CustomEventInit<number>;
+
 export abstract class Timer<T extends TimerSetting> {
 	abstract connect(): Promise<void>;
 	abstract disconnect(): Promise<void>;
