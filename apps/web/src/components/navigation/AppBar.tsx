@@ -1,4 +1,4 @@
-import { Menu } from "@mui/icons-material";
+import { Circle, Menu } from "@mui/icons-material";
 import {
 	IconButton,
 	Toolbar,
@@ -6,8 +6,10 @@ import {
 	AppBar as MuiAppBar,
 	AppBarProps as MuiAppBarProps,
 	styled,
+	Grid,
 } from "@mui/material";
 import { drawerWidth } from "./NavigationLayout";
+import { useTimer } from "@/providers/timer/TimerProvider";
 
 interface StyledAppBarProps extends MuiAppBarProps {
 	open?: boolean;
@@ -42,6 +44,8 @@ export interface AppBarProps {
 }
 
 export default function AppBar(props: AppBarProps) {
+	const { isConnected } = useTimer();
+
 	return (
 		<StyledAppBar open={props.open} position="fixed">
 			<Toolbar>
@@ -59,9 +63,26 @@ export default function AppBar(props: AppBarProps) {
 				>
 					<Menu />
 				</IconButton>
-				<Typography variant="h6" noWrap component="div">
-					IPSC Scoreboard
-				</Typography>
+				<Grid>
+					<Grid size={12}>
+						<Typography variant="h6" noWrap component="div">
+							IPSC Scoreboard
+						</Typography>
+					</Grid>
+					<Grid size={12}>
+						<Typography
+							variant="subtitle2"
+							fontWeight={"200"}
+							style={{ display: "inline-block" }}
+						>
+							Timer connectivity
+						</Typography>
+						<Circle
+							style={{ float: "inline-end" }}
+							color={isConnected ? "success" : "error"}
+						/>
+					</Grid>
+				</Grid>
 			</Toolbar>
 		</StyledAppBar>
 	);
