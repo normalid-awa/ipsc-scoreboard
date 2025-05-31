@@ -24,6 +24,7 @@ import {
 	Theme,
 	THEME_PREFERENCE_KEY,
 } from "@/providers/localPreferences/settings/theme.setting";
+import { SnackbarProvider } from "notistack";
 
 function ColorSchemeUpdateService() {
 	const { setMode } = useColorScheme();
@@ -64,6 +65,7 @@ export default function LayoutClient({ children }: { children: ReactNode }) {
 			theme={globalTheme}
 			modeStorageKey={THEME_PREFERENCE_KEY}
 		>
+			<SnackbarProvider />
 			<LocalPreferencesProvider>
 				<ConvexClientProvider>
 					<TimerProvider>
