@@ -1,7 +1,7 @@
 import {
 	ThemeType,
 	useLocalPreferences,
-} from "@/providers/LocalPreferencesProvider";
+} from "@/providers/localPreferences/LocalPreferencesProvider";
 import { AutoMode, DarkMode, LightMode } from "@mui/icons-material";
 import { Button, ButtonGroup } from "@mui/material";
 import { ReactNode } from "react";

@@ -13,7 +13,7 @@ import {
 	useTheme,
 } from "@mui/material";
 import MobileNavigationLayout from "@/components/navigation/MobileNavigationLayout";
-import { LocalPreferencesProvider } from "@/providers/LocalPreferencesProvider";
+import { LocalPreferencesProvider } from "@/providers/localPreferences/LocalPreferencesProvider";
 import globalTheme from "../theme";
 import { TimerProvider } from "@/providers/timer/TimerProvider";
 
