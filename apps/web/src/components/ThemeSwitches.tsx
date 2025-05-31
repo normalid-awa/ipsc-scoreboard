@@ -1,31 +1,30 @@
-import {
-	ThemeType,
-	useLocalPreferences,
-} from "@/providers/LocalPreferencesProvider";
+import { useLocalPreferences } from "@/providers/localPreferences/LocalPreferencesProvider";
+import { Theme } from "@/providers/localPreferences/settings/theme.setting";
 import { AutoMode, DarkMode, LightMode } from "@mui/icons-material";
-import { Button, ButtonGroup } from "@mui/material";
+import { Button, ButtonGroup, useColorScheme } from "@mui/material";
 import { ReactNode } from "react";
 
-const themeIcon: Record<ThemeType, ReactNode> = {
-	[ThemeType.Dark]: <DarkMode />,
-	[ThemeType.System]: <AutoMode />,
-	[ThemeType.Light]: <LightMode />,
+const themeIcon: Record<Theme, ReactNode> = {
+	dark: <DarkMode />,
+	system: <AutoMode />,
+	light: <LightMode />,
 };
 
 interface ThemeSwitchProps {
-	theme: ThemeType;
+	mode: Theme;
 }
 function ThemeSwtich(props: ThemeSwitchProps) {
-	const { theme, setTheme } = useLocalPreferences();
+	const { mode } = useColorScheme();
+	const { set } = useLocalPreferences();
 
 	return (
 		<Button
-			variant={theme === props.theme ? "contained" : "outlined"}
+			variant={mode === props.mode ? "contained" : "outlined"}
 			size="small"
 			sx={{ aspectRatio: "1/1" }}
-			onClick={() => setTheme(props.theme)}
+			onClick={() => set("theme", props.mode)}
 		>
-			{themeIcon[props.theme]}
+			{themeIcon[props.mode]}
 		</Button>
 	);
 }
@@ -33,9 +32,9 @@ function ThemeSwtich(props: ThemeSwitchProps) {
 export default function ThemeSwitches() {
 	return (
 		<ButtonGroup>
-			<ThemeSwtich theme={ThemeType.Dark} />
-			<ThemeSwtich theme={ThemeType.System} />
-			<ThemeSwtich theme={ThemeType.Light} />
+			<ThemeSwtich mode="dark" />
+			<ThemeSwtich mode="system" />
+			<ThemeSwtich mode="light" />
 		</ButtonGroup>
 	);
 }
