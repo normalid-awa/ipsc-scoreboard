@@ -1,6 +1,5 @@
 "use client";
 
-import { useColorScheme } from "@mui/material";
 import {
 	createContext,
 	ReactNode,
@@ -8,46 +7,28 @@ import {
 	useEffect,
 	useState,
 } from "react";
+import { ThemeSetting } from "./settings/theme.setting";
 
-export enum ThemeType {
-	Dark = "dark",
-	System = "system",
-	Light = "light",
+export type OnPrefrenceChangeEventType = `preference:${string}:change`;
+
+export interface Preference<T> {
+	name: string;
+	defaultValue: T;
+	getInitialValue: () => T;
+	onChange: (value: T) => void;
 }
 
-interface PreferencesType {
-	theme: ThemeType;
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const preferences: Preference<any>[] = [new ThemeSetting()];
 
-type Setters<Type> = {
-	[Property in keyof Type as `set${Capitalize<string & Property>}`]: (
-		value: Type[Property],
-	) => void;
-};
-interface LocalPreferencesContextType
-	extends PreferencesType,
-		Setters<PreferencesType> {}
+export const onPreferenceChangeEventType = (
+	name: string,
+): OnPrefrenceChangeEventType => `preference:${name}:change`;
 
-export const prefrencesDefaultValues: PreferencesType = {
-	theme: ThemeType.System,
-} as const;
-
-const prefrencesItems: (keyof PreferencesType)[] = Object.keys(
-	prefrencesDefaultValues,
-) as (keyof PreferencesType)[];
-
-const LocalPreferencesContext = createContext<LocalPreferencesContextType>(
-	null!,
-);
-
-function getValue<T>(key: string, defaultValue: T) {
-	if (localStorage.getItem(key) === null) {
-		localStorage.setItem(key, JSON.stringify(defaultValue));
-		return defaultValue;
-	} else {
-		return JSON.parse(localStorage.getItem(key)!) as T;
-	}
-}
+const LocalPreferencesContext = createContext<{
+	get: <T>(key: string) => T;
+	set: <T>(key: string, value: T) => void;
+}>(null!);
 
 export function useLocalPreferences() {
 	return useContext(LocalPreferencesContext);
@@ -58,45 +39,41 @@ export function LocalPreferencesProvider({
 }: {
 	children: ReactNode;
 }) {
-	const { setMode } = useColorScheme();
-	const [settings, setSettings] = useState<PreferencesType>(
-		prefrencesDefaultValues,
-	);
+	const [preferencesState, setPreferencesState] = useState<{
+		[key: string]: unknown;
+	}>({});
 
 	useEffect(() => {
-		let newSettings = {};
-		for (const item of prefrencesItems) {
-			newSettings = {
-				...newSettings,
-				[item]: getValue(item, prefrencesDefaultValues[item]),
-			};
-		}
-		setSettings(newSettings as PreferencesType);
+		preferences.forEach((preference) => {
+			const initialValue = preference.getInitialValue();
+			setPreferencesState((prev) => ({
+				...prev,
+				[preference.name]: initialValue,
+			}));
+		});
 	}, []);
 
-	useEffect(() => {
-		for (const item of prefrencesItems) {
-			localStorage.setItem(item, JSON.stringify(settings[item]));
-		}
-		setMode(settings.theme);
-	}, [settings, setMode]);
+	function get<T>(key: string): T {
+		return preferencesState[key] as T;
+	}
 
-	const setSettingCurried =
-		(key: keyof PreferencesType) =>
-		(value: PreferencesType[typeof key]) => {
-			setSettings((prev) => ({
-				...prev,
-				[key]: value,
-			}));
-		};
+	function set<T>(key: string, value: T) {
+		preferences
+			.find((preference) => preference.name === key)
+			?.onChange(value);
+		dispatchEvent(
+			new CustomEvent(
+				`preference:${key}:change` satisfies OnPrefrenceChangeEventType,
+				{
+					detail: value,
+				},
+			),
+		);
+		setPreferencesState((prev) => ({ ...prev, [key]: value }));
+	}
 
 	return (
-		<LocalPreferencesContext.Provider
-			value={{
-				theme: settings.theme,
-				setTheme: setSettingCurried("theme"),
-			}}
-		>
+		<LocalPreferencesContext.Provider value={{ get, set }}>
 			{children}
 		</LocalPreferencesContext.Provider>
 	);
