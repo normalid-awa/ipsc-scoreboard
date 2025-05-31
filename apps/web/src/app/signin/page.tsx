@@ -1,8 +1,16 @@
 "use client";
 
-import { useAuthActions, useAuthToken } from "@convex-dev/auth/react";
+import { useAuthActions } from "@convex-dev/auth/react";
 import { GitHub, Google } from "@mui/icons-material";
-import { Button, CircularProgress, Modal, Stack } from "@mui/material";
+import {
+	Button,
+	CircularProgress,
+	Container,
+	Divider,
+	Modal,
+	Stack,
+	Typography,
+} from "@mui/material";
 import { useConvexAuth } from "convex/react";
 import { ReactElement, useState } from "react";
 
@@ -25,7 +33,6 @@ function OAuthLoginButton(props: OAuthLoginButtonProps) {
 			size="large"
 			startIcon={ProviderIcons[props.provider]}
 		>
-			Continue with{" "}
 			{props.provider.at(0)?.toUpperCase() + props.provider.slice(1)}
 		</Button>
 	);
@@ -43,14 +50,24 @@ export default function LoginPage() {
 		});
 	};
 
+	if (isAuthenticated) {
+		history.back();
+	}
+
 	return (
-		<div>
-			<Modal open={loading}>
+		<Container maxWidth="md" sx={{ height: "100%" }}>
+			<Modal open={loading || isLoading}>
 				<CircularProgress />
 			</Modal>
-			<Stack>
-				<p>{isAuthenticated ? "Authenticated" : "Not authenticated"}</p>
-				<p>{isLoading ? "Loading" : "Not loading"}</p>
+			<Stack
+				spacing={2}
+				justifyContent={"center"}
+				sx={{ height: "80%" /** -20% for visually centering */ }}
+			>
+				<Typography variant="h4" align="center">
+					Sign in with
+				</Typography>
+				<Divider />
 				<OAuthLoginButton
 					provider="github"
 					signIn={handleProviderSignIn}
@@ -60,6 +77,6 @@ export default function LoginPage() {
 					signIn={handleProviderSignIn}
 				/>
 			</Stack>
-		</div>
+		</Container>
 	);
 }
