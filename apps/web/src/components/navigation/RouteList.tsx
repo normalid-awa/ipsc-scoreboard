@@ -9,9 +9,10 @@ import {
 	ListItemText,
 	Stack,
 } from "@mui/material";
-import { Login } from "@mui/icons-material";
+import { Login, Logout } from "@mui/icons-material";
 import { ReactNode } from "react";
 import { useConvexAuth } from "convex/react";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 export interface RouteListProps {
 	routes: Route[];
@@ -80,6 +81,7 @@ function RouteItem(props: {
 
 export default function RouteList(props: RouteListProps) {
 	const { isAuthenticated } = useConvexAuth();
+	const { signOut } = useAuthActions();
 
 	return (
 		<Stack
@@ -104,10 +106,18 @@ export default function RouteList(props: RouteListProps) {
 					);
 				})}
 			</List>
-			{isAuthenticated ? (
-				<></>
-			) : (
-				<List>
+			<List>
+				{isAuthenticated ? (
+					<>
+						<RouteItem
+							icon={<Logout />}
+							name="Sign Out"
+							path="/"
+							navTo={() => () => signOut()}
+							open={props.open}
+						/>
+					</>
+				) : (
 					<RouteItem
 						icon={<Login />}
 						name="Sign In"
@@ -115,8 +125,8 @@ export default function RouteList(props: RouteListProps) {
 						navTo={props.navTo}
 						open={props.open}
 					/>
-				</List>
-			)}
+				)}
+			</List>
 		</Stack>
 	);
 }
