@@ -15,31 +15,42 @@ export enum ThemeType {
 	Light = "light",
 }
 
-export interface LocalPreferencesContextType {
+interface PreferencesType {
 	theme: ThemeType;
-	setTheme: (value: ThemeType) => void;
 }
+
+type Setters<Type> = {
+	[Property in keyof Type as `set${Capitalize<string & Property>}`]: (
+		value: Type[Property],
+	) => void;
+};
+interface LocalPreferencesContextType
+	extends PreferencesType,
+		Setters<PreferencesType> {}
+
+export const prefrencesDefaultValues: PreferencesType = {
+	theme: ThemeType.System,
+} as const;
+
+const prefrencesItems: (keyof PreferencesType)[] = Object.keys(
+	prefrencesDefaultValues,
+) as (keyof PreferencesType)[];
 
 const LocalPreferencesContext = createContext<LocalPreferencesContextType>(
 	null!,
 );
 
-export function useLocalPreferences() {
-	return useContext(LocalPreferencesContext);
-}
-
-function initContextVariables<T>(
-	key: string,
-	defaultValue: T,
-	reactSetter: (value: T) => void,
-) {
+function getValue<T>(key: string, defaultValue: T) {
 	if (localStorage.getItem(key) === null) {
 		localStorage.setItem(key, JSON.stringify(defaultValue));
-		reactSetter(defaultValue);
+		return defaultValue;
 	} else {
-		const value = JSON.parse(localStorage.getItem(key)!) as T;
-		reactSetter(value);
+		return JSON.parse(localStorage.getItem(key)!) as T;
 	}
+}
+
+export function useLocalPreferences() {
+	return useContext(LocalPreferencesContext);
 }
 
 export function LocalPreferencesProvider({
@@ -48,22 +59,42 @@ export function LocalPreferencesProvider({
 	children: ReactNode;
 }) {
 	const { setMode } = useColorScheme();
-	const [theme, setTheme] = useState(ThemeType.System);
+	const [settings, setSettings] = useState<PreferencesType>(
+		prefrencesDefaultValues,
+	);
 
 	useEffect(() => {
-		initContextVariables("theme", ThemeType.System, setTheme);
+		let newSettings = {};
+		for (const item of prefrencesItems) {
+			newSettings = {
+				...newSettings,
+				[item]: getValue(item, prefrencesDefaultValues[item]),
+			};
+		}
+		setSettings(newSettings as PreferencesType);
 	}, []);
 
 	useEffect(() => {
-		localStorage.setItem("theme", JSON.stringify(theme));
-		setMode(theme);
-	}, [theme, setMode]);
+		for (const item of prefrencesItems) {
+			localStorage.setItem(item, JSON.stringify(settings[item]));
+		}
+		setMode(settings.theme);
+	}, [settings, setMode]);
+
+	const setSettingCurried =
+		(key: keyof PreferencesType) =>
+		(value: PreferencesType[typeof key]) => {
+			setSettings((prev) => ({
+				...prev,
+				[key]: value,
+			}));
+		};
 
 	return (
 		<LocalPreferencesContext.Provider
 			value={{
-				theme,
-				setTheme,
+				theme: settings.theme,
+				setTheme: setSettingCurried("theme"),
 			}}
 		>
 			{children}
