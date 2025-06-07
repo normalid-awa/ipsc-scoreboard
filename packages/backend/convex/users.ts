@@ -1,7 +1,7 @@
 import { ConvexError } from "convex/values";
 import { query } from "./_generated/server";
 
-export const getAuthUserIdentity = query({
+export const getAuthUserInfo = query({
 	handler: async (ctx): Promise<{ avatar: string; name: string }> => {
 		const id = await ctx.auth.getUserIdentity();
 		if (!id)
