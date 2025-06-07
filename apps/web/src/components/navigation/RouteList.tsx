@@ -11,8 +11,10 @@ import {
 } from "@mui/material";
 import { Login, Logout } from "@mui/icons-material";
 import { ReactNode } from "react";
-import { useConvexAuth } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
+import UserCard from "../UserCard";
+import { api } from "@ipsc-scoreboard/backend/convex/_generated/api.js";
 
 export interface RouteListProps {
 	routes: Route[];
@@ -29,51 +31,17 @@ function RouteItem(props: {
 }) {
 	return (
 		<ListItem key={props.path} disablePadding>
-			<ListItemButton
-				onClick={props.navTo(props.path)}
-				sx={[
-					{
-						minHeight: 48,
-						px: 2.5,
-					},
-					props.open
-						? {
-								justifyContent: "initial",
-							}
-						: {
-								justifyContent: "center",
-							},
-				]}
-			>
+			<ListItemButton onClick={props.navTo(props.path)} sx={{ pl: 2.5 }}>
 				<ListItemIcon
-					sx={[
-						{
-							minWidth: 0,
-							justifyContent: "center",
-						},
-						props.open
-							? {
-									mr: 3,
-								}
-							: {
-									mr: "auto",
-								},
-					]}
+					sx={{
+						minWidth: 0,
+						justifyContent: "center",
+						mr: 4,
+					}}
 				>
 					{props.icon}
 				</ListItemIcon>
-				<ListItemText
-					primary={props.name}
-					sx={[
-						props.open
-							? {
-									opacity: 1,
-								}
-							: {
-									opacity: 0,
-								},
-					]}
-				/>
+				<ListItemText primary={props.name} />
 			</ListItemButton>
 		</ListItem>
 	);
@@ -82,6 +50,7 @@ function RouteItem(props: {
 export default function RouteList(props: RouteListProps) {
 	const { isAuthenticated } = useConvexAuth();
 	const { signOut } = useAuthActions();
+	const identity = useQuery(api.users.getAuthUserInfo);
 
 	return (
 		<Stack
@@ -89,23 +58,30 @@ export default function RouteList(props: RouteListProps) {
 			sx={{ height: "100%" }}
 			divider={<Divider />}
 		>
-			<List>
-				{props.routes.map((route) => {
-					if (route.shouldBeShow && !route.shouldBeShow()) {
-						return null;
-					}
-					return (
-						<RouteItem
-							key={route.path}
-							name={route.name}
-							icon={route.icon}
-							path={route.path}
-							navTo={props.navTo}
-							open={props.open}
-						/>
-					);
-				})}
-			</List>
+			<div>
+				<UserCard
+					avatar={identity?.avatar}
+					name={identity?.name || "Guest"}
+				/>
+				<Divider />
+				<List>
+					{props.routes.map((route) => {
+						if (route.shouldBeShow && !route.shouldBeShow()) {
+							return null;
+						}
+						return (
+							<RouteItem
+								key={route.path}
+								name={route.name}
+								icon={route.icon}
+								path={route.path}
+								navTo={props.navTo}
+								open={props.open}
+							/>
+						);
+					})}
+				</List>
+			</div>
 			<List>
 				{isAuthenticated ? (
 					<>
