@@ -7,12 +7,15 @@ import {
 	ListItemButton,
 	ListItemIcon,
 	ListItemText,
+	Popover,
 	Stack,
 } from "@mui/material";
 import { Login, Logout } from "@mui/icons-material";
-import { ReactNode } from "react";
-import { useConvexAuth } from "convex/react";
+import { ReactNode, useState } from "react";
+import { useConvexAuth, useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
+import UserCard from "../UserCard";
+import { api } from "@ipsc-scoreboard/backend/convex/_generated/api.js";
 
 export interface RouteListProps {
 	routes: Route[];
@@ -29,51 +32,17 @@ function RouteItem(props: {
 }) {
 	return (
 		<ListItem key={props.path} disablePadding>
-			<ListItemButton
-				onClick={props.navTo(props.path)}
-				sx={[
-					{
-						minHeight: 48,
-						px: 2.5,
-					},
-					props.open
-						? {
-								justifyContent: "initial",
-							}
-						: {
-								justifyContent: "center",
-							},
-				]}
-			>
+			<ListItemButton onClick={props.navTo(props.path)} sx={{ pl: 2.5 }}>
 				<ListItemIcon
-					sx={[
-						{
-							minWidth: 0,
-							justifyContent: "center",
-						},
-						props.open
-							? {
-									mr: 3,
-								}
-							: {
-									mr: "auto",
-								},
-					]}
+					sx={{
+						minWidth: 0,
+						justifyContent: "center",
+						mr: 4,
+					}}
 				>
 					{props.icon}
 				</ListItemIcon>
-				<ListItemText
-					primary={props.name}
-					sx={[
-						props.open
-							? {
-									opacity: 1,
-								}
-							: {
-									opacity: 0,
-								},
-					]}
-				/>
+				<ListItemText primary={props.name} />
 			</ListItemButton>
 		</ListItem>
 	);
@@ -82,13 +51,52 @@ function RouteItem(props: {
 export default function RouteList(props: RouteListProps) {
 	const { isAuthenticated } = useConvexAuth();
 	const { signOut } = useAuthActions();
+	const identity = useQuery(api.users.getAuthUserInfo);
+
+	const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(
+		null,
+	);
 
 	return (
-		<Stack
-			justifyContent={"space-between"}
-			sx={{ height: "100%" }}
-			divider={<Divider />}
-		>
+		<Stack sx={{ height: "100%" }} divider={<Divider />}>
+			<div>
+				<UserCard
+					avatar={identity?.avatar}
+					name={identity?.name || "Guest"}
+					onClick={(event) => setAnchorElement(event.currentTarget)}
+				/>
+				<Popover
+					open={anchorElement !== null}
+					anchorEl={anchorElement}
+					onClose={() => setAnchorElement(null)}
+					anchorOrigin={{
+						vertical: "bottom",
+						horizontal: "left",
+					}}
+				>
+					<Stack divider={<Divider />}>
+						{isAuthenticated ? (
+							<>
+								<RouteItem
+									icon={<Logout />}
+									name="Sign Out"
+									path="/"
+									navTo={() => () => signOut()}
+									open={props.open}
+								/>
+							</>
+						) : (
+							<RouteItem
+								icon={<Login />}
+								name="Sign In"
+								path="/signin"
+								navTo={props.navTo}
+								open={props.open}
+							/>
+						)}
+					</Stack>
+				</Popover>
+			</div>
 			<List>
 				{props.routes.map((route) => {
 					if (route.shouldBeShow && !route.shouldBeShow()) {
@@ -105,27 +113,6 @@ export default function RouteList(props: RouteListProps) {
 						/>
 					);
 				})}
-			</List>
-			<List>
-				{isAuthenticated ? (
-					<>
-						<RouteItem
-							icon={<Logout />}
-							name="Sign Out"
-							path="/"
-							navTo={() => () => signOut()}
-							open={props.open}
-						/>
-					</>
-				) : (
-					<RouteItem
-						icon={<Login />}
-						name="Sign In"
-						path="/signin"
-						navTo={props.navTo}
-						open={props.open}
-					/>
-				)}
 			</List>
 		</Stack>
 	);
