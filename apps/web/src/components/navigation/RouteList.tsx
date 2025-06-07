@@ -7,10 +7,11 @@ import {
 	ListItemButton,
 	ListItemIcon,
 	ListItemText,
+	Popover,
 	Stack,
 } from "@mui/material";
 import { Login, Logout } from "@mui/icons-material";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import UserCard from "../UserCard";
@@ -52,56 +53,66 @@ export default function RouteList(props: RouteListProps) {
 	const { signOut } = useAuthActions();
 	const identity = useQuery(api.users.getAuthUserInfo);
 
+	const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(
+		null,
+	);
+
 	return (
-		<Stack
-			justifyContent={"space-between"}
-			sx={{ height: "100%" }}
-			divider={<Divider />}
-		>
+		<Stack sx={{ height: "100%" }} divider={<Divider />}>
 			<div>
 				<UserCard
 					avatar={identity?.avatar}
 					name={identity?.name || "Guest"}
+					onClick={(event) => setAnchorElement(event.currentTarget)}
 				/>
-				<Divider />
-				<List>
-					{props.routes.map((route) => {
-						if (route.shouldBeShow && !route.shouldBeShow()) {
-							return null;
-						}
-						return (
+				<Popover
+					open={anchorElement !== null}
+					anchorEl={anchorElement}
+					onClose={() => setAnchorElement(null)}
+					anchorOrigin={{
+						vertical: "bottom",
+						horizontal: "left",
+					}}
+				>
+					<Stack divider={<Divider />}>
+						{isAuthenticated ? (
+							<>
+								<RouteItem
+									icon={<Logout />}
+									name="Sign Out"
+									path="/"
+									navTo={() => () => signOut()}
+									open={props.open}
+								/>
+							</>
+						) : (
 							<RouteItem
-								key={route.path}
-								name={route.name}
-								icon={route.icon}
-								path={route.path}
+								icon={<Login />}
+								name="Sign In"
+								path="/signin"
 								navTo={props.navTo}
 								open={props.open}
 							/>
-						);
-					})}
-				</List>
+						)}
+					</Stack>
+				</Popover>
 			</div>
 			<List>
-				{isAuthenticated ? (
-					<>
+				{props.routes.map((route) => {
+					if (route.shouldBeShow && !route.shouldBeShow()) {
+						return null;
+					}
+					return (
 						<RouteItem
-							icon={<Logout />}
-							name="Sign Out"
-							path="/"
-							navTo={() => () => signOut()}
+							key={route.path}
+							name={route.name}
+							icon={route.icon}
+							path={route.path}
+							navTo={props.navTo}
 							open={props.open}
 						/>
-					</>
-				) : (
-					<RouteItem
-						icon={<Login />}
-						name="Sign In"
-						path="/signin"
-						navTo={props.navTo}
-						open={props.open}
-					/>
-				)}
+					);
+				})}
 			</List>
 		</Stack>
 	);
