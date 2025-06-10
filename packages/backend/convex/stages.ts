@@ -28,3 +28,15 @@ export const createStage = mutation({
 		return await ctx.db.insert("stages", { ...args });
 	},
 });
+
+export const updateStage = mutation({
+	args: {
+		id: v.id("stages"),
+		...stageDto,
+	},
+	handler(ctx, args) {
+		throwIfNotLoggedIn(ctx);
+		const { id, ...data } = args;
+		return ctx.db.replace(args.id, { ...data });
+	},
+});
