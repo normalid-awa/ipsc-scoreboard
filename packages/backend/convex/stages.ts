@@ -11,7 +11,7 @@ import { AppError, AppErrorCode } from "./utils/errorType";
 const stageModel = v.object({
 	title: v.string(),
 	description: v.string(),
-	breifing: v.string(),
+	briefing: v.string(),
 	designer: v.id("users"),
 	images: v.array(v.id("_storage")),
 	papers: v.number(),
