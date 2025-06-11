@@ -3,12 +3,12 @@ import {
 	paginationOptsValidator,
 	PaginationResult,
 } from "convex/server";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, QueryCtx } from "./_generated/server";
 import { throwIfNotLoggedIn } from "./utils/auth";
 import { ConvexError, Infer, v } from "convex/values";
 import { AppError, AppErrorCode } from "./utils/errorType";
 
-const stageModel = {
+const stageModel = v.object({
 	title: v.string(),
 	description: v.string(),
 	breifing: v.string(),
@@ -18,34 +18,45 @@ const stageModel = {
 	noShoots: v.number(),
 	poppers: v.number(),
 	walkthroughTime: v.number(), // in minutes
-};
+});
 
-const stageDto = v.object({ ...stageModel, imagesUrl: v.array(v.string()) });
+const stageDto = v.object({
+	...stageModel.fields,
+	imagesUrl: v.array(v.string()),
+});
 
 export const stageTables = {
 	stages: defineTable(stageModel),
 };
+
+async function toStageDto(
+	stage: Infer<typeof stageModel>,
+	ctx: QueryCtx,
+): Promise<Infer<typeof stageDto>> {
+	const result: Infer<typeof stageDto> = { ...stage } as unknown as Infer<
+		typeof stageDto
+	>;
+	result.imagesUrl = await Promise.all(
+		stage.images.map(async (imageId) => {
+			return (await ctx.storage.getUrl(imageId)) ?? "";
+		}),
+	);
+	return result;
+}
 
 export const getStage = query({
 	args: {
 		id: v.id("stages"),
 	},
 	async handler(ctx, args) {
-		const stage = (await ctx.db.get(args.id)) as unknown as Infer<
-			typeof stageDto
-		>;
+		const stage = await ctx.db.get(args.id);
 		if (!stage) {
 			throw new ConvexError({
 				code: AppErrorCode.NotFound,
 				message: "Stage not found",
 			} satisfies AppError);
 		}
-		stage.imagesUrl = await Promise.all(
-			stage.images.map(async (imageId) => {
-				return (await ctx.storage.getUrl(imageId)) ?? "";
-			}),
-		);
-		return stage;
+		return await toStageDto(stage, ctx);
 	},
 });
 
@@ -54,25 +65,21 @@ export const getStages = query({
 		paginationOpts: paginationOptsValidator,
 	},
 	async handler(ctx, args) {
-		const data = (await ctx.db
-			.query("stages")
-			.paginate(args.paginationOpts)) as unknown as PaginationResult<
-			Infer<typeof stageDto>
-		>;
+		const data = await ctx.db.query("stages").paginate(args.paginationOpts);
+		const result: PaginationResult<Infer<typeof stageDto>> = {
+			...data,
+			page: [],
+		};
 		for (const stage in data.page) {
-			data.page[stage].imagesUrl = await Promise.all(
-				data.page[stage].images.map(async (imageId) => {
-					return (await ctx.storage.getUrl(imageId)) ?? "";
-				}),
-			);
+			result.page[stage] = await toStageDto(data.page[stage], ctx);
 		}
-		return data;
+		return result;
 	},
 });
 
 export const createStage = mutation({
 	args: {
-		...stageModel,
+		...stageModel.fields,
 	},
 	returns: v.id("stages"),
 	async handler(ctx, args) {
@@ -84,7 +91,7 @@ export const createStage = mutation({
 export const updateStage = mutation({
 	args: {
 		id: v.id("stages"),
-		...stageModel,
+		...stageModel.fields,
 	},
 	handler(ctx, args) {
 		throwIfNotLoggedIn(ctx);
