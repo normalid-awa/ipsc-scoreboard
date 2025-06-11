@@ -66,14 +66,10 @@ export const getStages = query({
 	},
 	async handler(ctx, args) {
 		const data = await ctx.db.query("stages").paginate(args.paginationOpts);
-		const result: PaginationResult<Infer<typeof stageDto>> = {
-			...data,
-			page: [],
-		};
-		for (const stage in data.page) {
-			result.page[stage] = await toStageDto(data.page[stage], ctx);
-		}
-		return result;
+		const page = await Promise.all(
+			data.page.map((stage) => toStageDto(stage, ctx)),
+		);
+		return { ...data, page } as PaginationResult<Infer<typeof stageDto>>;
 	},
 });
 
