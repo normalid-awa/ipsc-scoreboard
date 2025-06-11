@@ -16,8 +16,12 @@ import type {
 import type * as auth from "../auth.js";
 import type * as healthCheck from "../healthCheck.js";
 import type * as http from "../http.js";
+import type * as stages from "../stages.js";
+import type * as storage from "../storage.js";
 import type * as todos from "../todos.js";
 import type * as users from "../users.js";
+import type * as utils_auth from "../utils/auth.js";
+import type * as utils_errorType from "../utils/errorType.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -31,8 +35,12 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   healthCheck: typeof healthCheck;
   http: typeof http;
+  stages: typeof stages;
+  storage: typeof storage;
   todos: typeof todos;
   users: typeof users;
+  "utils/auth": typeof utils_auth;
+  "utils/errorType": typeof utils_errorType;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
