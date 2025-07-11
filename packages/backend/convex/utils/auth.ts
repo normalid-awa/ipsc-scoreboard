@@ -3,6 +3,10 @@ import { DataModel } from "../_generated/dataModel";
 import { ConvexError } from "convex/values";
 import { AppError, AppErrorCode } from "./errorType";
 
+export async function getUserIdFromCtx(ctx: GenericMutationCtx<DataModel>) {
+	return (await ctx.auth.getUserIdentity())?.subject.split("|")[0];
+}
+
 export async function isLoggedIn(
 	ctx: GenericMutationCtx<DataModel>,
 ): Promise<boolean> {

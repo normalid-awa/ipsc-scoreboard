@@ -4,7 +4,7 @@ import {
 	PaginationResult,
 } from "convex/server";
 import { mutation, query, QueryCtx } from "./_generated/server";
-import { throwIfNotLoggedIn } from "./utils/auth";
+import { getUserIdFromCtx, throwIfNotLoggedIn } from "./utils/auth";
 import { ConvexError, Infer, v } from "convex/values";
 import { AppError, AppErrorCode } from "./utils/errorType";
 
@@ -89,9 +89,33 @@ export const updateStage = mutation({
 		id: v.id("stages"),
 		...stageModel.fields,
 	},
-	handler(ctx, args) {
+	async handler(ctx, args) {
 		throwIfNotLoggedIn(ctx);
+		const stage = await ctx.db.get(args.id);
+		if (stage?.designer != (await getUserIdFromCtx(ctx))) {
+			throw new ConvexError({
+				message: "You are not allowed to perform this action",
+				code: AppErrorCode.Unauthorized,
+			} satisfies AppError);
+		}
 		const { id, ...data } = args;
 		return ctx.db.replace(args.id, { ...data });
+	},
+});
+
+export const deleteStage = mutation({
+	args: {
+		id: v.id("stages"),
+	},
+	async handler(ctx, args) {
+		throwIfNotLoggedIn(ctx);
+		const stage = await ctx.db.get(args.id);
+		if (stage?.designer != (await getUserIdFromCtx(ctx))) {
+			throw new ConvexError({
+				message: "You are not allowed to perform this action",
+				code: AppErrorCode.Unauthorized,
+			} satisfies AppError);
+		}
+		return ctx.db.delete(args.id);
 	},
 });
