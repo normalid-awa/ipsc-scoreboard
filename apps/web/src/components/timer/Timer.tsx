@@ -383,7 +383,7 @@ export default function Timer() {
 							variant="contained"
 							size="large"
 							fullWidth
-							sx={{ height: 80 }}
+							sx={{ height: "100%" }}
 							onClick={OnMenu}
 						>
 							Menu
