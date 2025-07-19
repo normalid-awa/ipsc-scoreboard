@@ -23,7 +23,6 @@ function SettingsPage() {
 		<>
 			<div>
 				<ModeSwitch />
-				<UserCard />
 				<Paper sx={{ p: 2, width: 540 }}>
 					<LoginForm />
 				</Paper>
