@@ -1,4 +1,5 @@
 import {
+	Divider,
 	Icon,
 	List,
 	ListItem,
@@ -9,8 +10,14 @@ import {
 import { useRouter } from "@tanstack/react-router";
 import { isRouteAListedRoute } from "../../router";
 import { Link } from "../MuiWrapper";
+import { ReactElement } from "react";
 
-export default function NavBar() {
+export interface NavBarProps {
+	topItems?: ReactElement[];
+	bottomItems?: ReactElement[];
+}
+
+export default function NavBar(props: NavBarProps) {
 	const { flatRoutes } = useRouter();
 
 	flatRoutes.sort((a, b) => {
@@ -27,6 +34,8 @@ export default function NavBar() {
 	return (
 		<>
 			<List disablePadding sx={{ width: 250 }}>
+				{props.topItems}
+				{props.topItems && <Divider />}
 				{flatRoutes.map((route) => {
 					if (!isRouteAListedRoute(route.options.staticData)) return <></>;
 					return (
@@ -60,6 +69,8 @@ export default function NavBar() {
 						</ListItem>
 					);
 				})}
+				<Divider />
+				{props.bottomItems}
 			</List>
 		</>
 	);

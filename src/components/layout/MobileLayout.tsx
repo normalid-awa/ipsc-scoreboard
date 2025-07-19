@@ -1,4 +1,5 @@
 import {
+	Box,
 	Collapse,
 	Paper,
 	Slide,
@@ -7,9 +8,10 @@ import {
 	useScrollTrigger,
 } from "@mui/material";
 import { LayoutProps } from "./Layout";
-import { cloneElement, ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import AppTopBar from "./AppTopBar";
 import NavBar from "./NavBar";
+import { UserCard } from "../UserCard";
 
 function SlideOnScroll({
 	children,
@@ -62,7 +64,7 @@ function CollapseOnScroll({
 
 export default function MobileLayout(props: LayoutProps) {
 	const [scrollTarget, setScrollTarget] = useState<Node | null>(null);
-	const scrollRef = useRef<Node | null>(null);
+	const scrollRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		setScrollTarget(scrollRef.current);
@@ -77,7 +79,9 @@ export default function MobileLayout(props: LayoutProps) {
 				sx={{ width: 200 }}
 			>
 				<Toolbar />
-				<NavBar />
+				<NavBar
+					topItems={[<UserCard sx={{ p: 2 }} />, <Box sx={{ my: 1 }} />]}
+				/>
 			</SwipeableDrawer>
 			<SlideOnScroll target={scrollTarget}>
 				<div>

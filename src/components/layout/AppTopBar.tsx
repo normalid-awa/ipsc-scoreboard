@@ -1,5 +1,13 @@
-import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
+import {
+	AppBar,
+	Box,
+	Card,
+	IconButton,
+	Toolbar,
+	Typography,
+} from "@mui/material";
 import { Menu, MenuOpen } from "@mui/icons-material";
+import { UserCard } from "../UserCard";
 
 export interface AppTopBarProps {
 	fold: boolean;
@@ -25,7 +33,10 @@ export default function AppTopBar(props: AppTopBarProps) {
 				>
 					{props.fold ? <MenuOpen /> : <Menu />}
 				</IconButton>
-				<Typography variant="h6">IPSC Scoreboard</Typography>
+				<Typography variant="h6" sx={{ flexGrow: 1 }}>
+					IPSC Scoreboard
+				</Typography>
+				{!props.mobileLayout && <UserCard sx={{ p: 1 }} />}
 			</Toolbar>
 		</AppBar>
 	);
