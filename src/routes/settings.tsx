@@ -3,6 +3,8 @@ import { ListedRouteStaticData } from "../router";
 import { Settings } from "@mui/icons-material";
 import { ROUTE_ORDER as PREV_ROUTE_ORDER } from "./timer";
 import ModeSwitch from "../components/ModeSwitch";
+import LoginForm from "@/components/LoginForm";
+import { Paper } from "@mui/material";
 
 export const ROUTE_ORDER = PREV_ROUTE_ORDER + 1;
 export const Route = createFileRoute("/settings")({
@@ -20,6 +22,9 @@ function SettingsPage() {
 		<>
 			<div>
 				<ModeSwitch />
+				<Paper sx={{ p: 2, width: 540 }}>
+					<LoginForm />
+				</Paper>
 			</div>
 		</>
 	);
