@@ -5,10 +5,7 @@ import {
 	ButtonGroup,
 	Checkbox,
 	Divider,
-	FormControl,
 	FormControlLabel,
-	Input,
-	InputLabel,
 	Stack,
 	TextField,
 	Tooltip,
@@ -23,7 +20,17 @@ function OAuthButton(props: {
 	provider: string;
 }) {
 	return (
-		<Button variant="outlined" size="large" startIcon={props.icon}>
+		<Button
+			variant="outlined"
+			size="large"
+			startIcon={props.icon}
+			onClick={() =>
+				authClient.signIn.social({
+					provider: props.provider,
+					callbackURL: window.location.href,
+				})
+			}
+		>
 			{props.label}
 		</Button>
 	);
