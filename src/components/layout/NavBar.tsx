@@ -48,7 +48,8 @@ export default function NavBar(props: NavBarProps) {
 								sx={{
 									color: "inherit",
 									"&[data-status='active']": {
-										bgcolor: (theme) => theme.palette.action.selected,
+										bgcolor: (theme) =>
+											theme.vars?.palette.Switch.infoDisabledColor,
 									},
 								}}
 							>
