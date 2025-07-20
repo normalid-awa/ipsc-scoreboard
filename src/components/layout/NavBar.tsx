@@ -34,10 +34,16 @@ export default function NavBar(props: NavBarProps) {
 	return (
 		<>
 			<List disablePadding sx={{ width: 250 }}>
-				{props.topItems}
+				{props.topItems?.map((v) => {
+					return (
+						<ListItem disableGutters disablePadding key={v.key}>
+							{v}
+						</ListItem>
+					);
+				})}
 				{props.topItems && <Divider />}
 				{flatRoutes.map((route) => {
-					if (!isRouteAListedRoute(route.options.staticData)) return <></>;
+					if (!isRouteAListedRoute(route.options.staticData)) return null;
 					return (
 						<ListItem disableGutters disablePadding key={route.id}>
 							<Link
