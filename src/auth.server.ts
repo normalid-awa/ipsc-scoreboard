@@ -1,6 +1,5 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { createAuthClient } from "better-auth/react";
 import { reactStartCookies } from "better-auth/react-start";
 import db from "./db/db";
 import * as authSchema from "@/db/schema/auth-schema";
@@ -10,6 +9,12 @@ export const auth = betterAuth({
 		provider: "pg",
 		schema: { ...authSchema },
 	}),
+	advanced: {
+		ipAddress: {
+			ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
+			disableIpTracking: false,
+		},
+	},
 	emailAndPassword: {
 		enabled: true,
 	},

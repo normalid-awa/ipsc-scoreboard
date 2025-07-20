@@ -2,9 +2,9 @@
 import { useState, type ReactNode } from "react";
 import {
 	Outlet,
-	createRootRoute,
 	HeadContent,
 	Scripts,
+	createRootRouteWithContext,
 } from "@tanstack/react-router";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
@@ -18,12 +18,21 @@ import MobileLayout from "../components/layout/MobileLayout";
 import WideScreenLayout from "../components/layout/WideScreenLayout";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { TimerProvider } from "@/providers/timer/TimerProvider";
+import { AuthQueryProvider } from "@daveyplate/better-auth-tanstack";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ConfirmProvider } from "material-ui-confirm";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { createRootRoute } from "@tanstack/react-router";
+import { getUserSession } from "@/auth.api";
 
-export const Route = createRootRoute({
+export interface RouterContext {
+	session: Awaited<ReturnType<typeof getUserSession>>;
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
 	head: () => ({
 		meta: [
 			{
@@ -38,6 +47,9 @@ export const Route = createRootRoute({
 			},
 		],
 	}),
+	async beforeLoad(ctx) {
+		return { session: await getUserSession() } satisfies RouterContext;
+	},
 	component: RootComponent,
 });
 
@@ -59,6 +71,14 @@ const theme = createTheme({
 	},
 });
 
+export const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 1000 * 60,
+		},
+	},
+});
+
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 	return (
 		<html>
@@ -72,12 +92,21 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 					modeStorageKey={THEME_PREFERENCE_KEY}
 				/>
 				<main>
-					<ThemeProvider theme={theme} modeStorageKey={THEME_PREFERENCE_KEY}>
-						<CssBaseline enableColorScheme />
-						<TimerProvider>
-							<Layout>{children}</Layout>
-						</TimerProvider>
-					</ThemeProvider>
+					<QueryClientProvider client={queryClient}>
+						<AuthQueryProvider>
+							<ThemeProvider
+								theme={theme}
+								modeStorageKey={THEME_PREFERENCE_KEY}
+							>
+								<CssBaseline enableColorScheme />
+								<ConfirmProvider>
+									<TimerProvider>
+										<Layout>{children}</Layout>
+									</TimerProvider>
+								</ConfirmProvider>
+							</ThemeProvider>
+						</AuthQueryProvider>
+					</QueryClientProvider>
 				</main>
 			</body>
 		</html>

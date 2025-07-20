@@ -33,12 +33,15 @@ export function isRouteAListedRoute(
 	return true;
 }
 
-export function createRouter() {
-	const router = createTanStackRouter({
-		routeTree,
-		scrollRestoration: true,
-	});
+export const router = createTanStackRouter({
+	routeTree,
+	scrollRestoration: true,
+	context: {
+		session: undefined!,
+	},
+});
 
+export function createRouter() {
 	return router;
 }
 
