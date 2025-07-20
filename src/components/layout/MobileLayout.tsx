@@ -80,7 +80,12 @@ export default function MobileLayout(props: LayoutProps) {
 			>
 				<Toolbar />
 				<NavBar
-					topItems={[<UserCard sx={{ p: 2 }} />, <Box sx={{ my: 1 }} />]}
+					topItems={[
+						<Box sx={{ flexGrow: 1 }}>
+							<UserCard sx={{ p: 2 }} />
+						</Box>,
+						<Box sx={{ my: 1 }} />,
+					]}
 				/>
 			</SwipeableDrawer>
 			<SlideOnScroll target={scrollTarget}>
