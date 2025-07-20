@@ -1,5 +1,5 @@
 import { authClient, useSession } from "@/auth.client";
-import { Login, Logout } from "@mui/icons-material";
+import { AccountBox, Login, Logout } from "@mui/icons-material";
 import {
 	Avatar,
 	Card,
@@ -19,6 +19,7 @@ import {
 import { useState } from "react";
 import LoginForm from "./LoginForm";
 import ModeSwitch from "./ModeSwitch";
+import { Link } from "./MuiWrapper";
 
 interface MenuProps {
 	closeMenu: () => void;
@@ -55,6 +56,14 @@ function UserMenu(props: MenuProps) {
 
 	return (
 		<>
+			<Link underline="none" color="textPrimary" to="/account/management">
+				<MenuItem onClick={() => props.closeMenu()}>
+					<ListItemIcon>
+						<AccountBox />
+					</ListItemIcon>
+					My Account
+				</MenuItem>
+			</Link>
 			<MenuItem
 				onClick={() => {
 					props.closeMenu();

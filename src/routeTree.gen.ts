@@ -14,6 +14,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TimerRouteImport } from './routes/timer'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountManagementRouteImport } from './routes/account/management'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -33,6 +34,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountManagementRoute = AccountManagementRouteImport.update({
+  id: '/account/management',
+  path: '/account/management',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -43,30 +49,34 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/settings': typeof SettingsRoute
   '/timer': typeof TimerRoute
+  '/account/management': typeof AccountManagementRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/settings': typeof SettingsRoute
   '/timer': typeof TimerRoute
+  '/account/management': typeof AccountManagementRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/settings': typeof SettingsRoute
   '/timer': typeof TimerRoute
+  '/account/management': typeof AccountManagementRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/settings' | '/timer'
+  fullPaths: '/' | '/settings' | '/timer' | '/account/management'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/settings' | '/timer'
-  id: '__root__' | '/' | '/settings' | '/timer'
+  to: '/' | '/settings' | '/timer' | '/account/management'
+  id: '__root__' | '/' | '/settings' | '/timer' | '/account/management'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SettingsRoute: typeof SettingsRoute
   TimerRoute: typeof TimerRoute
+  AccountManagementRoute: typeof AccountManagementRoute
 }
 export interface FileServerRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatServerRoute
@@ -113,6 +123,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/management': {
+      id: '/account/management'
+      path: '/account/management'
+      fullPath: '/account/management'
+      preLoaderRoute: typeof AccountManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 declare module '@tanstack/react-start/server' {
@@ -131,6 +148,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SettingsRoute: SettingsRoute,
   TimerRoute: TimerRoute,
+  AccountManagementRoute: AccountManagementRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
