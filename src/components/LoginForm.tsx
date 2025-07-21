@@ -13,12 +13,14 @@ import Typography from "@mui/material/Typography";
 import GithubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 import MicrosoftIcon from "@mui/icons-material/Microsoft";
+import { confirm } from "material-ui-confirm";
 
 function OAuthButton(props: {
 	icon: ReactElement;
 	label: string;
 	provider: string;
 }) {
+	const location = useLocation();
 	return (
 		<Button
 			variant="outlined"
@@ -28,6 +30,7 @@ function OAuthButton(props: {
 				authClient.signIn.social({
 					provider: props.provider,
 					callbackURL: window.location.href,
+					newUserCallbackURL: "/newUser?from=" + location.pathname,
 				})
 			}
 		>
@@ -40,36 +43,37 @@ export default function LoginForm() {
 	const { href } = useLocation();
 	const formRef = useRef<HTMLFormElement>(null);
 
-	const handleEmailLogin = async (email: string, password: string) => {
-		const { data, error } = await authClient.signIn.email(
-			{
-				/**
-				 * The user email
-				 */
-				email,
-				/**
-				 * The user password
-				 */
-				password,
-				/**
-				 * A URL to redirect to after the user verifies their email (optional)
-				 */
-				callbackURL: href,
-				/**
-				 * remember the user session after the browser is closed.
-				 * @default true
-				 */
-				rememberMe: false,
-			},
-			{
-				//callbacks
-			},
-		);
+	const handleEmailLogin = async (
+		email: string,
+		password: string,
+		rememberMe: boolean,
+	) => {
+		const { error } = await authClient.signIn.email({
+			/**
+			 * The user email
+			 */
+			email,
+			/**
+			 * The user password
+			 */
+			password,
+			/**
+			 * A URL to redirect to after the user verifies their email (optional)
+			 */
+			callbackURL: href,
+			/**
+			 * remember the user session after the browser is closed.
+			 * @default true
+			 */
+			rememberMe,
+		});
 		if (error) {
 			for (const ele of formRef.current?.getElementsByTagName?.("input") ||
 				[]) {
-				ele.setCustomValidity(error.message || "Invalid input");
-				ele.reportValidity();
+				confirm({
+					description: error.message || "Invalid input",
+					hideCancelButton: true,
+				});
 			}
 		}
 	};
@@ -96,9 +100,11 @@ export default function LoginForm() {
 					onSubmit={(e) => {
 						e.preventDefault();
 						const formData = new FormData(e.target as HTMLFormElement);
+						console.log(formData.get("rememberMe"));
 						handleEmailLogin(
 							formData.get("email") as string,
 							formData.get("password") as string,
+							formData.get("rememberMe") == "on",
 						);
 					}}
 				>
@@ -121,6 +127,7 @@ export default function LoginForm() {
 					/>
 					<Tooltip title="Keep login even you close the browser" followCursor>
 						<FormControlLabel
+							name="rememberMe"
 							label="Remember me"
 							control={
 								<Checkbox size="small" sx={{ p: 0, mr: 1 }} defaultChecked />

@@ -31,6 +31,7 @@ function OAuthButton(props: {
 				authClient.signIn.social({
 					provider: props.provider,
 					callbackURL: window.location.href,
+					newUserCallbackURL: "/newUser?from=" + location.pathname,
 				})
 			}
 		>

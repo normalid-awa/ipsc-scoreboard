@@ -13,6 +13,7 @@ import { createServerRootRoute } from '@tanstack/react-start/server'
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TimerRouteImport } from './routes/timer'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as NewUserRouteImport } from './routes/newUser'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountManagementRouteImport } from './routes/account/management'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
@@ -27,6 +28,11 @@ const TimerRoute = TimerRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewUserRoute = NewUserRouteImport.update({
+  id: '/newUser',
+  path: '/newUser',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -47,12 +53,14 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/newUser': typeof NewUserRoute
   '/settings': typeof SettingsRoute
   '/timer': typeof TimerRoute
   '/account/management': typeof AccountManagementRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/newUser': typeof NewUserRoute
   '/settings': typeof SettingsRoute
   '/timer': typeof TimerRoute
   '/account/management': typeof AccountManagementRoute
@@ -60,20 +68,28 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/newUser': typeof NewUserRoute
   '/settings': typeof SettingsRoute
   '/timer': typeof TimerRoute
   '/account/management': typeof AccountManagementRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/settings' | '/timer' | '/account/management'
+  fullPaths: '/' | '/newUser' | '/settings' | '/timer' | '/account/management'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/settings' | '/timer' | '/account/management'
-  id: '__root__' | '/' | '/settings' | '/timer' | '/account/management'
+  to: '/' | '/newUser' | '/settings' | '/timer' | '/account/management'
+  id:
+    | '__root__'
+    | '/'
+    | '/newUser'
+    | '/settings'
+    | '/timer'
+    | '/account/management'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  NewUserRoute: typeof NewUserRoute
   SettingsRoute: typeof SettingsRoute
   TimerRoute: typeof TimerRoute
   AccountManagementRoute: typeof AccountManagementRoute
@@ -116,6 +132,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/newUser': {
+      id: '/newUser'
+      path: '/newUser'
+      fullPath: '/newUser'
+      preLoaderRoute: typeof NewUserRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -146,6 +169,7 @@ declare module '@tanstack/react-start/server' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  NewUserRoute: NewUserRoute,
   SettingsRoute: SettingsRoute,
   TimerRoute: TimerRoute,
   AccountManagementRoute: AccountManagementRoute,
