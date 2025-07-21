@@ -7,10 +7,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
 
-export const authClient = createAuthClient({
-	/** The base URL of the server (optional if you're using the same domain) */
-	// baseURL: "http://localhost:3000",
-});
+export const authClient = createAuthClient({});
 export const { signIn, signUp, useSession } = authClient;
 
 export function AuthProtectedComponent(props: { component: ReactElement }) {
