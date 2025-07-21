@@ -17,7 +17,7 @@ import { TimerProvider } from "@/providers/timer/TimerProvider";
 import { AuthQueryProvider } from "@daveyplate/better-auth-tanstack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfirmProvider } from "material-ui-confirm";
-import { getUserSession } from "@/auth.api";
+import { getUserSession } from "@/auth/auth.api";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";

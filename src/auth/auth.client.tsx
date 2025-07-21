@@ -1,5 +1,5 @@
 import { createAuthClient } from "better-auth/react";
-import LoginForm from "./components/LoginForm";
+import LoginForm from "../components/LoginForm";
 import { ReactElement } from "react";
 import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";

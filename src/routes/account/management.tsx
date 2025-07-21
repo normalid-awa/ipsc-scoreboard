@@ -1,5 +1,5 @@
-import { authClient, AuthProtectedComponent } from "@/auth.client";
-import { useListAccounts } from "@/auth.hooks";
+import { authClient, AuthProtectedComponent } from "@/auth/auth.client";
+import { useListAccounts } from "@/auth/auth.hooks";
 import { createFileRoute } from "@tanstack/react-router";
 import { confirm } from "material-ui-confirm";
 import { ReactElement, useMemo, useState } from "react";

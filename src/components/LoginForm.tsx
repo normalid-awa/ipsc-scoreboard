@@ -1,4 +1,4 @@
-import { authClient } from "@/auth.client";
+import { authClient } from "@/auth/auth.client";
 import { useLocation } from "@tanstack/react-router";
 import { ReactElement, useRef } from "react";
 import Button from "@mui/material/Button";
