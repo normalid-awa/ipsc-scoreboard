@@ -5,8 +5,8 @@ import {
 	TimerSetting,
 	TimerSettingProps,
 } from "../TimerProvider";
-import { Stack } from "@mui/material";
 import InputSlider from "@/components/inputs/InputSlider";
+import Stack from "@mui/material/Stack";
 
 const SERVICE_UUID = "812c3d3c-7af6-45e9-a873-edce7a58096a";
 

@@ -7,13 +7,9 @@ import {
 	createRootRouteWithContext,
 } from "@tanstack/react-router";
 import CssBaseline from "@mui/material/CssBaseline";
-import {
-	createTheme,
-	InitColorSchemeScript,
-	ThemeProvider,
-	useMediaQuery,
-	useTheme,
-} from "@mui/material";
+import { createTheme, ThemeProvider, useTheme } from "@mui/material/styles";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import MobileLayout from "../components/layout/MobileLayout";
 import WideScreenLayout from "../components/layout/WideScreenLayout";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
@@ -21,12 +17,11 @@ import { TimerProvider } from "@/providers/timer/TimerProvider";
 import { AuthQueryProvider } from "@daveyplate/better-auth-tanstack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfirmProvider } from "material-ui-confirm";
+import { getUserSession } from "@/auth.api";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { createRootRoute } from "@tanstack/react-router";
-import { getUserSession } from "@/auth.api";
 
 export interface RouterContext {
 	session: Awaited<ReturnType<typeof getUserSession>>;

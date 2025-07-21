@@ -1,21 +1,22 @@
 import { authClient, useSession } from "@/auth.client";
-import { AccountBox, Login, Logout } from "@mui/icons-material";
-import {
-	Avatar,
-	Card,
-	CardActionArea,
+import Avatar from "@mui/material/Avatar";
+import Card from "@mui/material/Card";
+import CardActionArea, {
 	CardActionAreaProps,
-	Dialog,
-	DialogContent,
-	DialogTitle,
-	Grid,
-	ListItem,
-	ListItemIcon,
-	Menu,
-	MenuItem,
-	Skeleton,
-	Typography,
-} from "@mui/material";
+} from "@mui/material/CardActionArea";
+import Grid from "@mui/material/Grid";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Skeleton from "@mui/material/Skeleton";
+import Typography from "@mui/material/Typography";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
 import { useState } from "react";
 import LoginForm from "./LoginForm";
 import ModeSwitch from "./ModeSwitch";
@@ -32,7 +33,7 @@ function GuestMenu(props: MenuProps) {
 		<>
 			<MenuItem onClick={() => setOpen(true)}>
 				<ListItemIcon>
-					<Login />
+					<LoginIcon />
 				</ListItemIcon>
 				<Typography>Login</Typography>
 			</MenuItem>
@@ -59,7 +60,7 @@ function UserMenu(props: MenuProps) {
 			<Link underline="none" color="textPrimary" to="/account/management">
 				<MenuItem onClick={() => props.closeMenu()}>
 					<ListItemIcon>
-						<AccountBox />
+						<AccountBoxIcon />
 					</ListItemIcon>
 					My Account
 				</MenuItem>
@@ -71,7 +72,7 @@ function UserMenu(props: MenuProps) {
 				}}
 			>
 				<ListItemIcon>
-					<Logout />
+					<LogoutIcon />
 				</ListItemIcon>
 				<Typography>Logout</Typography>
 			</MenuItem>

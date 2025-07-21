@@ -1,11 +1,9 @@
-import {
-	Box,
-	Grid,
-	Input,
-	InputAdornment,
-	Slider,
-	Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Input from "@mui/material/Input";
+import InputAdornment from "@mui/material/InputAdornment";
+import Slider from "@mui/material/Slider";
+import Typography from "@mui/material/Typography";
 
 export interface InputSliderProps<T extends number | number[]> {
 	label: string;
@@ -27,9 +25,7 @@ export default function InputSlider(
 	const handleSingleInputChange = (
 		event: React.ChangeEvent<HTMLInputElement>,
 	) => {
-		props.onChange(
-			event.target.value === "" ? 0 : Number(event.target.value),
-		);
+		props.onChange(event.target.value === "" ? 0 : Number(event.target.value));
 	};
 
 	const handleFirstInputChange = (
@@ -37,7 +33,6 @@ export default function InputSlider(
 	) => {
 		props.onChange([
 			event.target.value === "" ? 0 : Number(event.target.value),
-			//@ts-expect-error The props value must be arrray in this case
 			props.value[1],
 		]);
 	};
@@ -46,7 +41,6 @@ export default function InputSlider(
 		event: React.ChangeEvent<HTMLInputElement>,
 	) => {
 		props.onChange([
-			//@ts-expect-error The props value must be arrray in this case
 			props.value[0],
 			event.target.value === "" ? 0 : Number(event.target.value),
 		]);
@@ -61,9 +55,7 @@ export default function InputSlider(
 			]);
 		} else {
 			//clamp to min and max
-			props.onChange(
-				Math.max(props.min, Math.min(props.max, props.value)),
-			);
+			props.onChange(Math.max(props.min, Math.min(props.max, props.value)));
 		}
 	};
 
@@ -89,9 +81,7 @@ export default function InputSlider(
 								type: "number",
 							}}
 							endAdornment={
-								<InputAdornment position="end">
-									{props.unit}
-								</InputAdornment>
+								<InputAdornment position="end">{props.unit}</InputAdornment>
 							}
 						/>
 					</Grid>
@@ -109,11 +99,7 @@ export default function InputSlider(
 				</Grid>
 				<Grid size={{ xs: "auto" }}>
 					<Input
-						value={
-							Array.isArray(props.value)
-								? props.value[1]
-								: props.value
-						}
+						value={Array.isArray(props.value) ? props.value[1] : props.value}
 						size="small"
 						onChange={
 							Array.isArray(props.value)
@@ -128,9 +114,7 @@ export default function InputSlider(
 							type: "number",
 						}}
 						endAdornment={
-							<InputAdornment position="end">
-								{props.unit}
-							</InputAdornment>
+							<InputAdornment position="end">{props.unit}</InputAdornment>
 						}
 					/>
 				</Grid>

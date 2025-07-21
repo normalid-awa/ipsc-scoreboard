@@ -1,7 +1,11 @@
-import { Box, Collapse, Divider, Paper, Toolbar } from "@mui/material";
 import { LayoutProps } from "./Layout";
 import AppTopBar from "./AppTopBar";
 import NavBar from "./NavBar";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
+import Toolbar from "@mui/material/Toolbar";
+import Divider from "@mui/material/Divider";
 
 export default function WideScreenLayout(props: LayoutProps) {
 	return (

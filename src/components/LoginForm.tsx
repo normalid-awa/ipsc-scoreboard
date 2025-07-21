@@ -1,18 +1,18 @@
 import { authClient } from "@/auth.client";
-import { GitHub, Google, Microsoft } from "@mui/icons-material";
-import {
-	Button,
-	ButtonGroup,
-	Checkbox,
-	Divider,
-	FormControlLabel,
-	Stack,
-	TextField,
-	Tooltip,
-	Typography,
-} from "@mui/material";
 import { useLocation } from "@tanstack/react-router";
 import { ReactElement, useRef } from "react";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Checkbox from "@mui/material/Checkbox";
+import Divider from "@mui/material/Divider";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import GithubIcon from "@mui/icons-material/GitHub";
+import GoogleIcon from "@mui/icons-material/Google";
+import MicrosoftIcon from "@mui/icons-material/Microsoft";
 
 function OAuthButton(props: {
 	icon: ReactElement;
@@ -81,10 +81,10 @@ export default function LoginForm() {
 					<Typography variant="h5" textAlign={"center"}>
 						3-rd Party Login
 					</Typography>
-					<OAuthButton icon={<GitHub />} label="Github" provider="github" />
-					<OAuthButton icon={<Google />} label="Google" provider="google" />
+					<OAuthButton icon={<GithubIcon />} label="Github" provider="github" />
+					<OAuthButton icon={<GoogleIcon />} label="Google" provider="google" />
 					<OAuthButton
-						icon={<Microsoft />}
+						icon={<MicrosoftIcon />}
 						label="Microsoft"
 						provider="microsoft"
 					/>

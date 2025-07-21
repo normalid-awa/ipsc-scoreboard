@@ -5,33 +5,31 @@ import {
 	TimerSetting,
 	useTimer,
 } from "@/providers/timer/TimerProvider";
-import { ExpandMore } from "@mui/icons-material";
-import {
-	Accordion,
-	AccordionDetails,
-	AccordionSummary,
-	Button,
-	ButtonGroup,
-	CircularProgress,
-	Collapse,
-	Dialog,
-	DialogContent,
-	DialogTitle,
-	Divider,
-	FormControl,
-	FormControlLabel,
-	FormGroup,
-	InputLabel,
-	MenuItem,
-	Modal,
-	Select,
-	Stack,
-	Switch,
-	Typography,
-} from "@mui/material";
 import { useState } from "react";
 import InputSlider from "../inputs/InputSlider";
 import { beep } from "./Timer";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import Modal from "@mui/material/Modal";
+import CircularProgress from "@mui/material/CircularProgress";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Collapse from "@mui/material/Collapse";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface GeneralSettingsProps {
 	randomizeCountdownTime: boolean;
@@ -55,9 +53,7 @@ function GeneralSettings(props: GeneralSettingsProps) {
 						<Switch
 							checked={props.randomizeCountdownTime}
 							onChange={(e) =>
-								props.setRandomizeCountdownTime(
-									e.target.checked,
-								)
+								props.setRandomizeCountdownTime(e.target.checked)
 							}
 						/>
 					}
@@ -66,9 +62,7 @@ function GeneralSettings(props: GeneralSettingsProps) {
 				/>
 			</FormGroup>
 			<InputSlider
-				label={`Countdown time${
-					props.randomizeCountdownTime ? " range" : ""
-				}`}
+				label={`Countdown time${props.randomizeCountdownTime ? " range" : ""}`}
 				unit="s"
 				value={props.countdownTime}
 				onChange={(value) => props.setCountdownTime(value)}
@@ -143,8 +137,7 @@ export default function TimerMenuDialog(props: TimerMenuDialogProps) {
 	});
 
 	const expandPanel =
-		(panel: string) =>
-		(event: React.SyntheticEvent, isExpanded: boolean) => {
+		(panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
 			setExpanded(isExpanded ? panel : false);
 		};
 
@@ -233,28 +226,20 @@ export default function TimerMenuDialog(props: TimerMenuDialogProps) {
 							>
 								Ident
 							</Button>
-							<Button
-								variant="contained"
-								fullWidth
-								onClick={saveSetting}
-							>
+							<Button variant="contained" fullWidth onClick={saveSetting}>
 								Save setting
 							</Button>
 							<Accordion
 								expanded={expanded === "general"}
 								onChange={expandPanel("general")}
 							>
-								<AccordionSummary expandIcon={<ExpandMore />}>
-									<Typography component="span">
-										General settings
-									</Typography>
+								<AccordionSummary expandIcon={<ExpandMoreIcon />}>
+									<Typography component="span">General settings</Typography>
 								</AccordionSummary>
 								<AccordionDetails>
 									<GeneralSettings
 										buzzerDuration={settings.buzzerDuration}
-										buzzerFrequency={
-											settings.buzzerFrequency
-										}
+										buzzerFrequency={settings.buzzerFrequency}
 										buzzerWaveform={settings.buzzerWaveform}
 										countdownTime={
 											settings.randomizeCountdownTime
@@ -264,30 +249,16 @@ export default function TimerMenuDialog(props: TimerMenuDialogProps) {
 													]
 												: settings.countdownTime
 										}
-										randomizeCountdownTime={
-											settings.randomizeCountdownTime
-										}
-										setBuzzerDuration={setSettingByKey(
-											"buzzerDuration",
-										)}
-										setBuzzerFrequency={setSettingByKey(
-											"buzzerFrequency",
-										)}
-										setBuzzerWaveform={setSettingByKey(
-											"buzzerWaveform",
-										)}
+										randomizeCountdownTime={settings.randomizeCountdownTime}
+										setBuzzerDuration={setSettingByKey("buzzerDuration")}
+										setBuzzerFrequency={setSettingByKey("buzzerFrequency")}
+										setBuzzerWaveform={setSettingByKey("buzzerWaveform")}
 										setCountdownTime={(value) => {
 											if (Array.isArray(value)) {
-												setSettingByKey(
-													"randomCountdownTimeMin",
-												)(value[0]);
-												setSettingByKey(
-													"randomCountdownTimeMax",
-												)(value[1]);
+												setSettingByKey("randomCountdownTimeMin")(value[0]);
+												setSettingByKey("randomCountdownTimeMax")(value[1]);
 											} else {
-												setSettingByKey(
-													"countdownTime",
-												)(value);
+												setSettingByKey("countdownTime")(value);
 											}
 										}}
 										setRandomizeCountdownTime={setSettingByKey(
@@ -300,7 +271,7 @@ export default function TimerMenuDialog(props: TimerMenuDialogProps) {
 								expanded={expanded === "timer"}
 								onChange={expandPanel("timer")}
 							>
-								<AccordionSummary expandIcon={<ExpandMore />}>
+								<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 									<Typography component="span">
 										Timer specific settings
 									</Typography>
@@ -308,8 +279,7 @@ export default function TimerMenuDialog(props: TimerMenuDialogProps) {
 								<AccordionDetails>
 									{timer?.renderSettingWidget({
 										settingData: settings,
-										setSettingData: (v) =>
-											setSettings({ ...settings, ...v }),
+										setSettingData: (v) => setSettings({ ...settings, ...v }),
 									})}
 								</AccordionDetails>
 							</Accordion>

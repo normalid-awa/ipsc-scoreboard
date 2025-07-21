@@ -1,8 +1,10 @@
 import React from "react";
 import { createLink } from "@tanstack/react-router";
-import { Link as MuiLink, Button as MuiButton } from "@mui/material";
-import type { ButtonProps, LinkProps } from "@mui/material";
 import type { LinkComponent } from "@tanstack/react-router";
+import type { LinkProps } from "@mui/material/Link";
+import type { ButtonProps } from "@mui/material/Button";
+import MuiLink from "@mui/material/Link";
+import MuiButton from "@mui/material/Button";
 
 interface MUILinkProps extends LinkProps {
 	// Add any additional props you want to pass to the Link

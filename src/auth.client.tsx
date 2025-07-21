@@ -1,7 +1,11 @@
-import { Card, Chip, Container, Stack, Typography } from "@mui/material";
 import { createAuthClient } from "better-auth/react";
 import LoginForm from "./components/LoginForm";
 import { ReactElement } from "react";
+import Card from "@mui/material/Card";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Skeleton from "@mui/material/Skeleton";
 
 export const authClient = createAuthClient({
 	/** The base URL of the server (optional if you're using the same domain) */
@@ -11,6 +15,10 @@ export const { signIn, signUp, useSession } = authClient;
 
 export function AuthProtectedComponent(props: { component: ReactElement }) {
 	const session = useSession();
+	if (session.isPending) {
+		return <Skeleton width={"100%"} height={"100%"} />;
+	}
+
 	if (!session.data)
 		return (
 			<Stack

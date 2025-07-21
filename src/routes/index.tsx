@@ -1,9 +1,9 @@
 import * as fs from "node:fs";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { Button } from "@mui/material";
 import { ListedRouteStaticData } from "../router";
-import { Home } from "@mui/icons-material";
+import Button from "@mui/material/Button";
+import HomeIcon from "@mui/icons-material/Home";
 
 const filePath = "count.txt";
 
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
 	loader: async () => await getCount(),
 	staticData: {
 		displayName: "Home",
-		icon: <Home />,
+		icon: <HomeIcon />,
 		needAuth: false,
 		order: ROUTE_ORDER,
 	} satisfies ListedRouteStaticData,

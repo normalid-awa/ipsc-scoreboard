@@ -1,20 +1,19 @@
-import { authClient, AuthProtectedComponent, useSession } from "@/auth.client";
+import { authClient, AuthProtectedComponent } from "@/auth.client";
 import { useListAccounts } from "@/auth.hooks";
-import LoginForm from "@/components/LoginForm";
-import { Check, GitHub, Google, Microsoft } from "@mui/icons-material";
-import {
-	Box,
-	Button,
-	Container,
-	Divider,
-	Paper,
-	PaperProps,
-	Stack,
-	Typography,
-} from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
 import { confirm } from "material-ui-confirm";
 import { ReactElement, useMemo, useState } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import Paper, { PaperProps } from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import CheckIcon from "@mui/icons-material/Check";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import GoogleIcon from "@mui/icons-material/Google";
+import MicrosoftIcon from "@mui/icons-material/Microsoft";
 
 export const Route = createFileRoute("/account/management")({
 	component: () => <AuthProtectedComponent component={<RouteComponent />} />,
@@ -87,7 +86,7 @@ function ThirdPartyLinkButton(props: {
 					<Typography variant="button">{props.label}</Typography>
 					{linked && (
 						<Box sx={{ display: "flex", alignItems: "center" }}>
-							{<Check />}
+							{<CheckIcon />}
 							<Typography>Linked</Typography>
 						</Box>
 					)}
@@ -105,17 +104,17 @@ function ThirdPartyLinks() {
 			</Typography>
 			<Stack direction={"row"} justifyContent={"space-around"} spacing={2}>
 				<ThirdPartyLinkButton
-					icon={<GitHub fontSize="large" />}
+					icon={<GitHubIcon fontSize="large" />}
 					label="Github"
 					provider="github"
 				/>
 				<ThirdPartyLinkButton
-					icon={<Google fontSize="large" />}
+					icon={<GoogleIcon fontSize="large" />}
 					label="Google"
 					provider="google"
 				/>
 				<ThirdPartyLinkButton
-					icon={<Microsoft fontSize="large" />}
+					icon={<MicrosoftIcon fontSize="large" />}
 					label="Microsoft"
 					provider="microsoft"
 				/>

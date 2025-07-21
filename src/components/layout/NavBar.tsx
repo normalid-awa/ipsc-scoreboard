@@ -1,16 +1,14 @@
-import {
-	Divider,
-	Icon,
-	List,
-	ListItem,
-	ListItemAvatar,
-	ListItemButton,
-	ListItemText,
-} from "@mui/material";
 import { useRouter } from "@tanstack/react-router";
 import { isRouteAListedRoute } from "../../router";
 import { Link } from "../MuiWrapper";
 import { ReactElement } from "react";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Divider from "@mui/material/Divider";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Icon from "@mui/material/Icon";
+import ListItemText from "@mui/material/ListItemText";
 
 export interface NavBarProps {
 	topItems?: ReactElement[];

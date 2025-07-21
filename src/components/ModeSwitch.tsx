@@ -1,5 +1,9 @@
-import { AutoMode, DarkMode, LightMode } from "@mui/icons-material";
-import { ToggleButton, ToggleButtonGroup, useColorScheme } from "@mui/material";
+import { useColorScheme } from "@mui/material/styles";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import AutoModeIcon from "@mui/icons-material/AutoMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 
 export default function ModeSwitch() {
 	const { mode, setMode } = useColorScheme();
@@ -14,13 +18,13 @@ export default function ModeSwitch() {
 			color="primary"
 		>
 			<ToggleButton value="light">
-				<LightMode />
+				<LightModeIcon />
 			</ToggleButton>
 			<ToggleButton value="system">
-				<AutoMode />
+				<AutoModeIcon />
 			</ToggleButton>
 			<ToggleButton value="dark">
-				<DarkMode />
+				<DarkModeIcon />
 			</ToggleButton>
 		</ToggleButtonGroup>
 	);

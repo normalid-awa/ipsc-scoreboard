@@ -1,20 +1,5 @@
 "use client";
 
-import {
-	Avatar,
-	Box,
-	Button,
-	ButtonProps,
-	Collapse,
-	Grid,
-	GridProps,
-	List,
-	ListItemAvatar,
-	ListItemButton,
-	ListItemText,
-	Paper,
-	Typography,
-} from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { TransitionGroup } from "react-transition-group";
 import TimerMenuDialog from "./Menu";
@@ -23,6 +8,17 @@ import {
 	TimerEvent,
 	useTimer,
 } from "@/providers/timer/TimerProvider";
+import Grid, { GridProps } from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Button, { ButtonProps } from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import ListItemText from "@mui/material/ListItemText";
 
 interface TimeDisplayProps {
 	time: number;

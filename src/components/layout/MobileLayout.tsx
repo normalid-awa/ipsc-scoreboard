@@ -1,17 +1,15 @@
-import {
-	Box,
-	Collapse,
-	Paper,
-	Slide,
-	SwipeableDrawer,
-	Toolbar,
-	useScrollTrigger,
-} from "@mui/material";
 import { LayoutProps } from "./Layout";
 import { ReactElement, useEffect, useRef, useState } from "react";
 import AppTopBar from "./AppTopBar";
 import NavBar from "./NavBar";
 import { UserCard } from "../UserCard";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+import Slide from "@mui/material/Slide";
+import Collapse from "@mui/material/Collapse";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import Toolbar from "@mui/material/Toolbar";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 
 function SlideOnScroll({
 	children,
