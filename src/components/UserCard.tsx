@@ -21,6 +21,7 @@ import { useState } from "react";
 import LoginForm from "./LoginForm";
 import ModeSwitch from "./ModeSwitch";
 import { Link } from "./MuiWrapper";
+import { confirm } from "material-ui-confirm";
 
 interface MenuProps {
 	closeMenu: () => void;
@@ -66,9 +67,28 @@ function UserMenu(props: MenuProps) {
 				</MenuItem>
 			</Link>
 			<MenuItem
-				onClick={() => {
+				onClick={async () => {
 					props.closeMenu();
-					signOut();
+					const { confirmed } = await confirm({
+						description: "Are you sure you want to log out?",
+					});
+					if (confirmed) {
+						const { data, error } = await signOut();
+						if (error) {
+							console.error(error);
+							confirm({
+								description: `[${error.code}] ${error.message}`,
+								title: "Failed to log out.",
+								hideCancelButton: true,
+							});
+						} else {
+							confirm({
+								description: "You have been logged out.",
+								title: "Success",
+								hideCancelButton: true,
+							});
+						}
+					}
 				}}
 			>
 				<ListItemIcon>
