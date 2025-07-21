@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { reactStartCookies } from "better-auth/react-start";
 import db from "../db/db";
 import * as authSchema from "@/db/schema/auth-schema";
+import { username } from "better-auth/plugins";
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -33,5 +34,5 @@ export const auth = betterAuth({
 			tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER as string,
 		},
 	},
-	plugins: [reactStartCookies()],
+	plugins: [reactStartCookies(), username()],
 });

@@ -3,6 +3,7 @@ import { ListedRouteStaticData } from "../router";
 import { ROUTE_ORDER as PREV_ROUTE_ORDER } from "./timer";
 import ModeSwitch from "../components/ModeSwitch";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { SignedUpForm } from "@/components/SignedUpForm";
 
 export const ROUTE_ORDER = PREV_ROUTE_ORDER + 1;
 export const Route = createFileRoute("/settings")({
@@ -20,6 +21,7 @@ function SettingsPage() {
 		<>
 			<div>
 				<ModeSwitch />
+				<SignedUpForm />
 			</div>
 		</>
 	);

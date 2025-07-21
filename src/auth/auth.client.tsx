@@ -6,8 +6,11 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
+import { usernameClient } from "better-auth/client/plugins";
 
-export const authClient = createAuthClient({});
+export const authClient = createAuthClient({
+	plugins: [usernameClient()],
+});
 export const { signIn, signUp, useSession } = authClient;
 
 export function AuthProtectedComponent(props: { component: ReactElement }) {
