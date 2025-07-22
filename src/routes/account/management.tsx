@@ -1,5 +1,9 @@
-import { authClient, AuthProtectedComponent } from "@/auth/auth.client";
-import { useListAccounts } from "@/auth/auth.hooks";
+import {
+	authClient,
+	AuthProtectedComponent,
+	useSession,
+} from "@/auth/auth.client";
+import { useListAccounts, useUpdateUser } from "@/auth/auth.hooks";
 import { createFileRoute } from "@tanstack/react-router";
 import { confirm } from "material-ui-confirm";
 import { ReactElement, useMemo, useState } from "react";
@@ -14,10 +18,88 @@ import CheckIcon from "@mui/icons-material/Check";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 import MicrosoftIcon from "@mui/icons-material/Microsoft";
+import Grid from "@mui/material/Grid";
+import Avatar from "@mui/material/Avatar";
+import Fab from "@mui/material/Fab";
+import EditIcon from "@mui/icons-material/Edit";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
 
 export const Route = createFileRoute("/account/management")({
 	component: () => <AuthProtectedComponent component={<RouteComponent />} />,
 });
+
+function AccountInfo() {
+	const { data } = useSession();
+	const { mutate: updateUser } = useUpdateUser();
+	const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+	return (
+		<>
+			<Dialog
+				open={editDialogOpen}
+				onClose={() => setEditDialogOpen(false)}
+				component={"form"}
+				onReset={() => setEditDialogOpen(false)}
+				onSubmit={(e) => {
+					e.preventDefault();
+					const formData = new FormData(e.target as HTMLFormElement);
+					updateUser({
+						name: formData.get("name") as string,
+					});
+					setEditDialogOpen(false);
+				}}
+			>
+				<DialogTitle>Edit Account Info</DialogTitle>
+				<Divider />
+				<DialogContent>
+					<TextField label="Name" name="name" defaultValue={data?.user.name} />
+				</DialogContent>
+				<Divider />
+				<DialogActions>
+					<Button type="reset">Cancel</Button>
+					<Button type="submit">Save</Button>
+				</DialogActions>
+			</Dialog>
+			<Typography variant="h5" sx={{ mb: 2 }}>
+				Account info
+			</Typography>
+			<Paper variant="outlined" sx={{ p: 2 }}>
+				<Fab
+					sx={{ float: "right" }}
+					color="primary"
+					variant="extended"
+					onClick={() => setEditDialogOpen(true)}
+				>
+					<EditIcon />
+					Edit info
+				</Fab>
+				<Grid container rowSpacing={2}>
+					<Grid size={{ xs: 12, sm: "auto" }}>
+						<Avatar
+							sx={{ height: "8rem", width: "8rem", mr: 5 }}
+							src={data?.user.image || ""}
+						/>
+					</Grid>
+					<Grid size={{ xs: 12, sm: "grow" }} container sx={{ flexGrow: 1 }}>
+						<Grid size={12}>
+							<Typography variant="h5">{data?.user.name}</Typography>
+						</Grid>
+						<Grid size={12}>
+							<Typography variant="body1">Email: {data?.user.email}</Typography>
+							<Typography variant="body1">
+								Username: {data?.user.username || "N/A"}
+							</Typography>
+						</Grid>
+					</Grid>
+				</Grid>
+			</Paper>
+		</>
+	);
+}
 
 function ThirdPartyLinkButton(props: {
 	icon: ReactElement;
@@ -133,6 +215,9 @@ function RouteComponent() {
 			<Container maxWidth="md">
 				<h1>Account Management</h1>
 				<Stack divider={<Divider />} spacing={2}>
+					<SettingBlock>
+						<AccountInfo />
+					</SettingBlock>
 					<SettingBlock>
 						<ThirdPartyLinks />
 					</SettingBlock>
