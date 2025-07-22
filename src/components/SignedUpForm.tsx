@@ -1,4 +1,4 @@
-import { authClient } from "@/auth/auth.client";
+import { authClient, useSession } from "@/auth/auth.client";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -83,11 +83,14 @@ export function SignedUpForm() {
 				hideCancelButton: true,
 			});
 		}
-		confirm({
+
+		await confirm({
 			title: "Success",
-			description: "You have successfully signed up!",
+			description: "Please check your email for verification",
+			confirmationText: "Verified, refresh the page",
 			hideCancelButton: true,
 		});
+		window.location.reload();
 	}
 
 	return (

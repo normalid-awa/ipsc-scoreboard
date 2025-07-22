@@ -4,6 +4,20 @@ import { reactStartCookies } from "better-auth/react-start";
 import db from "../db/db";
 import * as authSchema from "@/db/schema/auth-schema";
 import { username } from "better-auth/plugins";
+import nodemailer from "nodemailer";
+const emailVerificationHtmlTemplate = (
+	await import(`@/email/template/verificationEmailTemplate.html?raw`)
+).default;
+
+const transporter = nodemailer.createTransport({
+	host: process.env.SMTP_HOST as string,
+	port: parseInt(process.env.SMTP_PORT as string),
+	secure: false, // true for 465, false for other ports
+	auth: {
+		user: process.env.SMTP_USER as string,
+		pass: process.env.SMTP_PASSWORD as string,
+	},
+});
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -18,6 +32,24 @@ export const auth = betterAuth({
 	},
 	emailAndPassword: {
 		enabled: true,
+		requireEmailVerification: true,
+	},
+	emailVerification: {
+		sendOnSignUp: true,
+		autoSignInAfterVerification: true,
+		sendVerificationEmail: async ({ user, url, token }, request) => {
+			const info = await transporter.sendMail({
+				from: process.env.SMTP_EMAIL_VERIFY_FROM as string,
+				to: user.email,
+				subject: "Verify your email address",
+				text: `Click the link to verify your email: ${url}`, // plain‑text body
+				html: emailVerificationHtmlTemplate.replace(
+					"{{verificationLink}}",
+					url,
+				), // HTML body
+			});
+			console.log(info);
+		},
 	},
 	socialProviders: {
 		github: {
