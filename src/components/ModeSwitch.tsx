@@ -12,6 +12,7 @@ export default function ModeSwitch() {
 	}
 	return (
 		<ToggleButtonGroup
+			fullWidth
 			value={mode}
 			onChange={(event, value) => setMode(value as "system" | "light" | "dark")}
 			exclusive

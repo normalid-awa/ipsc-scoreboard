@@ -22,6 +22,8 @@ import LoginForm from "./LoginForm";
 import ModeSwitch from "./ModeSwitch";
 import { Link } from "./MuiWrapper";
 import { confirm } from "material-ui-confirm";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 interface MenuProps {
 	closeMenu: () => void;
@@ -101,6 +103,8 @@ function UserMenu(props: MenuProps) {
 }
 
 export function UserCard(props: CardActionAreaProps) {
+	const theme = useTheme();
+	const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 	const [menuAnchorEl, setMenuAnchorEl] = useState<Element | null>(null);
 	const { data, isPending } = useSession();
 
@@ -132,6 +136,18 @@ export function UserCard(props: CardActionAreaProps) {
 				open={Boolean(menuAnchorEl)}
 				anchorEl={menuAnchorEl}
 				onClose={closeMenu}
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: mobile ? "left" : "right",
+				}}
+				slotProps={{
+					paper: {
+						sx: {
+							overflow: "visible",
+							width: 300,
+						},
+					},
+				}}
 			>
 				<ListItem>
 					<ModeSwitch />
