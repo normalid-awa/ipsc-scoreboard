@@ -96,9 +96,6 @@ export function SignedUpForm() {
 	return (
 		<>
 			<Stack>
-				<Typography variant="h3" textAlign={"center"} sx={{ mb: 2 }}>
-					Sign up
-				</Typography>
 				<Accordion
 					expanded={expand === "3rd-party"}
 					onChange={() => setExpand("3rd-party")}

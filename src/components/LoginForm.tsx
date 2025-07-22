@@ -1,6 +1,6 @@
 import { authClient } from "@/auth/auth.client";
 import { useLocation } from "@tanstack/react-router";
-import { ReactElement, useRef } from "react";
+import { ReactElement, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Checkbox from "@mui/material/Checkbox";
@@ -14,6 +14,10 @@ import GithubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 import MicrosoftIcon from "@mui/icons-material/Microsoft";
 import { confirm } from "material-ui-confirm";
+import Dialog from "@mui/material/Dialog";
+import { SignedUpForm } from "./SignedUpForm";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
 
 function OAuthButton(props: {
 	icon: ReactElement;
@@ -42,6 +46,7 @@ function OAuthButton(props: {
 export default function LoginForm() {
 	const { href } = useLocation();
 	const formRef = useRef<HTMLFormElement>(null);
+	const [signUpFormOpen, setSignUpFormOpen] = useState(false);
 
 	const handleEmailLogin = async (
 		email: string,
@@ -80,6 +85,17 @@ export default function LoginForm() {
 
 	return (
 		<>
+			<Dialog
+				onClose={() => setSignUpFormOpen(false)}
+				open={signUpFormOpen}
+				maxWidth="md"
+				fullWidth
+			>
+				<DialogTitle>Sign up</DialogTitle>
+				<DialogContent>
+					<SignedUpForm />
+				</DialogContent>
+			</Dialog>
 			<Stack divider={<Divider />} spacing={2}>
 				<Stack spacing={2}>
 					<Typography variant="h5" textAlign={"center"}>
@@ -135,7 +151,11 @@ export default function LoginForm() {
 						/>
 					</Tooltip>
 					<ButtonGroup fullWidth>
-						<Button variant="outlined" size="large">
+						<Button
+							variant="outlined"
+							size="large"
+							onClick={() => setSignUpFormOpen(true)}
+						>
 							Sign up
 						</Button>
 						<Button variant="contained" size="large" type="submit">

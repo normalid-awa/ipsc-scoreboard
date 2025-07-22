@@ -21,7 +21,6 @@ function SettingsPage() {
 		<>
 			<div>
 				<ModeSwitch />
-				<SignedUpForm />
 			</div>
 		</>
 	);
