@@ -3,7 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { reactStartCookies } from "better-auth/react-start";
 import db from "../db/db";
 import * as authSchema from "@/db/schema/auth-schema";
-import { emailOTP, username } from "better-auth/plugins";
+import { emailOTP, multiSession, username } from "better-auth/plugins";
 import nodemailer from "nodemailer";
 
 const emailVerificationHtmlTemplate = (
@@ -37,6 +37,7 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 		requireEmailVerification: true,
+		revokeSessionsOnPasswordReset: true,
 	},
 	emailVerification: {
 		sendOnSignUp: true,
@@ -99,5 +100,6 @@ export const auth = betterAuth({
 				console.log(info);
 			},
 		}),
+		multiSession(),
 	],
 });

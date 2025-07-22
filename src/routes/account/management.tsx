@@ -3,7 +3,12 @@ import {
 	AuthProtectedComponent,
 	useSession,
 } from "@/auth/auth.client";
-import { useListAccounts, useUpdateUser } from "@/auth/auth.hooks";
+import {
+	useListAccounts,
+	useListSessions,
+	useRevokeSession,
+	useUpdateUser,
+} from "@/auth/auth.hooks";
 import { createFileRoute } from "@tanstack/react-router";
 import { confirm } from "material-ui-confirm";
 import { ReactElement, useMemo, useState } from "react";
@@ -27,6 +32,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const Route = createFileRoute("/account/management")({
 	component: () => <AuthProtectedComponent component={<RouteComponent />} />,
@@ -205,6 +214,38 @@ function ThirdPartyLinks() {
 	);
 }
 
+function SessionDevices() {
+	const { data } = useListSessions();
+	const { mutate: revokeSession } = useRevokeSession();
+
+	const revoke = (token: string) => async () => {
+		revokeSession({ token });
+	};
+
+	return (
+		<>
+			<Typography variant="h5" sx={{ mb: 2 }}>
+				Session Devices
+			</Typography>
+			<Stack divider={<Divider />}>
+				{data?.map((device) => (
+					<ListItem
+						disablePadding
+						key={device.id}
+						secondaryAction={
+							<IconButton onClick={revoke(device.token)}>
+								<DeleteIcon />
+							</IconButton>
+						}
+					>
+						<Paper>{device.userAgent}</Paper>
+					</ListItem>
+				))}
+			</Stack>
+		</>
+	);
+}
+
 function SettingBlock(props: PaperProps) {
 	return <Paper {...props} elevation={3} sx={{ p: 2 }} />;
 }
@@ -220,6 +261,9 @@ function RouteComponent() {
 					</SettingBlock>
 					<SettingBlock>
 						<ThirdPartyLinks />
+					</SettingBlock>
+					<SettingBlock>
+						<SessionDevices />
 					</SettingBlock>
 				</Stack>
 			</Container>
