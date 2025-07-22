@@ -15,6 +15,7 @@ import { Route as TimerRouteImport } from './routes/timer'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as NewUserRouteImport } from './routes/newUser'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountResetPasswordRouteImport } from './routes/account/resetPassword'
 import { Route as AccountManagementRouteImport } from './routes/account/management'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
@@ -40,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountResetPasswordRoute = AccountResetPasswordRouteImport.update({
+  id: '/account/resetPassword',
+  path: '/account/resetPassword',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountManagementRoute = AccountManagementRouteImport.update({
   id: '/account/management',
   path: '/account/management',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/timer': typeof TimerRoute
   '/account/management': typeof AccountManagementRoute
+  '/account/resetPassword': typeof AccountResetPasswordRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/timer': typeof TimerRoute
   '/account/management': typeof AccountManagementRoute
+  '/account/resetPassword': typeof AccountResetPasswordRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -72,12 +80,25 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/timer': typeof TimerRoute
   '/account/management': typeof AccountManagementRoute
+  '/account/resetPassword': typeof AccountResetPasswordRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/newUser' | '/settings' | '/timer' | '/account/management'
+  fullPaths:
+    | '/'
+    | '/newUser'
+    | '/settings'
+    | '/timer'
+    | '/account/management'
+    | '/account/resetPassword'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/newUser' | '/settings' | '/timer' | '/account/management'
+  to:
+    | '/'
+    | '/newUser'
+    | '/settings'
+    | '/timer'
+    | '/account/management'
+    | '/account/resetPassword'
   id:
     | '__root__'
     | '/'
@@ -85,6 +106,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/timer'
     | '/account/management'
+    | '/account/resetPassword'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,6 +115,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   TimerRoute: typeof TimerRoute
   AccountManagementRoute: typeof AccountManagementRoute
+  AccountResetPasswordRoute: typeof AccountResetPasswordRoute
 }
 export interface FileServerRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatServerRoute
@@ -146,6 +169,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/resetPassword': {
+      id: '/account/resetPassword'
+      path: '/account/resetPassword'
+      fullPath: '/account/resetPassword'
+      preLoaderRoute: typeof AccountResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/management': {
       id: '/account/management'
       path: '/account/management'
@@ -173,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   TimerRoute: TimerRoute,
   AccountManagementRoute: AccountManagementRoute,
+  AccountResetPasswordRoute: AccountResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

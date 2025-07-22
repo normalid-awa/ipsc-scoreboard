@@ -18,6 +18,7 @@ import Dialog from "@mui/material/Dialog";
 import { SignedUpForm } from "./SignedUpForm";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
+import { Link } from "./MuiWrapper";
 
 function OAuthButton(props: {
 	icon: ReactElement;
@@ -162,6 +163,11 @@ export default function LoginForm() {
 							Login
 						</Button>
 					</ButtonGroup>
+					<Link to="/account/resetPassword">
+						<Button fullWidth size="small">
+							Forgot password?
+						</Button>
+					</Link>
 				</Stack>
 			</Stack>
 		</>

@@ -6,10 +6,10 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
-import { usernameClient } from "better-auth/client/plugins";
+import { emailOTPClient, usernameClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-	plugins: [usernameClient()],
+	plugins: [usernameClient(), emailOTPClient()],
 });
 export const { signIn, signUp, useSession } = authClient;
 
