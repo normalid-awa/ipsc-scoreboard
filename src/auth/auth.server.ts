@@ -3,15 +3,16 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { reactStartCookies } from "better-auth/react-start";
 import db from "../db/db";
 import * as authSchema from "@/db/schema/auth-schema";
-import { emailOTP, multiSession, username } from "better-auth/plugins";
+import {
+	emailOTP,
+	multiSession,
+	username,
+	organization,
+} from "better-auth/plugins";
 import nodemailer from "nodemailer";
 
-const emailVerificationHtmlTemplate = (
-	await import(`@/email/template/verificationEmailTemplate.html?raw`)
-).default;
-const passwordResetVerificationCodeHtmlTemplate = (
-	await import(`@/email/template/passwordResetVerificationCode.html?raw`)
-).default;
+let emailVerificationHtmlTemplate: string;
+let passwordResetVerificationCodeHtmlTemplate: string;
 
 const transporter = nodemailer.createTransport({
 	host: process.env.SMTP_HOST as string,
@@ -43,6 +44,11 @@ export const auth = betterAuth({
 		sendOnSignUp: true,
 		autoSignInAfterVerification: true,
 		sendVerificationEmail: async ({ user, url, token }, request) => {
+			if (!emailVerificationHtmlTemplate)
+				emailVerificationHtmlTemplate = (
+					await import(`@/email/template/verificationEmailTemplate.html?raw`)
+				).default;
+
 			const info = await transporter.sendMail({
 				from: process.env.SMTP_EMAIL_VERIFY_FROM as string,
 				to: user.email,
@@ -77,6 +83,13 @@ export const auth = betterAuth({
 		emailOTP({
 			expiresIn: 5 * 60,
 			async sendVerificationOTP({ email, otp, type }) {
+				if (!emailVerificationHtmlTemplate)
+					passwordResetVerificationCodeHtmlTemplate = (
+						await import(
+							`@/email/template/passwordResetVerificationCode.html?raw`
+						)
+					).default;
+
 				let subject = "";
 				let html = ";";
 
@@ -101,5 +114,8 @@ export const auth = betterAuth({
 			},
 		}),
 		multiSession(),
+		organization({
+			allowUserToCreateOrganization: true,
+		}),
 	],
 });

@@ -15,6 +15,13 @@
       "when": 1753069533427,
       "tag": "0001_auth add username",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1753190006845,
+      "tag": "0002_add organization",
+      "breakpoints": true
     }
   ]
 }

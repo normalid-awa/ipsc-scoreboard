@@ -10,10 +10,16 @@ import {
 	emailOTPClient,
 	multiSessionClient,
 	usernameClient,
+	organizationClient,
 } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-	plugins: [usernameClient(), emailOTPClient(), multiSessionClient()],
+	plugins: [
+		usernameClient(),
+		emailOTPClient(),
+		multiSessionClient(),
+		organizationClient(),
+	],
 });
 export const { signIn, signUp, useSession } = authClient;
 

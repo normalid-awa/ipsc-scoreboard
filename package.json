@@ -5,6 +5,7 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
+		"auth:generate": "npx @better-auth/cli generate --config ./src/auth/auth.server.ts",
 		"dev": "vite dev",
 		"build": "vite build"
 	},
