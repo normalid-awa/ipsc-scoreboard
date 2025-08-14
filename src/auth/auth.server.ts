@@ -1,8 +1,6 @@
 import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { reactStartCookies } from "better-auth/react-start";
-import db from "../db/db";
-import * as authSchema from "@/db/schema/auth-schema";
 import {
 	emailOTP,
 	multiSession,
@@ -10,6 +8,10 @@ import {
 	organization,
 } from "better-auth/plugins";
 import nodemailer from "nodemailer";
+import { MongoClient } from "mongodb";
+
+const client = new MongoClient(process.env.DATABASE_URL as string);
+const db = client.db();
 
 let emailVerificationHtmlTemplate: string;
 let passwordResetVerificationCodeHtmlTemplate: string;
@@ -25,10 +27,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export const auth = betterAuth({
-	database: drizzleAdapter(db, {
-		provider: "pg",
-		schema: { ...authSchema },
-	}),
+	database: mongodbAdapter(db),
 	advanced: {
 		ipAddress: {
 			ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
