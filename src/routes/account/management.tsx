@@ -65,7 +65,12 @@ function AccountInfo() {
 				<DialogTitle>Edit Account Info</DialogTitle>
 				<Divider />
 				<DialogContent>
-					<TextField label="Name" name="name" defaultValue={data?.user.name} />
+					<TextField
+						label="Name"
+						name="name"
+						defaultValue={data?.user.name}
+						required
+					/>
 				</DialogContent>
 				<Divider />
 				<DialogActions>
