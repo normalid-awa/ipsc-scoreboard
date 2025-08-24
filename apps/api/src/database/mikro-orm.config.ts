@@ -7,8 +7,8 @@ import { EntityGenerator } from "@mikro-orm/entity-generator";
 const ormConfig: Options = {
 	driver: PostgreSqlDriver,
 	clientUrl: appConfig.database.connectionString,
-	entities: ["dist/database/entities/*.js"],
-	entitiesTs: ["src/database/entities/*.ts"],
+	entities: ["dist/database/entities/**/*.js"],
+	entitiesTs: ["src/database/entities/**/*.ts"],
 	migrations: {
 		path: "dist/database/migrations",
 		pathTs: "src/database/migrations",
