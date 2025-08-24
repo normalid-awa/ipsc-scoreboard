@@ -1,0 +1,37 @@
+{
+	"name": "@ipsc_scoreboard/api",
+	"type": "module",
+	"scripts": {
+		"dev": "tsx watch --clear-screen=false --env-file=.env.development src/index.ts",
+		"orm:generate": "npx mikro-orm-esm generate-entities --save --path=./src/entities",
+		"auth:generate": "npx @better-auth/cli generate --config ./src/auth/auth.ts",
+		"1dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
+		"build": "tsc",
+		"start": "node dist/index.js"
+	},
+	"dependencies": {
+		"@hono/node-server": "^1.19.0",
+		"@mikro-orm/core": "^6.4.16",
+		"@mikro-orm/entity-generator": "^6.4.16",
+		"@mikro-orm/migrations": "^6.4.16",
+		"@mikro-orm/postgresql": "^6.4.16",
+		"@mikro-orm/reflection": "^6.4.16",
+		"better-auth-mikro-orm": "^0.4.3",
+		"hono": "^4.9.2",
+		"nodemailer": "^7.0.5",
+		"pg": "^8.16.0"
+	},
+	"devDependencies": {
+		"@mikro-orm/cli": "^6.4.16",
+		"@types/nodemailer": "^7.0.0",
+		"ts-node": "^10.9.2",
+		"tsx": "^4.7.1"
+	},
+	"mikro-orm": {
+		"useTsNode": true,
+		"tsConfigPath": "./tsconfig.json",
+		"configPaths": [
+			"./src/database/mikro-orm.config.ts"
+		]
+	}
+}
