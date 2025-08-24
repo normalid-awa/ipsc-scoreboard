@@ -28,4 +28,5 @@ lerna-debug.log*
 # misc
 .DS_Store
 
+src/config.ts
 temp
