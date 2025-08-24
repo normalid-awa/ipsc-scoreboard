@@ -1,4 +1,4 @@
-import { betterAuth } from "better-auth";
+import { betterAuth, BetterAuthOptions } from "better-auth";
 import { reactStartCookies } from "better-auth/react-start";
 import {
 	emailOTP,
@@ -26,7 +26,7 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
-export const auth = betterAuth({
+const authConfig = {
 	database: mikroOrmAdapter(orm),
 	logger: {
 		level: process.env.NODE_ENV === "development" ? "debug" : "warn",
@@ -130,4 +130,8 @@ export const auth = betterAuth({
 		openAPI(),
 		reactStartCookies(),
 	],
-});
+} satisfies BetterAuthOptions;
+
+export const auth = betterAuth(authConfig) as ReturnType<
+	typeof betterAuth<typeof authConfig>
+>;
