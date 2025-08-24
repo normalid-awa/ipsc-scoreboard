@@ -21,7 +21,7 @@ const env = createEnv({
 		AUTH_MICROSOFT_ENTRA_ID_SECRET: z.string(),
 
 		SMTP_HOST: z.string(),
-		SMTP_PORT: z.number(),
+		SMTP_PORT: z.coerce.number(),
 		SMTP_USER: z.string(),
 		SMTP_PASSWORD: z.string(),
 		SMTP_EMAIL_VERIFY_FROM: z.string(),

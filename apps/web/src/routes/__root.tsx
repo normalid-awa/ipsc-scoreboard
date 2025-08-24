@@ -5,19 +5,8 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanstackDevtools } from "@tanstack/react-devtools";
-
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
-
 import appCss from "../styles.css?url";
-
-import { type QueryClient } from "@tanstack/react-query";
-// import { getUserSession } from "@/auth/auth.api";
-
-interface MyRouterContext {
-	queryClient: QueryClient;
-	// session: Awaited<ReturnType<typeof getUserSession>>;
-}
-
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -36,6 +25,7 @@ import { TimerProvider } from "@/providers/timer/TimerProvider";
 import MobileLayout from "@/components/layout/MobileLayout";
 import WideScreenLayout from "@/components/layout/WideScreenLayout";
 import { ReactNode, useState } from "react";
+import { MyRouterContext } from "@/router";
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
 	head: () => ({
@@ -58,12 +48,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			},
 		],
 	}),
-	// async beforeLoad(ctx) {
-	// 	return {
-	// 		...ctx.context,
-	// 		session: await getUserSession(),
-	// 	} satisfies MyRouterContext;
-	// },
 	shellComponent: RootDocument,
 });
 

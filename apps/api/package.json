@@ -21,6 +21,7 @@
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.19.0",
+		"@hono/zod-validator": "^0.7.2",
 		"@mikro-orm/core": "^6.4.16",
 		"@mikro-orm/entity-generator": "^6.4.16",
 		"@mikro-orm/migrations": "^6.4.16",

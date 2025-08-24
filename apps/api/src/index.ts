@@ -6,6 +6,9 @@ import orm from "./database/orm.js";
 import authApp from "./auth/api.js";
 import { createServer } from "node:https";
 import { readFileSync } from "node:fs";
+import z from "zod";
+import { zValidator } from "@hono/zod-validator";
+import env from "./env.js";
 
 type Variables = {
 	orm: typeof orm;
@@ -20,40 +23,47 @@ const app = new Hono<{
 app.use("*", (c, next) => {
 	c.set("orm", orm);
 	return next();
-});
+})
+	.use(
+		"*", // or replace with "*" to enable cors for all routes
+		cors({
+			origin: process.env.FRONTEND_URL || "", // replace with your origin
+			allowHeaders: ["Content-Type", "Authorization"],
+			allowMethods: ["POST", "GET", "OPTIONS"],
+			exposeHeaders: ["Content-Length"],
+			maxAge: 600,
+			credentials: true,
+		}),
+	)
+	.use("*", async (c, next) => {
+		const session = await auth.api.getSession({
+			headers: c.req.raw.headers,
+		});
 
-app.use(
-	"*", // or replace with "*" to enable cors for all routes
-	cors({
-		origin: process.env.FRONTEND_URL || "", // replace with your origin
-		allowHeaders: ["Content-Type", "Authorization"],
-		allowMethods: ["POST", "GET", "OPTIONS"],
-		exposeHeaders: ["Content-Length"],
-		maxAge: 600,
-		credentials: true,
-	}),
-);
+		if (!session) {
+			c.set("user", null);
+			c.set("session", null);
+			return next();
+		}
 
-app.use("*", async (c, next) => {
-	const session = await auth.api.getSession({ headers: c.req.raw.headers });
-
-	if (!session) {
-		c.set("user", null);
-		c.set("session", null);
+		c.set("user", session.user);
+		c.set("session", session.session);
 		return next();
-	}
+	});
 
-	c.set("user", session.user);
-	c.set("session", session.session);
-	return next();
-});
-
-app.get("/redirect", (c) => {
-	console.log(c.req.query("to"));
-	return c.redirect(c.req.query("to") || "/");
-});
-
-const routes = app.route("/auth", authApp);
+const routes = app.route("/auth", authApp).get(
+	"/redirect",
+	zValidator(
+		"query",
+		z.object({
+			to: z.string().url().includes(env.FRONTEND_URL),
+		}),
+	),
+	(c) => {
+		console.log(c.req.query("to"));
+		return c.redirect(c.req.query("to") || "/");
+	},
+);
 
 serve(
 	{

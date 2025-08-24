@@ -4,10 +4,16 @@ import {
 } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import * as TanstackQuery from "./providers/root-provider";
-
-// Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import { ReactElement } from "react";
+import { hc } from "hono/client";
+import { AppType } from "@ipsc_scoreboard/api";
+import { QueryClient } from "@tanstack/react-query";
+
+export interface MyRouterContext {
+	queryClient: QueryClient;
+	rpc: ReturnType<typeof hc<AppType>>;
+}
 
 export interface ListedRouteStaticData extends StaticDataRouteOption {
 	displayName: string;
@@ -41,12 +47,13 @@ export function isRouteAListedRoute(
 export const createRouter = () => {
 	const rqContext = TanstackQuery.getContext();
 
+	const client = hc<AppType>("");
+
 	const router = createTanstackRouter({
 		routeTree,
 		context: {
-			...rqContext /**
-			 session: undefined! 
-		*/,
+			...rqContext,
+			rpc: client,
 		},
 		defaultPreload: "intent",
 		Wrap: (props: { children: React.ReactNode }) => {
