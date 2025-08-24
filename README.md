@@ -8,3 +8,6 @@
 # Server-side setup
 
 # Client-side setup
+
+# Contributing
+1. Commit messages should follow the [conventional commit standard](https://www.conventionalcommits.org/en/v1.0.0/).
