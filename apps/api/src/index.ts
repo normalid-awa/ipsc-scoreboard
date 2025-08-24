@@ -60,7 +60,6 @@ const routes = app.route("/auth", authApp).get(
 		}),
 	),
 	(c) => {
-		console.log(c.req.query("to"));
 		return c.redirect(c.req.query("to") || "/");
 	},
 );
