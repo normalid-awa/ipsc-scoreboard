@@ -48,16 +48,12 @@ app.use("*", async (c, next) => {
 	return next();
 });
 
-app.route("/auth", authApp);
-
-app.get("/hello", (c) => {
-	return c.text(`Hello Hono! ${c.var.user?.id}`);
-});
-
 app.get("/redirect", (c) => {
 	console.log(c.req.query("to"));
 	return c.redirect(c.req.query("to") || "/");
 });
+
+const routes = app.route("/auth", authApp);
 
 serve(
 	{
@@ -76,3 +72,4 @@ serve(
 );
 
 export default app;
+export type AppType = typeof routes;
