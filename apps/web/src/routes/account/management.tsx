@@ -33,12 +33,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
 import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import env from "@/env";
 
 export const Route = createFileRoute("/account/management")({
 	component: () => <AuthProtectedComponent component={<RouteComponent />} />,
+	head: () => ({
+		meta: [{ title: `${env.VITE_TITLE_PREFIX} Account Management` }],
+	}),
 });
 
 function AccountInfo() {

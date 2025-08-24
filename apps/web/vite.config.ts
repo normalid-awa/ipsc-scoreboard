@@ -4,16 +4,17 @@ import viteReact from "@vitejs/plugin-react-swc";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
 import { readFileSync } from "fs";
+import env from "@/env";
 
 const config = defineConfig((confEnv) => {
-	const env = loadEnv(confEnv.mode, process.cwd());
+	const loadedEnv = loadEnv(confEnv.mode, process.cwd()) as typeof env;
 	return {
 		server: {
 			host: "0.0.0.0",
 			allowedHosts: true,
 			proxy: {
 				"/api": {
-					target: env.VITE_BACKEND_API_URL,
+					target: loadedEnv.VITE_BACKEND_API_URL,
 					changeOrigin: true,
 					secure: false,
 				},

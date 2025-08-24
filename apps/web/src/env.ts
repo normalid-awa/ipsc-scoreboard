@@ -1,7 +1,7 @@
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 
-export const env = createEnv({
+const env = createEnv({
 	server: {},
 
 	/**
@@ -12,6 +12,7 @@ export const env = createEnv({
 
 	client: {
 		VITE_BACKEND_API_URL: z.string().url(),
+		VITE_TITLE_PREFIX: z.string().default("IPSC Scoreboard |"),
 	},
 
 	/**
@@ -35,3 +36,5 @@ export const env = createEnv({
 	 */
 	emptyStringAsUndefined: true,
 });
+
+export default env;

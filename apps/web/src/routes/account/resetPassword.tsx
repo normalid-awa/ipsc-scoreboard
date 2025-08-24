@@ -1,4 +1,5 @@
 import { authClient } from "@/auth/auth.client";
+import env from "@/env";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
@@ -10,6 +11,9 @@ import { FormEvent, useRef, useState } from "react";
 
 export const Route = createFileRoute("/account/resetPassword")({
 	component: RouteComponent,
+	head: () => ({
+		meta: [{ title: `${env.VITE_TITLE_PREFIX} Reset Password` }],
+	}),
 });
 
 function RouteComponent() {
@@ -137,7 +141,11 @@ function RouteComponent() {
 						label="Verification Code"
 						name="verificationCode"
 					/>
-					<TextField type="password" label="Password" name="password" />
+					<TextField
+						type="password"
+						label="Password"
+						name="password"
+					/>
 					<TextField
 						type="password"
 						label="Re-enter Password"

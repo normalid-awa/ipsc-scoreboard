@@ -1,4 +1,5 @@
 import { authClient, useSession } from "@/auth/auth.client";
+import env from "@/env";
 import { FileRouteTypes } from "@/routeTree.gen";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -16,6 +17,9 @@ export const Route = createFileRoute("/newUser")({
 			from: (s.from || "/") as FileRouteTypes["to"],
 		};
 	},
+	head: () => ({
+		meta: [{ title: `${env.VITE_TITLE_PREFIX} Create Account` }],
+	}),
 });
 
 function RouteComponent() {
