@@ -65,6 +65,8 @@ const routes = app.route("/auth", authApp).get(
 	},
 );
 
+const routes = app.route("/auth", authApp);
+
 serve(
 	{
 		fetch: app.fetch,
