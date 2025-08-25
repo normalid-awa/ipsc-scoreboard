@@ -36,6 +36,7 @@ const authConfig = {
 			ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
 			disableIpTracking: false,
 		},
+		cookiePrefix: "ipsc-scoreboard",
 	},
 	emailAndPassword: {
 		enabled: true,

@@ -9,6 +9,7 @@ import { readFileSync } from "node:fs";
 import z from "zod";
 import { zValidator } from "@hono/zod-validator";
 import env from "./env.js";
+import shooterProfileApp from "./apps/shooterProfile/shooterProfile.app.js";
 
 type Variables = {
 	orm: typeof orm;
@@ -16,9 +17,11 @@ type Variables = {
 	session: typeof auth.$Infer.Session.session | null;
 };
 
-const app = new Hono<{
+export type AppContext = {
 	Variables: Variables;
-}>().basePath("/api");
+};
+
+const app = new Hono<AppContext>().basePath("/api");
 
 app.use("*", (c, next) => {
 	c.set("orm", orm);
@@ -51,18 +54,21 @@ app.use("*", (c, next) => {
 		return next();
 	});
 
-const routes = app.route("/auth", authApp).get(
-	"/redirect",
-	zValidator(
-		"query",
-		z.object({
-			to: z.string().url().includes(env.FRONTEND_URL),
-		}),
-	),
-	(c) => {
-		return c.redirect(c.req.query("to") || "/");
-	},
-);
+const routes = app
+	.route("/auth", authApp)
+	.route("/shooterProfile", shooterProfileApp)
+	.get(
+		"/redirect",
+		zValidator(
+			"query",
+			z.object({
+				to: z.string().url().includes(env.FRONTEND_URL),
+			}),
+		),
+		(c) => {
+			return c.redirect(c.req.query("to") || "/");
+		},
+	);
 
 serve(
 	{
