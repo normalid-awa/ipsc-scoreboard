@@ -11,12 +11,8 @@
 	},
 	"exports": {
 		".": {
-			"import": "./dist/index.js",
-			"types": "./dist/index.d.ts"
-		},
-		"./*": {
-			"import": "./dist/*.js",
-			"types": "./dist/*.d.ts"
+			"import": "./dist/exportToClient.js",
+			"types": "./dist/exportToClient.d.ts"
 		}
 	},
 	"dependencies": {
