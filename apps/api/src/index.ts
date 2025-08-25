@@ -1,9 +1,9 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { auth } from "./auth/auth.js";
+import { auth } from "./apps/auth/auth.js";
 import orm from "./database/orm.js";
-import authApp from "./auth/api.js";
+import authApp from "./apps/auth/api.js";
 import { createServer } from "node:https";
 import { readFileSync } from "node:fs";
 import z from "zod";

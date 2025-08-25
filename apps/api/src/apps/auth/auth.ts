@@ -9,7 +9,7 @@ import {
 } from "better-auth/plugins";
 import nodemailer from "nodemailer";
 import { mikroOrmAdapter } from "better-auth-mikro-orm";
-import orm from "../database/orm.js";
+import orm from "../../database/orm.js";
 import { readFile } from "fs/promises";
 import path from "path";
 
