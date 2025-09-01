@@ -158,24 +158,6 @@
           "length": 6,
           "default": "CURRENT_TIMESTAMP",
           "mappedType": "datetime"
-        },
-        "username": {
-          "name": "username",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "displayUsername": {
-          "name": "displayUsername",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
         }
       },
       "name": "user",
@@ -187,16 +169,6 @@
           ],
           "composite": false,
           "keyName": "user_email_key",
-          "constraint": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "columnNames": [
-            "username"
-          ],
-          "composite": false,
-          "keyName": "user_username_key",
           "constraint": true,
           "primary": false,
           "unique": true
