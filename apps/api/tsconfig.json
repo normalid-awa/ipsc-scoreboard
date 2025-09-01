@@ -1,10 +1,10 @@
 {
 	// Visit https://aka.ms/tsconfig to read more about this file
 	"compilerOptions": {
-		"rootDir": "./src",
 		"outDir": "./dist",
 		"module": "nodenext",
-		"target": "ES2023",
+		"moduleResolution": "nodenext",
+		"target": "ES2022",
 		"types": ["node"],
 		"sourceMap": true,
 		"declaration": true,
@@ -16,6 +16,13 @@
 		"isolatedModules": true,
 		"noUncheckedSideEffectImports": true,
 		"moduleDetection": "force",
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"esModuleInterop": true
+	},
+	"ts-node": {
+		"esm": true,
+		"transpileOnly": true
 	}
 }
