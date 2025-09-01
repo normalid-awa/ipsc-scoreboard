@@ -3,8 +3,7 @@
 	"compilerOptions": {
 		"outDir": "./dist",
 		"module": "nodenext",
-		"moduleResolution": "nodenext",
-		"target": "ES2022",
+		"target": "esnext",
 		"types": ["node"],
 		"sourceMap": true,
 		"declaration": true,
