@@ -5,8 +5,8 @@ import {
 	Property,
 	type Rel,
 } from "@mikro-orm/core";
-import { Organization } from "./Organization.js";
-import { User } from "./User.js";
+import { Organization } from "./organization.entity.js";
+import { User } from "./user.entity.js";
 
 @Entity()
 export class Invitation {

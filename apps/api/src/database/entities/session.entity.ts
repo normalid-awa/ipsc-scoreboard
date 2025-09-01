@@ -5,7 +5,7 @@ import {
 	Property,
 	type Rel,
 } from "@mikro-orm/core";
-import { User } from "./User.js";
+import { User } from "./user.entity.js";
 
 @Entity()
 export class Session {
