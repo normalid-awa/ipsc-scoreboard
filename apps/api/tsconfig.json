@@ -18,7 +18,10 @@
 		"skipLibCheck": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		"paths": {
+			"@/*": ["src/*"]
+		}
 	},
 	"ts-node": {
 		"esm": true,
