@@ -13,7 +13,6 @@
 		"exactOptionalPropertyTypes": true,
 		"noUnusedLocals": true,
 		"strict": true,
-		"verbatimModuleSyntax": true,
 		"isolatedModules": true,
 		"noUncheckedSideEffectImports": true,
 		"moduleDetection": "force",
