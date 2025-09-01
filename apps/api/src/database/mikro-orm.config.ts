@@ -1,10 +1,11 @@
 import { defineConfig } from "@mikro-orm/postgresql";
 import { TsMorphMetadataProvider } from "@mikro-orm/reflection";
 import { Migrator } from "@mikro-orm/migrations";
+import "dotenv/config";
 import env from "../env.js";
 
 export default defineConfig({
-	dbName: env.DATABASE_URL,
+	clientUrl: env.DATABASE_URL,
 	entities: ["dist/**/*.entity.js"],
 	entitiesTs: ["src/**/*.entity.ts"],
 	migrations: {
