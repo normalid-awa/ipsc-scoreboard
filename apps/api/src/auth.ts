@@ -130,6 +130,6 @@ const authConfig = {
 	],
 } satisfies BetterAuthOptions;
 
-export const auth = betterAuth(authConfig) as ReturnType<
+export default betterAuth(authConfig) as ReturnType<
 	typeof betterAuth<typeof authConfig>
 >;

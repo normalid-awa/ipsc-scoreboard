@@ -1,7 +1,10 @@
 import { Elysia } from "elysia";
 import { node } from "@elysiajs/node";
+import { cors } from "@elysiajs/cors";
 import orm from "./database/orm.js";
 import { RequestContext, Utils, wrap } from "@mikro-orm/core";
+import auth from "./auth.js";
+import env from "./env.js";
 
 const app = new Elysia({ adapter: node() })
 	.decorate("orm", orm)
@@ -9,6 +12,33 @@ const app = new Elysia({ adapter: node() })
 	.on("afterHandle", ({ response }) =>
 		Utils.isEntity(response) ? wrap(response).toObject() : response,
 	)
+	///#region BetterAuth
+	.use(
+		cors({
+			origin: env.FRONTEND_URL,
+			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+			credentials: true,
+			allowedHeaders: ["Content-Type", "Authorization"],
+		}),
+	)
+	.mount(auth.handler)
+	.macro({
+		auth: {
+			async resolve({ status, request: { headers } }) {
+				const session = await auth.api.getSession({
+					headers,
+				});
+
+				if (!session) return status(401);
+
+				return {
+					user: session.user,
+					session: session.session,
+				};
+			},
+		},
+	})
+	///#endregion
 	.listen(3000, ({ hostname, port }) => {
 		console.log(`🦊 Elysia is running at ${hostname}:${port}`);
 	});
