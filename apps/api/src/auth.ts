@@ -11,6 +11,7 @@ import { mikroOrmAdapter } from "better-auth-mikro-orm";
 import { readFile } from "fs/promises";
 import path from "path";
 import orm from "./database/orm.js";
+import env from "./env.js";
 
 let emailVerificationHtmlTemplate: string;
 let passwordResetVerificationCodeHtmlTemplate: string;
@@ -30,6 +31,7 @@ const authConfig = {
 	logger: {
 		level: process.env.NODE_ENV === "development" ? "debug" : "warn",
 	},
+	trustedOrigins: [env.FRONTEND_URL],
 	advanced: {
 		ipAddress: {
 			ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
@@ -72,15 +74,18 @@ const authConfig = {
 		github: {
 			clientId: process.env.AUTH_GITHUB_ID as string,
 			clientSecret: process.env.AUTH_GITHUB_SECRET as string,
+			redirectURI: `${env.FRONTEND_URL}/api/auth/callback/github`,
 		},
 		google: {
 			clientId: process.env.AUTH_GOOGLE_ID as string,
 			clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
+			redirectURI: `${env.FRONTEND_URL}/api/auth/callback/google`,
 		},
 		microsoft: {
 			clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID as string,
 			clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET as string,
 			tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER as string,
+			redirectURI: `${env.FRONTEND_URL}/api/auth/callback/microsoft`,
 		},
 	},
 	plugins: [

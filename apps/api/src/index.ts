@@ -6,7 +6,9 @@ import { RequestContext, Utils, wrap } from "@mikro-orm/core";
 import auth from "./auth.js";
 import env from "./env.js";
 
-const app = new Elysia({ adapter: node() })
+const app = new Elysia({
+	adapter: node(),
+})
 	.decorate("orm", orm)
 	.on("beforeHandle", () => RequestContext.enter(orm.em))
 	.on("afterHandle", ({ response }) =>
@@ -39,6 +41,6 @@ const app = new Elysia({ adapter: node() })
 		},
 	})
 	///#endregion
-	.listen(3000, ({ hostname, port }) => {
+	.listen(3001, ({ hostname, port }) => {
 		console.log(`🦊 Elysia is running at ${hostname}:${port}`);
 	});
