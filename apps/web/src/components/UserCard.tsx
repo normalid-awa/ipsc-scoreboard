@@ -1,4 +1,4 @@
-import { authClient, useSession } from "@/auth/auth.client";
+import { authClient } from "@/auth/auth.client";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardActionArea, {
