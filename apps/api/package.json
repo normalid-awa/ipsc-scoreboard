@@ -4,6 +4,7 @@
 	"description": "",
 	"type": "module",
 	"main": "index.js",
+	"types": "./dist/index.d.ts",
 	"scripts": {
 		"dev": "tsx watch src/index.ts",
 		"build": "tsc",

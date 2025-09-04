@@ -25,7 +25,7 @@ const app = new Elysia({
 	)
 	.mount(auth.handler)
 	.macro({
-		auth: {
+		isAuth: {
 			async resolve({ status, request: { headers } }) {
 				const session = await auth.api.getSession({
 					headers,
@@ -44,3 +44,5 @@ const app = new Elysia({
 	.listen(3001, ({ hostname, port }) => {
 		console.log(`🦊 Elysia is running at ${hostname}:${port}`);
 	});
+
+export type App = typeof app;
