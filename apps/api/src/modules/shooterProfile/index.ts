@@ -2,6 +2,11 @@ import { ShooterProfile } from "@/database/entities/shooterProfile.entity.js";
 import { User } from "@/database/entities/user.entity.js";
 import { authPlugin, ormPlugin } from "@/plugins.js";
 import { Sport } from "@/sport.js";
+import {
+	paginationDto,
+	parsePaginationParams,
+	serializePaginationResult,
+} from "@/util/pagination.js";
 import { Elysia, status, t } from "elysia";
 
 export const shooterProfileRoute = new Elysia({
@@ -9,6 +14,22 @@ export const shooterProfileRoute = new Elysia({
 })
 	.use(ormPlugin)
 	.use(authPlugin)
+	.get(
+		"/",
+		async ({ orm, query }) => {
+			const shooterProfiles = await orm.em.findByCursor(
+				ShooterProfile,
+				{},
+				parsePaginationParams(query),
+			);
+			return serializePaginationResult(shooterProfiles);
+		},
+		{
+			query: t.Object({
+				...paginationDto(["id"]),
+			}),
+		},
+	)
 	.get(
 		"/:id",
 		async ({ orm, params: { id } }) => {
