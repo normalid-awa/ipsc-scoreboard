@@ -5,6 +5,10 @@
 	"type": "module",
 	"main": "index.js",
 	"types": "./dist/index.d.ts",
+	"exports": {
+		"types": "./dist/index.d.ts",
+		"import": "./dist/index.js"
+	},
 	"scripts": {
 		"dev": "tsx watch src/index.ts",
 		"build": "tsc",
@@ -26,6 +30,7 @@
 	},
 	"devDependencies": {
 		"@mikro-orm/cli": "^6.5.1",
+		"@types/nodemailer": "^7.0.1",
 		"cross-env": "^10.0.0",
 		"ts-node": "^10.9.2",
 		"tsx": "^4.20.5"

@@ -40,6 +40,7 @@ const app = new Elysia({
 			},
 		},
 	})
+	.get("/hello", () => "Hello World")
 	///#endregion
 	.listen(3001, ({ hostname, port }) => {
 		console.log(`🦊 Elysia is running at ${hostname}:${port}`);
