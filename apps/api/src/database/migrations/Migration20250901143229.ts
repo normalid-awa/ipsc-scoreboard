@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20250823143237 extends Migration {
+export class Migration20250901143229 extends Migration {
 
   override async up(): Promise<void> {
     this.addSql(`create table "organization" ("id" text not null, "name" text not null, "slug" text not null, "logo" text null, "createdAt" timestamp(6) not null, "metadata" text null, constraint "organization_pkey" primary key ("id"));`);
@@ -10,7 +10,7 @@ export class Migration20250823143237 extends Migration {
     this.addSql(`alter table "user" add constraint "user_email_key" unique ("email");`);
     this.addSql(`alter table "user" add constraint "user_username_key" unique ("username");`);
 
-    this.addSql(`create table "session" ("id" text not null, "expiresAt" timestamp(6) not null, "token" text not null, "createdAt" timestamp(6) not null, "updatedAt" timestamp(6) not null, "ipAddress" text null, "userAgent" text null, "user_id" text not null, "activeOrganizationId" text null, constraint "session_pkey" primary key ("id"));`);
+    this.addSql(`create table "session" ("id" text not null, "expiresAt" timestamp(6) not null, "token" text not null, "createdAt" timestamp(6) not null, "updatedAt" timestamp(6) not null, "ipAddress" text null, "userAgent" text null, "user_id" text not null, "active_organization" text null, constraint "session_pkey" primary key ("id"));`);
     this.addSql(`alter table "session" add constraint "session_token_key" unique ("token");`);
 
     this.addSql(`create table "member" ("id" text not null, "organization_id" text not null, "user_id" text not null, "role" text not null, "createdAt" timestamp(6) not null, constraint "member_pkey" primary key ("id"));`);

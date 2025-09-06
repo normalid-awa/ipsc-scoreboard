@@ -1,4 +1,4 @@
-import { authClient, useSession } from "@/auth/auth.client";
+import { authClient } from "@/auth/auth.client";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardActionArea, {
@@ -124,17 +124,30 @@ export function UserCard(props: CardActionAreaProps) {
 				>
 					<Grid container gap={2} alignItems={"center"}>
 						<Grid size={"auto"}>
-							<Avatar
-								sx={{
-									boxShadow: (theme) => `${theme.shadows[5]}`,
-								}}
-								src={data?.user.image || data?.user.name}
-							/>
+							{isPending ? (
+								<Skeleton
+									variant="circular"
+									height={40}
+									width={40}
+								/>
+							) : (
+								<Avatar
+									sx={{
+										boxShadow: (theme) =>
+											`${theme.shadows[5]}`,
+									}}
+									src={data?.user.image || undefined}
+								/>
+							)}
 						</Grid>
 						<Grid size={"grow"}>
-							<Typography variant="h6">
-								{data?.user.name ?? "Guest"}
-							</Typography>
+							{isPending ? (
+								<Skeleton variant="text" width={100} />
+							) : (
+								<Typography variant="h6">
+									{data?.user.name ?? "Guest"}
+								</Typography>
+							)}
 						</Grid>
 					</Grid>
 				</CardActionArea>

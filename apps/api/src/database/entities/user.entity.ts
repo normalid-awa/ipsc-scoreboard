@@ -32,10 +32,4 @@ export class User {
 		defaultRaw: `CURRENT_TIMESTAMP`,
 	})
 	updatedAt!: Date & Opt;
-
-	@Property({ type: "text", nullable: true, unique: "user_username_key" })
-	username?: string;
-
-	@Property({ fieldName: "displayUsername", type: "text", nullable: true })
-	displayUsername?: string;
 }

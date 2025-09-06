@@ -1,20 +1,28 @@
 {
+	// Visit https://aka.ms/tsconfig to read more about this file
 	"compilerOptions": {
-		"target": "ES2022",
-		"module": "NodeNext",
-		"moduleResolution": "NodeNext",
-		"strict": true,
-		"skipLibCheck": true,
-		"types": ["node"],
-		"jsx": "react-jsx",
-		"jsxImportSource": "hono/jsx",
 		"outDir": "./dist",
+		"module": "nodenext",
+		"target": "esnext",
+		"types": ["node"],
+		"sourceMap": true,
 		"declaration": true,
-		"emitDecoratorMetadata": true,
+		"declarationMap": true,
+		"noUncheckedIndexedAccess": true,
+		"exactOptionalPropertyTypes": true,
+		"noUnusedLocals": true,
+		"strict": true,
+		"isolatedModules": true,
+		"noUncheckedSideEffectImports": true,
+		"moduleDetection": "force",
+		"skipLibCheck": true,
 		"experimentalDecorators": true,
-		"disableSizeLimit": true
+		"emitDecoratorMetadata": true,
+		"esModuleInterop": true,
+		"paths": {
+			"@/*": ["./src/*"]
+		}
 	},
-	"exclude": ["node_modules", "dist"],
 	"ts-node": {
 		"esm": true,
 		"transpileOnly": true

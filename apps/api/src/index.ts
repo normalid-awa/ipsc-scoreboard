@@ -1,84 +1,49 @@
-import { serve } from "@hono/node-server";
-import { Hono } from "hono";
-import { cors } from "hono/cors";
-import { auth } from "./auth/auth.js";
+import { Elysia } from "elysia";
+import { node } from "@elysiajs/node";
+import { cors } from "@elysiajs/cors";
 import orm from "./database/orm.js";
-import authApp from "./auth/api.js";
-import { createServer } from "node:https";
-import { readFileSync } from "node:fs";
-import z from "zod";
-import { zValidator } from "@hono/zod-validator";
+import { RequestContext, Utils, wrap } from "@mikro-orm/core";
+import auth from "./auth.js";
 import env from "./env.js";
 
-type Variables = {
-	orm: typeof orm;
-	user: typeof auth.$Infer.Session.user | null;
-	session: typeof auth.$Infer.Session.session | null;
-};
-
-const app = new Hono<{
-	Variables: Variables;
-}>().basePath("/api");
-
-app.use("*", (c, next) => {
-	c.set("orm", orm);
-	return next();
+const app = new Elysia({
+	adapter: node(),
 })
+	.decorate("orm", orm)
+	.on("beforeHandle", () => RequestContext.enter(orm.em))
+	.on("afterHandle", ({ response }) =>
+		Utils.isEntity(response) ? wrap(response).toObject() : response,
+	)
+	///#region BetterAuth
 	.use(
-		"*", // or replace with "*" to enable cors for all routes
 		cors({
-			origin: process.env.FRONTEND_URL || "", // replace with your origin
-			allowHeaders: ["Content-Type", "Authorization"],
-			allowMethods: ["POST", "GET", "OPTIONS"],
-			exposeHeaders: ["Content-Length"],
-			maxAge: 600,
+			origin: env.FRONTEND_URL,
+			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 			credentials: true,
+			allowedHeaders: ["Content-Type", "Authorization"],
 		}),
 	)
-	.use("*", async (c, next) => {
-		const session = await auth.api.getSession({
-			headers: c.req.raw.headers,
-		});
+	.mount(auth.handler)
+	.macro({
+		isAuth: {
+			async resolve({ status, request: { headers } }) {
+				const session = await auth.api.getSession({
+					headers,
+				});
 
-		if (!session) {
-			c.set("user", null);
-			c.set("session", null);
-			return next();
-		}
+				if (!session) return status(401);
 
-		c.set("user", session.user);
-		c.set("session", session.session);
-		return next();
+				return {
+					user: session.user,
+					session: session.session,
+				};
+			},
+		},
+	})
+	.get("/hello", () => "Hello World")
+	///#endregion
+	.listen(3001, ({ hostname, port }) => {
+		console.log(`🦊 Elysia is running at ${hostname}:${port}`);
 	});
 
-const routes = app.route("/auth", authApp).get(
-	"/redirect",
-	zValidator(
-		"query",
-		z.object({
-			to: z.string().url().includes(env.FRONTEND_URL),
-		}),
-	),
-	(c) => {
-		return c.redirect(c.req.query("to") || "/");
-	},
-);
-
-serve(
-	{
-		fetch: app.fetch,
-		hostname: "0.0.0.0",
-		port: 3001,
-		createServer,
-		serverOptions: {
-			key: readFileSync("../../key.pem"),
-			cert: readFileSync("../../cert.pem"),
-		},
-	},
-	(info) => {
-		console.log(`Server is running on http://${info.address}:${info.port}`);
-	},
-);
-
-export default app;
-export type AppType = typeof routes;
+export type App = typeof app;
