@@ -88,7 +88,19 @@
       ],
       "checks": [],
       "foreignKeys": {},
-      "nativeEnums": {}
+      "nativeEnums": {
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ]
+        }
+      }
     },
     {
       "columns": {
@@ -186,7 +198,142 @@
       ],
       "checks": [],
       "foreignKeys": {},
-      "nativeEnums": {}
+      "nativeEnums": {
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ]
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "sport": {
+          "name": "sport",
+          "type": "shooter_profile_sport",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "nativeEnumName": "shooter_profile_sport",
+          "enumItems": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ],
+          "mappedType": "enum"
+        },
+        "identifier": {
+          "name": "identifier",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "shooter_profile",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "shooter_profile_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "shooter_profile_user_id_foreign": {
+          "constraintName": "shooter_profile_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "public.shooter_profile",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "createForeignKeyConstraint": true,
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ]
+        }
+      }
     },
     {
       "columns": {
@@ -316,7 +463,19 @@
           "updateRule": "cascade"
         }
       },
-      "nativeEnums": {}
+      "nativeEnums": {
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ]
+        }
+      }
     },
     {
       "columns": {
@@ -412,7 +571,19 @@
           "updateRule": "cascade"
         }
       },
-      "nativeEnums": {}
+      "nativeEnums": {
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ]
+        }
+      }
     },
     {
       "columns": {
@@ -526,7 +697,19 @@
           "updateRule": "cascade"
         }
       },
-      "nativeEnums": {}
+      "nativeEnums": {
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ]
+        }
+      }
     },
     {
       "columns": {
@@ -683,7 +866,19 @@
           "updateRule": "cascade"
         }
       },
-      "nativeEnums": {}
+      "nativeEnums": {
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ]
+        }
+      }
     },
     {
       "columns": {
@@ -763,8 +958,32 @@
       ],
       "checks": [],
       "foreignKeys": {},
-      "nativeEnums": {}
+      "nativeEnums": {
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ]
+        }
+      }
     }
   ],
-  "nativeEnums": {}
+  "nativeEnums": {
+    "shooter_profile_sport": {
+      "name": "shooter_profile_sport",
+      "schema": "public",
+      "items": [
+        "IPSC",
+        "IDPA",
+        "AAIPSC",
+        "USPSA",
+        "3-Gun"
+      ]
+    }
+  }
 }
