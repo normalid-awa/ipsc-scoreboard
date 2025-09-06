@@ -4,6 +4,8 @@ import { shooterProfileRoute } from "./modules/shooterProfile/index.js";
 import { cors } from "@elysiajs/cors";
 import env from "./env.js";
 import auth from "./auth.js";
+import { RequestContext } from "@mikro-orm/core";
+import orm from "./database/orm.js";
 
 export const app = new Elysia({
 	adapter: node(),
@@ -17,6 +19,7 @@ export const app = new Elysia({
 			allowedHeaders: ["Content-Type", "Authorization"],
 		}),
 	)
+	.on("beforeHandle", () => RequestContext.enter(orm.em))
 	.mount(auth.handler)
 	.use(shooterProfileRoute)
 	.listen(3001, ({ hostname, port }) => {
