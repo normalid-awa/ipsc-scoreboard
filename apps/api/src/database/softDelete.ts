@@ -3,6 +3,6 @@ import { SoftDeletable } from "mikro-orm-soft-delete";
 
 @SoftDeletable(() => SoftDeletableEntity, "deletedAt", () => new Date())
 export abstract class SoftDeletableEntity {
-	@Property()
+	@Property({ hidden: true })
 	deletedAt?: Date;
 }
