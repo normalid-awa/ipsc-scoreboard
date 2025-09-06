@@ -2,13 +2,24 @@ import { ShooterProfile } from "@/database/entities/shooterProfile.entity.js";
 import { User } from "@/database/entities/user.entity.js";
 import { authPlugin, ormPlugin } from "@/plugins.js";
 import { Sport } from "@/sport.js";
-import { Elysia, t } from "elysia";
+import { Elysia, status, t } from "elysia";
 
 export const shooterProfileRoute = new Elysia({
 	prefix: "/shooter-profile",
 })
 	.use(ormPlugin)
 	.use(authPlugin)
+	.get(
+		"/:id",
+		async ({ orm, params: { id } }) => {
+			const shooterProfile = await orm.em.findOne(ShooterProfile, id);
+			if (!shooterProfile) return status(404);
+			return shooterProfile;
+		},
+		{
+			params: t.Object({ id: t.Numeric({ minimum: 1 }) }),
+		},
+	)
 	.post(
 		"/",
 		({ orm, user, body }) => {
