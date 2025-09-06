@@ -1,20 +1,14 @@
-import { Elysia } from "elysia";
+import { Elysia, InferContext } from "elysia";
 import { node } from "@elysiajs/node";
+import { shooterProfileRoute } from "./modules/shooterProfile/index.js";
 import { cors } from "@elysiajs/cors";
-import orm from "./database/orm.js";
-import { RequestContext, Utils, wrap } from "@mikro-orm/core";
-import auth from "./auth.js";
 import env from "./env.js";
+import auth from "./auth.js";
 
 export const app = new Elysia({
 	adapter: node(),
+	prefix: "/api",
 })
-	.decorate("orm", orm)
-	.on("beforeHandle", () => RequestContext.enter(orm.em))
-	.on("afterHandle", ({ response }) =>
-		Utils.isEntity(response) ? wrap(response).toObject() : response,
-	)
-	///#region BetterAuth
 	.use(
 		cors({
 			origin: env.FRONTEND_URL,
@@ -24,24 +18,9 @@ export const app = new Elysia({
 		}),
 	)
 	.mount(auth.handler)
-	.macro({
-		isAuth: {
-			async resolve({ status, request: { headers } }) {
-				const session = await auth.api.getSession({
-					headers,
-				});
-
-				if (!session) return status(401);
-
-				return {
-					user: session.user,
-					session: session.session,
-				};
-			},
-		},
-	})
-	.get("/hello", () => "Hello World")
-	///#endregion
+	.use(shooterProfileRoute)
 	.listen(3001, ({ hostname, port }) => {
 		console.log(`🦊 Elysia is running at ${hostname}:${port}`);
 	});
+
+export type Context = InferContext<typeof app>;

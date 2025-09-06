@@ -28,6 +28,7 @@ const transporter = nodemailer.createTransport({
 
 const authConfig = {
 	database: mikroOrmAdapter(orm),
+	basePath: "/auth",
 	logger: {
 		level: process.env.NODE_ENV === "development" ? "debug" : "warn",
 	},
