@@ -7,6 +7,7 @@ import {
 	parsePaginationParams,
 	serializePaginationResult,
 } from "@/util/pagination.js";
+import { wrap } from "@mikro-orm/core";
 import { Elysia, status, t } from "elysia";
 
 const createShooterDto = t.Object({
@@ -48,12 +49,32 @@ export const shooterProfileRoute = new Elysia({
 	)
 	.post(
 		"/",
-		({ orm, user, body }) => {
+		async ({ orm, user, body }) => {
+			const isAvailable =
+				(await orm.em.count(ShooterProfile, {
+					user: user.id,
+					$or: [
+						{
+							sport: body.sport,
+						},
+						{
+							$and: [
+								{ identifier: body.identifier },
+								{ sport: body.sport },
+							],
+						},
+					],
+				})) > 0;
+			if (isAvailable)
+				return status(
+					409,
+					"Conflict: Each user can only have one profile per sport",
+				);
 			const shooterProfile = new ShooterProfile();
 			shooterProfile.identifier = body.identifier;
 			shooterProfile.sport = body.sport;
 			shooterProfile.user = orm.em.getReference(User, user.id);
-			orm.em.persist(shooterProfile).flush();
+			await orm.em.persist(shooterProfile).flush();
 			return shooterProfile;
 		},
 		{
@@ -71,9 +92,8 @@ export const shooterProfileRoute = new Elysia({
 			if (!shooterProfile) return status(404);
 			if (shooterProfile.user !== orm.em.getReference(User, user.id))
 				return status(401);
-			shooterProfile.identifier = body.identifier;
-			shooterProfile.sport = body.sport;
-			orm.em.persist(shooterProfile).flush();
+			wrap(shooterProfile).assign(body);
+			await orm.em.flush();
 			return shooterProfile;
 		},
 		{
