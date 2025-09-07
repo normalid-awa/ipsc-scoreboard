@@ -24,6 +24,7 @@ import { Link } from "./MuiWrapper";
 import { confirm } from "material-ui-confirm";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import FolderSharedIcon from "@mui/icons-material/FolderShared";
 
 interface MenuProps {
 	closeMenu: () => void;
@@ -66,6 +67,18 @@ function UserMenu(props: MenuProps) {
 						<AccountBoxIcon />
 					</ListItemIcon>
 					My Account
+				</MenuItem>
+			</Link>
+			<Link
+				underline="none"
+				color="textPrimary"
+				to="/account/shooterProfileManagement"
+			>
+				<MenuItem onClick={() => props.closeMenu()}>
+					<ListItemIcon>
+						<FolderSharedIcon />
+					</ListItemIcon>
+					Shooter Profiles Management
 				</MenuItem>
 			</Link>
 			<MenuItem
