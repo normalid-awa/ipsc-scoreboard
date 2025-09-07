@@ -5,16 +5,20 @@ export function paginationDto(sortableFields: readonly string[]) {
 	return {
 		first: t.Numeric({ minimum: 1, default: 20 }),
 		after: t.Optional(t.String()),
-		sortField: t.UnionEnum(["id", ...sortableFields], { default: "id" }),
-		sortDirection: t.UnionEnum(["ASC", "DESC"], { default: "ASC" }),
+		sortField: t.Optional(
+			t.UnionEnum(["id", ...sortableFields], { default: "id" }),
+		),
+		sortDirection: t.Optional(
+			t.UnionEnum(["ASC", "DESC"], { default: "ASC" }),
+		),
 	};
 }
 
 export function parsePaginationParams(param: {
 	first: number;
 	after?: string | null | undefined;
-	sortField: string;
-	sortDirection: "ASC" | "DESC";
+	sortField?: string;
+	sortDirection?: "ASC" | "DESC";
 }) {
 	return {
 		first: param.first,

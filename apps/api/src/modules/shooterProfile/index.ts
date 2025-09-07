@@ -91,6 +91,26 @@ export const shooterProfileRoute = new Elysia({
 	.put(
 		"/:id",
 		async ({ orm, user, params, body }) => {
+			const isAvailable =
+				(await orm.em.count(ShooterProfile, {
+					user: user.id,
+					$or: [
+						{
+							sport: body.sport,
+						},
+						{
+							$and: [
+								{ identifier: body.identifier },
+								{ sport: body.sport },
+							],
+						},
+					],
+				})) > 0;
+			if (isAvailable)
+				return status(
+					409,
+					"Conflict: Each user can only have one profile per sport",
+				);
 			const shooterProfile = await orm.em.findOne(
 				ShooterProfile,
 				params.id,
