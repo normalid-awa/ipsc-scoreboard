@@ -13,6 +13,7 @@ import { Route as TimerRouteImport } from './routes/timer'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as NewUserRouteImport } from './routes/newUser'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountShooterProfileManagementRouteImport } from './routes/account/shooterProfileManagement'
 import { Route as AccountResetPasswordRouteImport } from './routes/account/resetPassword'
 import { Route as AccountManagementRouteImport } from './routes/account/management'
 
@@ -36,6 +37,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountShooterProfileManagementRoute =
+  AccountShooterProfileManagementRouteImport.update({
+    id: '/account/shooterProfileManagement',
+    path: '/account/shooterProfileManagement',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AccountResetPasswordRoute = AccountResetPasswordRouteImport.update({
   id: '/account/resetPassword',
   path: '/account/resetPassword',
@@ -54,6 +61,7 @@ export interface FileRoutesByFullPath {
   '/timer': typeof TimerRoute
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
+  '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +70,7 @@ export interface FileRoutesByTo {
   '/timer': typeof TimerRoute
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
+  '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +80,7 @@ export interface FileRoutesById {
   '/timer': typeof TimerRoute
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
+  '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +91,7 @@ export interface FileRouteTypes {
     | '/timer'
     | '/account/management'
     | '/account/resetPassword'
+    | '/account/shooterProfileManagement'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +100,7 @@ export interface FileRouteTypes {
     | '/timer'
     | '/account/management'
     | '/account/resetPassword'
+    | '/account/shooterProfileManagement'
   id:
     | '__root__'
     | '/'
@@ -97,6 +109,7 @@ export interface FileRouteTypes {
     | '/timer'
     | '/account/management'
     | '/account/resetPassword'
+    | '/account/shooterProfileManagement'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +119,7 @@ export interface RootRouteChildren {
   TimerRoute: typeof TimerRoute
   AccountManagementRoute: typeof AccountManagementRoute
   AccountResetPasswordRoute: typeof AccountResetPasswordRoute
+  AccountShooterProfileManagementRoute: typeof AccountShooterProfileManagementRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -138,6 +152,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/shooterProfileManagement': {
+      id: '/account/shooterProfileManagement'
+      path: '/account/shooterProfileManagement'
+      fullPath: '/account/shooterProfileManagement'
+      preLoaderRoute: typeof AccountShooterProfileManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/resetPassword': {
       id: '/account/resetPassword'
       path: '/account/resetPassword'
@@ -162,6 +183,7 @@ const rootRouteChildren: RootRouteChildren = {
   TimerRoute: TimerRoute,
   AccountManagementRoute: AccountManagementRoute,
   AccountResetPasswordRoute: AccountResetPasswordRoute,
+  AccountShooterProfileManagementRoute: AccountShooterProfileManagementRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
