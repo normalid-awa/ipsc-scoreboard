@@ -1,4 +1,3 @@
 {
-	"conventionalCommits.scopes": ["api", "web", "global"],
-	"conventionalCommits.autoCommit": false
+	"conventionalCommits.scopes": ["api", "web", "global"]
 }
