@@ -2,6 +2,7 @@ import { ShooterProfile } from "@/database/entities/shooterProfile.entity.js";
 import { User } from "@/database/entities/user.entity.js";
 import { authPlugin, ormPlugin } from "@/plugins.js";
 import { Sport } from "@/sport.js";
+import { normalizeOptionalQueryCondition } from "@/util/maybe.js";
 import {
 	paginationDto,
 	parsePaginationParams,
@@ -25,7 +26,10 @@ export const shooterProfileRoute = new Elysia({
 		async ({ orm, query }) => {
 			const shooterProfiles = await orm.em.findByCursor(
 				ShooterProfile,
-				{},
+				{
+					user: normalizeOptionalQueryCondition(query.user),
+					sport: normalizeOptionalQueryCondition(query.sport),
+				},
 				parsePaginationParams(query),
 			);
 			return serializePaginationResult(shooterProfiles);
@@ -33,6 +37,8 @@ export const shooterProfileRoute = new Elysia({
 		{
 			query: t.Object({
 				...paginationDto(["id"]),
+				user: t.Optional(t.String()),
+				sport: t.Optional(t.Array(t.Enum(Sport))),
 			}),
 		},
 	)
