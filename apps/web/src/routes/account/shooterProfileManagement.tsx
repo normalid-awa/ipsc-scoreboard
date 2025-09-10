@@ -192,7 +192,9 @@ function RouteComponent() {
 	return (
 		<Container maxWidth="md">
 			<Paper sx={{ p: 2 }}>
-				<Typography variant="h4">Shooter Profile Management</Typography>
+				<Typography variant="h4" sx={{ p: 1 }} textAlign="center">
+					Shooter Profile Management
+				</Typography>
 				<Paper variant="outlined" sx={{ p: 1 }}>
 					<Stack divider={<Divider />}>
 						{shooterProfiles?.data?.items.map((shooterProfile) => (
