@@ -61,13 +61,13 @@ export const shooterProfileRoute = new Elysia({
 					user: user.id,
 					$or: [
 						{
-							sport: body.sport,
+							$and: [
+								{ sport: body.sport },
+								{ identifier: body.identifier },
+							],
 						},
 						{
-							$and: [
-								{ identifier: body.identifier },
-								{ sport: body.sport },
-							],
+							$and: [{ user: user.id }, { sport: body.sport }],
 						},
 					],
 				})) > 0;
@@ -93,15 +93,18 @@ export const shooterProfileRoute = new Elysia({
 		async ({ orm, user, params, body }) => {
 			const isAvailable =
 				(await orm.em.count(ShooterProfile, {
-					user: user.id,
 					$or: [
 						{
-							sport: body.sport,
+							$and: [
+								{ sport: body.sport },
+								{ identifier: body.identifier },
+							],
 						},
 						{
 							$and: [
-								{ identifier: body.identifier },
+								{ user: user.id },
 								{ sport: body.sport },
+								{ id: { $ne: params.id } },
 							],
 						},
 					],

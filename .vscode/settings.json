@@ -1,3 +1,4 @@
 {
-	"conventionalCommits.scopes": ["api", "web", "global"]
+	"conventionalCommits.scopes": ["api", "web", "global"],
+	"typescript.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"]
 }
