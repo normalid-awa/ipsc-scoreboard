@@ -22,19 +22,23 @@ import MenuItem from "@mui/material/MenuItem";
 import { Sport } from "@ipsc_scoreboard/api";
 import {
 	useCreateShooterProfile,
+	useDeleteShooterProfile,
 	useMutateShooterProfile,
 	useShooterProfiles,
 } from "@/api/shooterProfile/shooterProfile";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
+import { useConfirm } from "material-ui-confirm";
 
 export const Route = createFileRoute("/account/shooterProfileManagement")({
 	component: () => <AuthProtectedComponent component={<RouteComponent />} />,
 });
 
 function ShooterCard(props: { id: number; sport: string; identifier: string }) {
+	const confirm = useConfirm();
 	const [editMode, setEditMode] = useState(false);
 	const { mutate } = useMutateShooterProfile();
+	const { mutate: deleteShooterProfile } = useDeleteShooterProfile();
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -56,6 +60,20 @@ function ShooterCard(props: { id: number; sport: string; identifier: string }) {
 			);
 		}
 		setEditMode(!editMode);
+	};
+
+	const onDelete = async () => {
+		if (
+			(
+				await confirm({
+					title: "Confirm deletion",
+					description:
+						"It's not recommended to delete shooter profiles. You will lost ALL OF YOUR SCORE DATA. Are you sure you want to delete this shooter profile?",
+				})
+			).confirmed
+		) {
+			deleteShooterProfile(props.id);
+		}
 	};
 
 	return (
@@ -100,7 +118,7 @@ function ShooterCard(props: { id: number; sport: string; identifier: string }) {
 				</IconButton>
 			</ListItemIcon>
 			<ListItemIcon>
-				<IconButton color="error">
+				<IconButton color="error" onClick={onDelete}>
 					<DeleteIcon />
 				</IconButton>
 			</ListItemIcon>
@@ -185,6 +203,16 @@ function RouteComponent() {
 								identifier={shooterProfile.identifier}
 							/>
 						))}
+						{shooterProfiles?.data?.items.length === 0 && (
+							<Typography
+								variant="h6"
+								textAlign="center"
+								sx={{ p: 2 }}
+							>
+								No shooter profiles found. Click the button
+								below to add a new one.
+							</Typography>
+						)}
 						<Button
 							sx={{ mt: 1 }}
 							variant="contained"

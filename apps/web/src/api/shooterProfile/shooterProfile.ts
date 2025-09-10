@@ -40,7 +40,7 @@ export function useMutateShooterProfile() {
 			return res.data;
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["shooterProfile"] });
+			queryClient.invalidateQueries({ queryKey: shooterProfileQueryKey });
 		},
 		onError: (error) => {
 			confirm({
@@ -67,7 +67,31 @@ export function useCreateShooterProfile() {
 			return res.data;
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["shooterProfile"] });
+			queryClient.invalidateQueries({ queryKey: shooterProfileQueryKey });
+		},
+		onError: (error) => {
+			confirm({
+				title: error.name,
+				description: error.message,
+				hideCancelButton: true,
+			});
+		},
+	});
+}
+
+export function useDeleteShooterProfile() {
+	const queryClient = useQueryClient();
+	const confirm = useConfirm();
+
+	return useMutation({
+		mutationKey: ["deleteShooterProfile"],
+		mutationFn: async (id: number) => {
+			const res = await api["shooter-profile"]({ id }).delete();
+			if (res.error) throw res.error;
+			return res.data;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: shooterProfileQueryKey });
 		},
 		onError: (error) => {
 			confirm({
