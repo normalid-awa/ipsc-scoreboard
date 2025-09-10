@@ -21,9 +21,12 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { Sport } from "@ipsc_scoreboard/api";
 import {
+	useCreateShooterProfile,
 	useMutateShooterProfile,
 	useShooterProfiles,
 } from "@/api/shooterProfile/shooterProfile";
+import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
 
 export const Route = createFileRoute("/account/shooterProfileManagement")({
 	component: () => <AuthProtectedComponent component={<RouteComponent />} />,
@@ -60,7 +63,7 @@ function ShooterCard(props: { id: number; sport: string; identifier: string }) {
 			{editMode ? (
 				<Grid container spacing={2} sx={{ width: "100%" }}>
 					<Grid size={{ xs: 12, md: 6 }}>
-						<FormControl fullWidth>
+						<FormControl fullWidth required>
 							<InputLabel>Sport</InputLabel>
 							<Select
 								label="Sport"
@@ -77,6 +80,7 @@ function ShooterCard(props: { id: number; sport: string; identifier: string }) {
 					</Grid>
 					<Grid size={{ xs: 12, md: 6 }}>
 						<TextField
+							required
 							fullWidth
 							label="Identifier"
 							name="identifier"
@@ -104,7 +108,67 @@ function ShooterCard(props: { id: number; sport: string; identifier: string }) {
 	);
 }
 
+function AddShooterForm(props: { onCreate?: () => void }) {
+	const { mutate: create } = useCreateShooterProfile();
+
+	return (
+		<Paper
+			sx={{ p: 2, mt: 1 }}
+			component="form"
+			onSubmit={async (e) => {
+				e.preventDefault();
+				const formData = new FormData(e.target as HTMLFormElement);
+				const sport = formData.get("sport") as Sport;
+				const identifier = formData.get("identifier") as string;
+				create(
+					{ sport, identifier },
+					{
+						onSuccess() {
+							props.onCreate?.();
+						},
+					},
+				);
+			}}
+		>
+			<Grid container spacing={2}>
+				<Grid size={{ xs: 12, sm: 6, md: 4 }}>
+					<FormControl fullWidth required>
+						<InputLabel>Sport</InputLabel>
+						<Select label="Sport" name="sport">
+							{Object.values(Sport).map((sport) => (
+								<MenuItem key={sport} value={sport}>
+									{sport}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Grid>
+				<Grid size={{ xs: 12, sm: 6, md: 6 }}>
+					<TextField
+						required
+						fullWidth
+						label="Identifier"
+						name="identifier"
+					/>
+				</Grid>
+				<Grid size={"grow"}>
+					<Button
+						type="submit"
+						variant="contained"
+						color="success"
+						fullWidth
+						sx={{ height: "100%" }}
+					>
+						Submit
+					</Button>
+				</Grid>
+			</Grid>
+		</Paper>
+	);
+}
+
 function RouteComponent() {
+	const [addShooterFormOpen, setAddShooterFormOpen] = useState(false);
 	const { data: shooterProfiles } = useShooterProfiles();
 
 	return (
@@ -121,6 +185,20 @@ function RouteComponent() {
 								identifier={shooterProfile.identifier}
 							/>
 						))}
+						<Button
+							sx={{ mt: 1 }}
+							variant="contained"
+							onClick={() =>
+								setAddShooterFormOpen(!addShooterFormOpen)
+							}
+						>
+							Add shooter profile
+						</Button>
+						<Collapse in={addShooterFormOpen}>
+							<AddShooterForm
+								onCreate={() => setAddShooterFormOpen(false)}
+							/>
+						</Collapse>
 					</Stack>
 				</Paper>
 			</Paper>

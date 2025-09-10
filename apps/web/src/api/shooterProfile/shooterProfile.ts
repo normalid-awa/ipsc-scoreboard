@@ -51,3 +51,30 @@ export function useMutateShooterProfile() {
 		},
 	});
 }
+
+export function useCreateShooterProfile() {
+	const queryClient = useQueryClient();
+	const confirm = useConfirm();
+
+	return useMutation({
+		mutationKey: ["createShooterProfile"],
+		mutationFn: async (param: { sport: Sport; identifier: string }) => {
+			const res = await api["shooter-profile"].post({
+				sport: param.sport,
+				identifier: param.identifier,
+			});
+			if (res.error) throw res.error;
+			return res.data;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["shooterProfile"] });
+		},
+		onError: (error) => {
+			confirm({
+				title: error.name,
+				description: error.message,
+				hideCancelButton: true,
+			});
+		},
+	});
+}
