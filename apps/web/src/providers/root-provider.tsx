@@ -4,7 +4,6 @@ import {
 	QueryClient,
 	QueryClientProvider,
 } from "@tanstack/react-query";
-
 import "@tanstack/react-query";
 
 declare module "@tanstack/react-query" {
