@@ -1,7 +1,7 @@
 import { api } from "@/api";
 import { authClient } from "@/auth/auth.client";
 import { Sport } from "@ipsc_scoreboard/api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useConfirm } from "material-ui-confirm";
 
 const shooterProfileQueryKey = ["shooterProfile"];
@@ -22,7 +22,6 @@ export function useShooterProfiles() {
 }
 
 export function useMutateShooterProfile() {
-	const queryClient = useQueryClient();
 	const confirm = useConfirm();
 
 	return useMutation({
@@ -39,9 +38,6 @@ export function useMutateShooterProfile() {
 			if (res.error) throw res.error;
 			return res.data;
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: shooterProfileQueryKey });
-		},
 		onError: (error) => {
 			confirm({
 				title: error.name,
@@ -49,11 +45,13 @@ export function useMutateShooterProfile() {
 				hideCancelButton: true,
 			});
 		},
+		meta: {
+			invalidateQueries: { queryKey: shooterProfileQueryKey },
+		},
 	});
 }
 
 export function useCreateShooterProfile() {
-	const queryClient = useQueryClient();
 	const confirm = useConfirm();
 
 	return useMutation({
@@ -66,9 +64,6 @@ export function useCreateShooterProfile() {
 			if (res.error) throw res.error;
 			return res.data;
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: shooterProfileQueryKey });
-		},
 		onError: (error) => {
 			confirm({
 				title: error.name,
@@ -76,11 +71,13 @@ export function useCreateShooterProfile() {
 				hideCancelButton: true,
 			});
 		},
+		meta: {
+			invalidateQueries: { queryKey: shooterProfileQueryKey },
+		},
 	});
 }
 
 export function useDeleteShooterProfile() {
-	const queryClient = useQueryClient();
 	const confirm = useConfirm();
 
 	return useMutation({
@@ -90,15 +87,15 @@ export function useDeleteShooterProfile() {
 			if (res.error) throw res.error;
 			return res.data;
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: shooterProfileQueryKey });
-		},
 		onError: (error) => {
 			confirm({
 				title: error.name,
 				description: error.message,
 				hideCancelButton: true,
 			});
+		},
+		meta: {
+			invalidateQueries: { queryKey: shooterProfileQueryKey },
 		},
 	});
 }

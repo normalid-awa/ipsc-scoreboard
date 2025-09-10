@@ -25,7 +25,7 @@ import {
 	useDeleteShooterProfile,
 	useMutateShooterProfile,
 	useShooterProfiles,
-} from "@/api/shooterProfile/shooterProfile";
+} from "@/queries/shooterProfile/shooterProfile";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import { useConfirm } from "material-ui-confirm";
