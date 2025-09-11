@@ -24,7 +24,7 @@ import {
 	useCreateShooterProfile,
 	useDeleteShooterProfile,
 	useMutateShooterProfile,
-	useShooterProfiles,
+	useSelfShooterProfiles,
 } from "@/queries/shooterProfile/shooterProfile";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
@@ -187,7 +187,7 @@ function AddShooterForm(props: { onCreate?: () => void }) {
 
 function RouteComponent() {
 	const [addShooterFormOpen, setAddShooterFormOpen] = useState(false);
-	const { data: shooterProfiles } = useShooterProfiles();
+	const { data: shooterProfiles } = useSelfShooterProfiles();
 
 	return (
 		<Container maxWidth="md">

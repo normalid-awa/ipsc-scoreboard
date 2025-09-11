@@ -15,7 +15,7 @@ import { useLiveQuery } from "@tanstack/react-db";
 
 const shooterProfileQueryKey = ["shooterProfile"];
 
-export function useShooterProfiles() {
+export function useSelfShooterProfiles() {
 	const session = authClient.useSession();
 
 	return useQuery({
