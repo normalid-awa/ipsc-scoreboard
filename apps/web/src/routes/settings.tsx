@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ListedRouteStaticData } from "../router";
-import { ROUTE_ORDER as PREV_ROUTE_ORDER } from "./timer";
+import { ROUTE_ORDER as PREV_ROUTE_ORDER } from "./shooters/index";
 import ModeSwitch from "../components/ModeSwitch";
 import SettingsIcon from "@mui/icons-material/Settings";
 import env from "@/env";

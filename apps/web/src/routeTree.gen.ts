@@ -13,6 +13,7 @@ import { Route as TimerRouteImport } from './routes/timer'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as NewUserRouteImport } from './routes/newUser'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ShootersIndexRouteImport } from './routes/shooters/index'
 import { Route as AccountShooterProfileManagementRouteImport } from './routes/account/shooterProfileManagement'
 import { Route as AccountResetPasswordRouteImport } from './routes/account/resetPassword'
 import { Route as AccountManagementRouteImport } from './routes/account/management'
@@ -35,6 +36,11 @@ const NewUserRoute = NewUserRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShootersIndexRoute = ShootersIndexRouteImport.update({
+  id: '/shooters/',
+  path: '/shooters/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountShooterProfileManagementRoute =
@@ -62,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/shooters': typeof ShootersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByTo {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/shooters': typeof ShootersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -81,6 +89,7 @@ export interface FileRoutesById {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/shooters/': typeof ShootersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -92,6 +101,7 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/shooters'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -101,6 +111,7 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/shooters'
   id:
     | '__root__'
     | '/'
@@ -110,6 +121,7 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/shooters/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -120,6 +132,7 @@ export interface RootRouteChildren {
   AccountManagementRoute: typeof AccountManagementRoute
   AccountResetPasswordRoute: typeof AccountResetPasswordRoute
   AccountShooterProfileManagementRoute: typeof AccountShooterProfileManagementRoute
+  ShootersIndexRoute: typeof ShootersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -150,6 +163,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shooters/': {
+      id: '/shooters/'
+      path: '/shooters'
+      fullPath: '/shooters'
+      preLoaderRoute: typeof ShootersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/shooterProfileManagement': {
@@ -184,6 +204,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountManagementRoute: AccountManagementRoute,
   AccountResetPasswordRoute: AccountResetPasswordRoute,
   AccountShooterProfileManagementRoute: AccountShooterProfileManagementRoute,
+  ShootersIndexRoute: ShootersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
