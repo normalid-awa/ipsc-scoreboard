@@ -4,6 +4,7 @@ import { Sport } from "@ipsc_scoreboard/api";
 import { createCollection } from "@tanstack/db";
 import {
 	QueryClient,
+	queryOptions,
 	useMutation,
 	useQuery,
 	useQueryClient,
@@ -13,13 +14,22 @@ import { queryCollectionOptions } from "@tanstack/query-db-collection";
 import z from "zod";
 import { useLiveQuery } from "@tanstack/react-db";
 
-const shooterProfileQueryKey = ["shooterProfile"];
+export const constructShooterProfileQueryOption = (
+	param: Parameters<(typeof api)["shooter-profile"]["get"]>[0]["query"],
+) =>
+	queryOptions({
+		queryKey: ["shooterProfile", "list", param],
+		queryFn: () =>
+			api["shooter-profile"].get({
+				query: param,
+			}),
+	});
 
 export function useSelfShooterProfiles() {
 	const session = authClient.useSession();
 
 	return useQuery({
-		queryKey: shooterProfileQueryKey,
+		queryKey: ["shooterProfile", "self"],
 		queryFn: () =>
 			api["shooter-profile"].get({
 				query: {
@@ -55,7 +65,7 @@ export function useMutateShooterProfile() {
 			});
 		},
 		meta: {
-			invalidateQueries: { queryKey: shooterProfileQueryKey },
+			invalidateQueries: { queryKey: ["shooterProfile", "self"] },
 		},
 	});
 }
@@ -81,7 +91,7 @@ export function useCreateShooterProfile() {
 			});
 		},
 		meta: {
-			invalidateQueries: { queryKey: shooterProfileQueryKey },
+			invalidateQueries: { queryKey: ["shooterProfile", "self"] },
 		},
 	});
 }
@@ -104,7 +114,7 @@ export function useDeleteShooterProfile() {
 			});
 		},
 		meta: {
-			invalidateQueries: { queryKey: shooterProfileQueryKey },
+			invalidateQueries: { queryKey: ["shooterProfile", "self"] },
 		},
 	});
 }

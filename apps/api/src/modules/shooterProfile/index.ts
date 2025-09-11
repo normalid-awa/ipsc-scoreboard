@@ -27,8 +27,19 @@ export const shooterProfileRoute = new Elysia({
 			const shooterProfiles = await orm.em.findByCursor(
 				ShooterProfile,
 				{
-					user: normalizeOptionalQueryCondition(query.user),
-					sport: normalizeOptionalQueryCondition(query.sport),
+					user: {
+						$or: [
+							{ id: normalizeOptionalQueryCondition(query.user) },
+							{
+								name: normalizeOptionalQueryCondition(
+									query.user,
+								),
+							},
+						],
+					},
+					sport: {
+						$in: normalizeOptionalQueryCondition(query.sport),
+					},
 				},
 				parsePaginationParams(query),
 			);
