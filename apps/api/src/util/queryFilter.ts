@@ -68,19 +68,44 @@ const LogicalOperators = t.Union([
 	t.Literal("not"),
 ]);
 
-export const LogicalFilters = t.Recursive((self) =>
-	t.Object({
-		operator: LogicalOperators,
-		value: t.Array(t.Union([FieldFilter, self])),
-	}),
-);
+// export const LogicalFilters = t.Recursive((self) =>
+// 	t.Object({
+// 		operator: LogicalOperators,
+// 		value: t.Array(t.Union([FieldFilter, self])),
+// 	}),
+// );
 
-export const QueryFilter = t.Union([LogicalFilters]);
+// Due to a bug of tsc, recusive type can't be compiled correctly.
+// Hence manually define the type of LogicalFilters. (3 layer is enough for now)
+export const LogicalFilters = t.Object({
+	operator: LogicalOperators,
+	value: t.Array(
+		t.Union([
+			FieldFilter,
+			t.Object({
+				operator: LogicalOperators,
+				value: t.Array(
+					t.Union([
+						FieldFilter,
+						t.Object({
+							operator: LogicalOperators,
+							value: t.Array(t.Union([FieldFilter])),
+						}),
+					]),
+				),
+			}),
+		]),
+	),
+});
+
+export const QueryFilter = LogicalFilters;
+export type QueryFilter = Static<typeof QueryFilter>;
 
 // Operator mapping to Mikro-ORM operator
 export function convertFilter<Entity>(
 	filter: Static<typeof QueryFilter> | Static<typeof FieldFilter>,
 ): FilterQuery<Entity> {
+	if (!filter || Object.keys(filter).length === 0) return {};
 	if ("field" in filter) {
 		// Handle FieldFilter types
 		const { field, operator, value } = filter;

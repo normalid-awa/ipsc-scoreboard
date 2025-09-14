@@ -28,15 +28,15 @@ export const shooterProfileRoute = new Elysia({
 			const shooterProfiles = await orm.em.findByCursor(
 				ShooterProfile,
 				convertFilter<ShooterProfile>(query.filter),
-				parsePaginationParams(query),
+				parsePaginationParams(query.pagination),
 			);
 			return serializePaginationResult(shooterProfiles);
 		},
 		{
-			query: t.Composite([
-				paginationDto(["id"]),
-				t.Object({ filter: QueryFilter }),
-			]),
+			query: t.Object({
+				pagination: paginationDto(["id"]),
+				filter: QueryFilter,
+			}),
 		},
 	)
 	.get(
