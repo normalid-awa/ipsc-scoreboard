@@ -101,68 +101,62 @@ export const LogicalFilters = t.Object({
 export const QueryFilter = LogicalFilters;
 export type QueryFilter = Static<typeof QueryFilter>;
 
-// Operator mapping to Mikro-ORM operator
-export function convertFilter<Entity>(
-	filter: Static<typeof QueryFilter> | Static<typeof FieldFilter>,
-): FilterQuery<Entity> {
-	if (!filter || Object.keys(filter).length === 0) return {};
-	if ("field" in filter) {
-		// Handle FieldFilter types
-		const { field, operator, value } = filter;
+function processFieldFilter(filter: Static<typeof FieldFilter>): any {
+	const operatorMap = {
+		eq: "$eq",
+		ne: "$ne",
+		gt: "$gt",
+		gte: "$gte",
+		lt: "$lt",
+		lte: "$lte",
+		in: "$in",
+		nin: "$nin",
+		like: "$like",
+		re: "$re",
+	};
 
-		switch (operator) {
-			case "eq":
-				//@ts-ignore
-				return { [field]: value };
-			case "ne":
-				//@ts-ignore
-				return { [field]: { $ne: value } };
-			case "gt":
-				//@ts-ignore
-				return { [field]: { $gt: value } };
-			case "gte":
-				//@ts-ignore
-				return { [field]: { $gte: value } };
-			case "lt":
-				//@ts-ignore
-				return { [field]: { $lt: value } };
-			case "lte":
-				//@ts-ignore
-				return { [field]: { $lte: value } };
-			case "in":
-				//@ts-ignore
-				return { [field]: { $in: value } };
-			case "nin":
-				//@ts-ignore
-				return { [field]: { $nin: value } };
-			case "like":
-				//@ts-ignore
-				return { [field]: { $like: value } };
-			case "re":
-				//@ts-ignore
-				return { [field]: { $re: value } };
-			default:
-				throw new Error(`Unsupported operator: ${operator}`);
-		}
-	} else {
-		// Handle LogicalFilters
-		const { operator, value } = filter;
-		const conditions = value.map((v) =>
-			convertFilter(v as Static<typeof QueryFilter>),
-		);
+	const operator = operatorMap[filter.operator];
+	let value = filter.value;
 
-		switch (operator) {
-			case "and":
-				//@ts-ignore
-				return { $and: conditions };
-			case "or":
-				//@ts-ignore
-				return { $or: conditions };
-			case "not":
-				//@ts-ignore
-				return { $not: conditions[0] }; // MikroORM's $not expects a single condition
-			default:
-				throw new Error(`Unsupported logical operator: ${operator}`);
-		}
+	// Handle boolean string conversion
+	if (filter.operator === "eq" || filter.operator === "ne") {
+		if (value === "true") value = true;
+		if (value === "false") value = false;
 	}
+
+	// Handle regex conversion
+	if (filter.operator === "re") {
+		value = new RegExp(value as string) as unknown as string;
+	}
+
+	// Split nested field paths
+	const parts = filter.field.split(".");
+	const condition = { [operator]: value };
+
+	// Build nested condition object
+	return parts.reduceRight((acc: any, part: string, index: number) => {
+		return index === parts.length - 1
+			? { [part]: condition }
+			: { [part]: acc };
+	}, {});
+}
+
+export function convertQueryFilter<T>(filter: QueryFilter): FilterQuery<T> {
+	if (filter.operator === "and" || filter.operator === "or") {
+		return {
+			[filter.operator === "and" ? "$and" : "$or"]:
+				//@ts-ignore
+				filter.value.map(convertQueryFilter),
+		} as FilterQuery<T>;
+	}
+
+	if (filter.operator === "not") {
+		return {
+			// @ts-ignore
+			$not: filter.value.map(convertQueryFilter),
+		} as FilterQuery<T>;
+	}
+
+	// @ts-ignore
+	return processFieldFilter(filter);
 }

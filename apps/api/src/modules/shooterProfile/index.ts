@@ -8,7 +8,7 @@ import {
 	serializePaginationResult,
 } from "@/util/pagination.js";
 import "@/util/queryFilter.js";
-import { convertFilter, QueryFilter } from "@/util/queryFilter.js";
+import { convertQueryFilter, QueryFilter } from "@/util/queryFilter.js";
 import { wrap } from "@mikro-orm/core";
 import { Elysia, status, t } from "elysia";
 
@@ -25,9 +25,19 @@ export const shooterProfileRoute = new Elysia({
 	.get(
 		"/",
 		async ({ orm, query }) => {
+			console.log(
+				JSON.stringify(convertQueryFilter(query.filter), null, 4),
+			);
 			const shooterProfiles = await orm.em.findByCursor(
 				ShooterProfile,
-				convertFilter<ShooterProfile>(query.filter),
+				// convertFilter<ShooterProfile>(query.filter),
+				{
+					user: {
+						name: {
+							$like: `%noewwemal%`,
+						},
+					},
+				},
 				parsePaginationParams(query.pagination),
 			);
 			return serializePaginationResult(shooterProfiles);
