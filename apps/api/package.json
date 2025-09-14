@@ -24,6 +24,7 @@
 		"@mikro-orm/migrations": "^6.5.1",
 		"@mikro-orm/postgresql": "^6.5.1",
 		"@mikro-orm/reflection": "^6.5.1",
+		"@sinclair/typebox": "^0.34.33",
 		"better-auth-mikro-orm": "^0.4.3",
 		"dotenv": "^17.2.1",
 		"elysia": "^1.3.21",

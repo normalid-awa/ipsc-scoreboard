@@ -6,6 +6,7 @@ import env from "./env.js";
 import auth from "./auth.js";
 import { RequestContext, Utils, wrap } from "@mikro-orm/core";
 import orm from "./database/orm.js";
+import "./util/queryFilter.js";
 
 export const app = new Elysia({
 	adapter: node(),

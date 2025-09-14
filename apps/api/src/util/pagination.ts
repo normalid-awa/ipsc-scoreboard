@@ -2,7 +2,7 @@ import { Cursor } from "@mikro-orm/core";
 import { t } from "elysia";
 
 export function paginationDto(sortableFields: readonly string[]) {
-	return {
+	return t.Object({
 		first: t.Numeric({ minimum: 1, default: 20 }),
 		after: t.Optional(t.String()),
 		before: t.Optional(t.String()),
@@ -12,7 +12,7 @@ export function paginationDto(sortableFields: readonly string[]) {
 		sortDirection: t.Optional(
 			t.UnionEnum(["ASC", "DESC"], { default: "ASC" }),
 		),
-	};
+	});
 }
 
 export function parsePaginationParams(param: {
