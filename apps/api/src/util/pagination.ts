@@ -27,7 +27,8 @@ export function parsePaginationParams(param: {
 		after: { endCursor: param.after || null },
 		before: { startCursor: param.before || null },
 		orderBy: {
-			[param.sortField as unknown as string]: param.sortDirection,
+			[(param.sortField as unknown as string) || "id"]:
+				param.sortDirection || "DESC",
 		},
 	};
 }
