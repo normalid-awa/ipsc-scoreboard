@@ -25,19 +25,9 @@ export const shooterProfileRoute = new Elysia({
 	.get(
 		"/",
 		async ({ orm, query }) => {
-			console.log(
-				JSON.stringify(convertQueryFilter(query.filter), null, 4),
-			);
 			const shooterProfiles = await orm.em.findByCursor(
 				ShooterProfile,
-				// convertFilter<ShooterProfile>(query.filter),
-				{
-					user: {
-						name: {
-							$like: `%noewwemal%`,
-						},
-					},
-				},
+				convertQueryFilter<ShooterProfile>(query.filter),
 				parsePaginationParams(query.pagination),
 			);
 			return serializePaginationResult(shooterProfiles);
