@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
-import { Sport } from "@ipsc_scoreboard/api";
+import { FieldFilter, Sport } from "@ipsc_scoreboard/api";
 import DoneIcon from "@mui/icons-material/Done";
 import TextField from "@mui/material/TextField";
 
@@ -95,6 +95,10 @@ function TextFilter(props: {
 	);
 }
 
+function valueOrUndefined<V>(cond: boolean, ret: V): [V] | [] {
+	return cond ? [ret] : [];
+}
+
 function RouteComponent() {
 	const [currentPage, setCurrentPage] = useState<{
 		before?: string;
@@ -107,10 +111,26 @@ function RouteComponent() {
 
 	const { data } = useQuery(
 		constructShooterProfileQueryOption({
-			first: 5,
-			...currentPage,
-			sport: sportsFilters ?? [],
-			user: textFilter.length > 0 ? textFilter : undefined,
+			pagination: {
+				before: currentPage.before,
+				after: currentPage.after,
+				first: 5,
+			},
+			filter: {
+				operator: "and",
+				value: [
+					...valueOrUndefined(sportsFilters.length > 0, {
+						field: "sport",
+						operator: "in",
+						value: sportsFilters,
+					} satisfies FieldFilter),
+					...valueOrUndefined(textFilter.length > 0, {
+						field: "user.name",
+						operator: "like",
+						value: `%${textFilter}%`,
+					} satisfies FieldFilter),
+				],
+			},
 		}),
 	);
 

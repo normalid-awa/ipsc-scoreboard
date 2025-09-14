@@ -33,8 +33,19 @@ export function useSelfShooterProfiles() {
 		queryFn: () =>
 			api["shooter-profile"].get({
 				query: {
-					first: 20,
-					user: session.data!.user.id,
+					pagination: {
+						first: 20,
+					},
+					filter: {
+						operator: "and",
+						value: [
+							{
+								field: "user",
+								operator: "eq",
+								value: session.data!.user.id,
+							},
+						],
+					},
 				},
 			}),
 	});
