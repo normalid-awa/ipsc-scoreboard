@@ -87,24 +87,34 @@ export function convertFilter<Entity>(
 
 		switch (operator) {
 			case "eq":
+				//@ts-ignore
 				return { [field]: value };
 			case "ne":
+				//@ts-ignore
 				return { [field]: { $ne: value } };
 			case "gt":
+				//@ts-ignore
 				return { [field]: { $gt: value } };
 			case "gte":
+				//@ts-ignore
 				return { [field]: { $gte: value } };
 			case "lt":
+				//@ts-ignore
 				return { [field]: { $lt: value } };
 			case "lte":
+				//@ts-ignore
 				return { [field]: { $lte: value } };
 			case "in":
+				//@ts-ignore
 				return { [field]: { $in: value } };
 			case "nin":
+				//@ts-ignore
 				return { [field]: { $nin: value } };
 			case "like":
+				//@ts-ignore
 				return { [field]: { $like: value } };
 			case "re":
+				//@ts-ignore
 				return { [field]: { $re: value } };
 			default:
 				throw new Error(`Unsupported operator: ${operator}`);
@@ -118,10 +128,13 @@ export function convertFilter<Entity>(
 
 		switch (operator) {
 			case "and":
+				//@ts-ignore
 				return { $and: conditions };
 			case "or":
+				//@ts-ignore
 				return { $or: conditions };
 			case "not":
+				//@ts-ignore
 				return { $not: conditions[0] }; // MikroORM's $not expects a single condition
 			default:
 				throw new Error(`Unsupported logical operator: ${operator}`);
