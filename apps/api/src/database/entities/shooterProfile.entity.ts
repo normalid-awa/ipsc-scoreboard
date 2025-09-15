@@ -1,7 +1,16 @@
 import { Sport } from "../../sport.js";
-import { Entity, Enum, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+	Cascade,
+	Entity,
+	Enum,
+	ManyToOne,
+	OneToOne,
+	PrimaryKey,
+	Property,
+} from "@mikro-orm/core";
 import { User } from "./user.entity.js";
 import { SoftDeletableEntity } from "../softDelete.js";
+import { Image } from "./image.entity.js";
 
 @Entity()
 export class ShooterProfile extends SoftDeletableEntity {
@@ -16,6 +25,9 @@ export class ShooterProfile extends SoftDeletableEntity {
 
 	@ManyToOne()
 	user?: User;
+
+	@OneToOne({ cascade: [Cascade.ALL] })
+	image?: Image;
 
 	@Property()
 	createdAt = new Date();

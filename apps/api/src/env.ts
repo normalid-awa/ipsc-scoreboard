@@ -1,5 +1,6 @@
 import { createEnv } from "@t3-oss/env-core";
 import z from "zod";
+import "dotenv/config";
 
 const env = createEnv({
 	server: {
@@ -25,6 +26,8 @@ const env = createEnv({
 		SMTP_USER: z.string(),
 		SMTP_PASSWORD: z.string(),
 		SMTP_EMAIL_VERIFY_FROM: z.string(),
+
+		FILE_UPLOAD_PATH: z.string(),
 	},
 	runtimeEnv: process.env,
 });

@@ -1,6 +1,7 @@
 import { ShooterProfile } from "@/database/entities/shooterProfile.entity.js";
 import { User } from "@/database/entities/user.entity.js";
-import { authPlugin, ormPlugin } from "@/plugins.js";
+import { authPlugin } from "@/plugins/auth.js";
+import { ormPlugin } from "@/plugins/orm.js";
 import { Sport } from "@/sport.js";
 import {
 	paginationDto,

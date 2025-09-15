@@ -1,8 +1,5 @@
 import { Elysia } from "elysia";
-import orm from "./database/orm.js";
-import auth from "./auth.js";
-
-export const ormPlugin = new Elysia({ name: "orm" }).decorate("orm", orm);
+import auth from "../auth.js";
 
 export const authPlugin = new Elysia({ name: "auth" }).macro({
 	isAuth: {
