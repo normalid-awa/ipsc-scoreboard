@@ -1,6 +1,6 @@
 import { Image } from "@/database/entities/image.entity.js";
+import orm from "@/database/orm.js";
 import { envPlugin } from "@/plugins/env.js";
-import { ormPlugin } from "@/plugins/orm.js";
 import { Elysia, file, status, t } from "elysia";
 import path from "path";
 
@@ -8,10 +8,9 @@ export const imageRoute = new Elysia({
 	prefix: "/image",
 })
 	.use(envPlugin)
-	.use(ormPlugin)
 	.get(
 		"/:id",
-		async ({ orm, params, env, set }) => {
+		async ({ params, env, set }) => {
 			const res = await orm.em.findOne(Image, { uuid: params.id });
 			if (!res) return status(404);
 

@@ -1,7 +1,7 @@
 import { ShooterProfile } from "@/database/entities/shooterProfile.entity.js";
 import { User } from "@/database/entities/user.entity.js";
+import orm from "@/database/orm.js";
 import { authPlugin } from "@/plugins/auth.js";
-import { ormPlugin } from "@/plugins/orm.js";
 import { Sport } from "@/sport.js";
 import {
 	paginationDto,
@@ -21,11 +21,10 @@ const createShooterDto = t.Object({
 export const shooterProfileRoute = new Elysia({
 	prefix: "/shooter-profile",
 })
-	.use(ormPlugin)
 	.use(authPlugin)
 	.get(
 		"/",
-		async ({ orm, query }) => {
+		async ({ query }) => {
 			const shooterProfiles = await orm.em.findByCursor(
 				ShooterProfile,
 				convertQueryFilter<ShooterProfile>(query.filter),
@@ -42,7 +41,7 @@ export const shooterProfileRoute = new Elysia({
 	)
 	.get(
 		"/:id",
-		async ({ orm, params: { id } }) => {
+		async ({ params: { id } }) => {
 			const shooterProfile = await orm.em.findOne(ShooterProfile, id);
 			if (!shooterProfile) return status(404);
 			return shooterProfile;
@@ -53,7 +52,7 @@ export const shooterProfileRoute = new Elysia({
 	)
 	.post(
 		"/",
-		async ({ orm, user, body }) => {
+		async ({ user, body }) => {
 			const isAvailable =
 				(await orm.em.count(ShooterProfile, {
 					user: user.id,
@@ -88,7 +87,7 @@ export const shooterProfileRoute = new Elysia({
 	)
 	.put(
 		"/:id",
-		async ({ orm, user, params, body }) => {
+		async ({ user, params, body }) => {
 			const isAvailable =
 				(await orm.em.count(ShooterProfile, {
 					$or: [
@@ -131,7 +130,7 @@ export const shooterProfileRoute = new Elysia({
 	)
 	.delete(
 		"/:id",
-		async ({ orm, user, params }) => {
+		async ({ user, params }) => {
 			const shooterProfile = await orm.em.findOne(
 				ShooterProfile,
 				params.id,
