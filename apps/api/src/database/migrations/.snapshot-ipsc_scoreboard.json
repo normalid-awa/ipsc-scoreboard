@@ -6,88 +6,6 @@
   "tables": [
     {
       "columns": {
-        "uuid": {
-          "name": "uuid",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "gen_random_uuid()",
-          "mappedType": "uuid"
-        },
-        "filename": {
-          "name": "filename",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "mimetype": {
-          "name": "mimetype",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "size": {
-          "name": "size",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "hash": {
-          "name": "hash",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        }
-      },
-      "name": "image",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "image_pkey",
-          "columnNames": [
-            "uuid"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {},
-      "nativeEnums": {
-        "shooter_profile_sport": {
-          "name": "shooter_profile_sport",
-          "schema": "public",
-          "items": [
-            "IPSC",
-            "IDPA",
-            "AAIPSC",
-            "USPSA",
-            "3-Gun"
-          ]
-        }
-      }
-    },
-    {
-      "columns": {
         "id": {
           "name": "id",
           "type": "text",
@@ -280,162 +198,6 @@
       ],
       "checks": [],
       "foreignKeys": {},
-      "nativeEnums": {
-        "shooter_profile_sport": {
-          "name": "shooter_profile_sport",
-          "schema": "public",
-          "items": [
-            "IPSC",
-            "IDPA",
-            "AAIPSC",
-            "USPSA",
-            "3-Gun"
-          ]
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "unsigned": false,
-          "autoincrement": true,
-          "primary": true,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "sport": {
-          "name": "sport",
-          "type": "shooter_profile_sport",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "nativeEnumName": "shooter_profile_sport",
-          "enumItems": [
-            "IPSC",
-            "IDPA",
-            "AAIPSC",
-            "USPSA",
-            "3-Gun"
-          ],
-          "mappedType": "enum"
-        },
-        "identifier": {
-          "name": "identifier",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "image_uuid": {
-          "name": "image_uuid",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "uuid"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        }
-      },
-      "name": "shooter_profile",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": [
-            "image_uuid"
-          ],
-          "composite": false,
-          "keyName": "shooter_profile_image_uuid_unique",
-          "constraint": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "shooter_profile_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "shooter_profile_user_id_foreign": {
-          "constraintName": "shooter_profile_user_id_foreign",
-          "columnNames": [
-            "user_id"
-          ],
-          "localTableName": "public.shooter_profile",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        },
-        "shooter_profile_image_uuid_foreign": {
-          "constraintName": "shooter_profile_image_uuid_foreign",
-          "columnNames": [
-            "image_uuid"
-          ],
-          "localTableName": "public.shooter_profile",
-          "referencedColumnNames": [
-            "uuid"
-          ],
-          "referencedTableName": "public.image",
-          "createForeignKeyConstraint": true,
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      },
       "nativeEnums": {
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
@@ -807,6 +569,267 @@
             "id"
           ],
           "referencedTableName": "public.user",
+          "createForeignKeyConstraint": true,
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ]
+        }
+      }
+    },
+    {
+      "columns": {
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
+        },
+        "filename": {
+          "name": "filename",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "mimetype": {
+          "name": "mimetype",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "size": {
+          "name": "size",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "hash": {
+          "name": "hash",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "uploader_id": {
+          "name": "uploader_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "image",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "image_pkey",
+          "columnNames": [
+            "uuid"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "image_uploader_id_foreign": {
+          "constraintName": "image_uploader_id_foreign",
+          "columnNames": [
+            "uploader_id"
+          ],
+          "localTableName": "public.image",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "createForeignKeyConstraint": true,
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ]
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "sport": {
+          "name": "sport",
+          "type": "shooter_profile_sport",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "nativeEnumName": "shooter_profile_sport",
+          "enumItems": [
+            "IPSC",
+            "IDPA",
+            "AAIPSC",
+            "USPSA",
+            "3-Gun"
+          ],
+          "mappedType": "enum"
+        },
+        "identifier": {
+          "name": "identifier",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "image_uuid": {
+          "name": "image_uuid",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "shooter_profile",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "image_uuid"
+          ],
+          "composite": false,
+          "keyName": "shooter_profile_image_uuid_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "shooter_profile_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "shooter_profile_user_id_foreign": {
+          "constraintName": "shooter_profile_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "public.shooter_profile",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "createForeignKeyConstraint": true,
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "shooter_profile_image_uuid_foreign": {
+          "constraintName": "shooter_profile_image_uuid_foreign",
+          "columnNames": [
+            "image_uuid"
+          ],
+          "localTableName": "public.shooter_profile",
+          "referencedColumnNames": [
+            "uuid"
+          ],
+          "referencedTableName": "public.image",
           "createForeignKeyConstraint": true,
           "deleteRule": "cascade",
           "updateRule": "cascade"

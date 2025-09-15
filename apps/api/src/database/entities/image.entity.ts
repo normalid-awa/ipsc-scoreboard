@@ -1,4 +1,5 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { User } from "./user.entity.js";
 
 @Entity()
 export class Image {
@@ -16,4 +17,7 @@ export class Image {
 
 	@Property()
 	hash!: string;
+
+	@ManyToOne()
+	uploader!: User;
 }
