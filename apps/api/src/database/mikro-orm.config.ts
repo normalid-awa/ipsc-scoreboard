@@ -17,4 +17,7 @@ export default defineConfig({
 	debug: process.env.NODE_ENV === "development",
 	extensions: [Migrator, SoftDeleteHandler],
 	ignoreUndefinedInQuery: true,
+	serialization: {
+		forceObject: true,
+	},
 });
