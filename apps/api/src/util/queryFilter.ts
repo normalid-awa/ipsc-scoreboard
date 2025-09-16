@@ -143,7 +143,7 @@ function processFieldFilter(filter: Static<typeof FieldFilter>): any {
 	}, {});
 }
 
-export function convertQueryFilter<T>(filter: QueryFilter): FilterQuery<T> {
+export function convertQueryFilter<T>(filter?: QueryFilter): FilterQuery<T> {
 	if (!filter || Object.keys(filter).length === 0) return {};
 	if (filter.operator === "and" || filter.operator === "or") {
 		return {
