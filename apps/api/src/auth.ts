@@ -38,6 +38,9 @@ const authConfig = {
 			ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
 			disableIpTracking: false,
 		},
+		database: {
+			generateId: false,
+		},
 	},
 	emailAndPassword: {
 		enabled: true,

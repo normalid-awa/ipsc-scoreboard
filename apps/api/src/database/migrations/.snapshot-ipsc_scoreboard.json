@@ -106,12 +106,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
         },
         "name": {
           "name": "name",
@@ -282,12 +283,12 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "mappedType": "uuid"
         },
         "active_organization": {
           "name": "active_organization",
@@ -376,12 +377,12 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "mappedType": "uuid"
         },
         "role": {
           "name": "role",
@@ -521,12 +522,12 @@
         },
         "inviter_id": {
           "name": "inviter_id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "mappedType": "uuid"
         }
       },
       "name": "invitation",
@@ -641,12 +642,12 @@
         },
         "uploader_id": {
           "name": "uploader_id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "mappedType": "uuid"
         }
       },
       "name": "image",
@@ -743,12 +744,12 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "text"
+          "mappedType": "uuid"
         },
         "image_uuid": {
           "name": "image_uuid",
@@ -880,12 +881,12 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "mappedType": "uuid"
         },
         "accessToken": {
           "name": "accessToken",
