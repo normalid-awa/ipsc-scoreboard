@@ -60,11 +60,19 @@ export function useMutateShooterProfile() {
 			id: number;
 			sport: Sport;
 			identifier: string;
+			image?: File;
 		}) => {
-			const res = await api["shooter-profile"]({ id: param.id }).put({
-				sport: param.sport,
-				identifier: param.identifier,
-			});
+			const res = await api["shooter-profile"]({ id: param.id }).patch(
+				{
+					sport: param.sport,
+					identifier: param.identifier,
+					image: param.image,
+				},
+				{
+					headers: {},
+					query: {},
+				},
+			);
 			if (res.error) throw res.error;
 			return res.data;
 		},
@@ -86,11 +94,22 @@ export function useCreateShooterProfile() {
 
 	return useMutation({
 		mutationKey: ["createShooterProfile"],
-		mutationFn: async (param: { sport: Sport; identifier: string }) => {
-			const res = await api["shooter-profile"].post({
-				sport: param.sport,
-				identifier: param.identifier,
-			});
+		mutationFn: async (param: {
+			sport: Sport;
+			identifier: string;
+			image?: File;
+		}) => {
+			const res = await api["shooter-profile"].post(
+				{
+					sport: param.sport,
+					identifier: param.identifier,
+					image: param.image,
+				},
+				{
+					headers: {},
+					query: {},
+				},
+			);
 			if (res.error) throw res.error;
 			return res.data;
 		},
@@ -113,7 +132,13 @@ export function useDeleteShooterProfile() {
 	return useMutation({
 		mutationKey: ["deleteShooterProfile"],
 		mutationFn: async (id: number) => {
-			const res = await api["shooter-profile"]({ id }).delete();
+			const res = await api["shooter-profile"]({ id }).delete(
+				{},
+				{
+					headers: {},
+					query: {},
+				},
+			);
 			if (res.error) throw res.error;
 			return res.data;
 		},
