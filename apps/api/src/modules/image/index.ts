@@ -30,7 +30,8 @@ export const imageRoute = new Elysia({
 			set.headers["content-type"] = res.mimetype;
 			set.headers["content-length"] = res.size;
 
-			return file(path.join(env.FILE_UPLOAD_PATH, res.hash));
+			//TODO: the bug of https://github.com/elysiajs/elysia/issues/1299
+			return file(path.join(env.FILE_UPLOAD_PATH, res.hash)).value;
 		},
 		{
 			params: t.Object({
