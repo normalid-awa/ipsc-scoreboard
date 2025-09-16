@@ -831,7 +831,7 @@
           ],
           "referencedTableName": "public.image",
           "createForeignKeyConstraint": true,
-          "deleteRule": "cascade",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       },
