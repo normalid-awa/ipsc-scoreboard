@@ -18,9 +18,13 @@ import { Elysia, status, t } from "elysia";
 const createShooterDto = t.Object({
 	identifier: t.String(),
 	sport: t.Enum(Sport),
-	image: t.File({
-		type: "image",
-	}),
+	image: t.Optional(
+		t.Nullable(
+			t.File({
+				type: "image",
+			}),
+		),
+	),
 });
 
 export const shooterProfileRoute = new Elysia({
@@ -83,13 +87,17 @@ export const shooterProfileRoute = new Elysia({
 			shooterProfile.identifier = body.identifier;
 			shooterProfile.sport = body.sport;
 			shooterProfile.user = rel(User, user.id);
-			const imageId = (await image.storeImage(body.image, user.id)).uuid;
-			shooterProfile.image = rel(Image, imageId);
+			let imageId = null;
+			if (body.image) {
+				const imageId = (await image.storeImage(body.image, user.id))
+					.uuid;
+				shooterProfile.image = rel(Image, imageId);
+			}
 
 			try {
 				await orm.em.persist(shooterProfile).flush();
 			} catch (e) {
-				image.deleteImage(imageId, user.id);
+				if (imageId) image.deleteImage(imageId, user.id);
 			}
 
 			return shooterProfile;
@@ -99,28 +107,19 @@ export const shooterProfileRoute = new Elysia({
 			body: createShooterDto,
 		},
 	)
-	.put(
+	.patch(
 		"/:id",
-		async ({ user, params, body }) => {
-			const isAvailable =
-				(await orm.em.count(ShooterProfile, {
-					$or: [
-						{
-							$and: [
-								{ sport: body.sport },
-								{ identifier: body.identifier },
-							],
-						},
-						{
-							$and: [
-								{ user: user.id },
-								{ sport: body.sport },
-								{ id: { $ne: params.id } },
-							],
-						},
-					],
-				})) > 0;
-			if (isAvailable)
+		async ({ user, params, body, image }) => {
+			let isAvailable = true;
+			if (body.sport) {
+				isAvailable =
+					(await orm.em.count(ShooterProfile, {
+						user: user.id,
+						sport: body.sport,
+						id: { $ne: params.id },
+					})) == 0;
+			}
+			if (!isAvailable)
 				return status(
 					409,
 					"Conflict: Each user can only have one profile per sport",
@@ -132,6 +131,20 @@ export const shooterProfileRoute = new Elysia({
 			if (!shooterProfile) return status(404);
 			if (shooterProfile.user !== orm.em.getReference(User, user.id))
 				return status(401);
+
+			if (body.image === null && shooterProfile.image) {
+				image.deleteImage(shooterProfile.image.uuid, user.id);
+			}
+			if (body.image) {
+				const imageId = (await image.storeImage(body.image, user.id))
+					.uuid;
+				if (shooterProfile.image) {
+					orm.em.remove(shooterProfile.image).flush();
+				}
+				//@ts-ignore
+				body.image = rel(Image, imageId);
+			}
+
 			wrap(shooterProfile).assign(body);
 			await orm.em.flush();
 			return shooterProfile;
@@ -139,7 +152,7 @@ export const shooterProfileRoute = new Elysia({
 		{
 			isAuth: true,
 			params: t.Object({ id: t.Numeric({ minimum: 1 }) }),
-			body: createShooterDto,
+			body: t.Partial(createShooterDto),
 		},
 	)
 	.delete(
