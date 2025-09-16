@@ -1,4 +1,4 @@
-import { Elysia, NotFoundError, status } from "elysia";
+import { Elysia, status } from "elysia";
 import path from "path";
 import { mkdir, rename, rm, stat } from "fs/promises";
 import crypto from "crypto";

@@ -1,7 +1,9 @@
+import { Image } from "@/database/entities/image.entity.js";
 import { ShooterProfile } from "@/database/entities/shooterProfile.entity.js";
 import { User } from "@/database/entities/user.entity.js";
 import orm from "@/database/orm.js";
 import { authPlugin } from "@/plugins/auth.js";
+import { imagePlugin } from "@/plugins/image.js";
 import { Sport } from "@/sport.js";
 import {
 	paginationDto,
@@ -10,18 +12,22 @@ import {
 } from "@/util/pagination.js";
 import "@/util/queryFilter.js";
 import { convertQueryFilter, QueryFilter } from "@/util/queryFilter.js";
-import { wrap } from "@mikro-orm/core";
+import { rel, wrap } from "@mikro-orm/core";
 import { Elysia, status, t } from "elysia";
 
 const createShooterDto = t.Object({
 	identifier: t.String(),
 	sport: t.Enum(Sport),
+	image: t.File({
+		type: "image",
+	}),
 });
 
 export const shooterProfileRoute = new Elysia({
 	prefix: "/shooter-profile",
 })
 	.use(authPlugin)
+	.use(imagePlugin)
 	.get(
 		"/",
 		async ({ query }) => {
@@ -52,7 +58,7 @@ export const shooterProfileRoute = new Elysia({
 	)
 	.post(
 		"/",
-		async ({ user, body }) => {
+		async ({ user, body, image }) => {
 			const isAvailable =
 				(await orm.em.count(ShooterProfile, {
 					user: user.id,
@@ -76,8 +82,16 @@ export const shooterProfileRoute = new Elysia({
 			const shooterProfile = new ShooterProfile();
 			shooterProfile.identifier = body.identifier;
 			shooterProfile.sport = body.sport;
-			shooterProfile.user = orm.em.getReference(User, user.id);
-			await orm.em.persist(shooterProfile).flush();
+			shooterProfile.user = rel(User, user.id);
+			const imageId = (await image.storeImage(body.image, user.id)).uuid;
+			shooterProfile.image = rel(Image, imageId);
+
+			try {
+				await orm.em.persist(shooterProfile).flush();
+			} catch (e) {
+				image.deleteImage(imageId, user.id);
+			}
+
 			return shooterProfile;
 		},
 		{
