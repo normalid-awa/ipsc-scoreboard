@@ -78,27 +78,29 @@ const LogicalOperators = t.Union([
 // Due to a bug of tsc, recusive type can't be compiled correctly.
 // Hence manually define the type of LogicalFilters. (3 layer is enough for now)
 export const LogicalFilters = t.Object({
-	operator: LogicalOperators,
-	value: t.Array(
-		t.Union([
-			FieldFilter,
-			t.Object({
-				operator: LogicalOperators,
-				value: t.Array(
-					t.Union([
-						FieldFilter,
-						t.Object({
-							operator: LogicalOperators,
-							value: t.Array(t.Union([FieldFilter])),
-						}),
-					]),
-				),
-			}),
-		]),
+	operator: t.Optional(LogicalOperators),
+	value: t.Optional(
+		t.Array(
+			t.Union([
+				FieldFilter,
+				t.Object({
+					operator: LogicalOperators,
+					value: t.Array(
+						t.Union([
+							FieldFilter,
+							t.Object({
+								operator: LogicalOperators,
+								value: t.Array(t.Union([FieldFilter])),
+							}),
+						]),
+					),
+				}),
+			]),
+		),
 	),
 });
 
-export const QueryFilter = LogicalFilters;
+export const QueryFilter = t.Optional(LogicalFilters);
 export type QueryFilter = Static<typeof QueryFilter>;
 
 function processFieldFilter(filter: Static<typeof FieldFilter>): any {
@@ -142,6 +144,7 @@ function processFieldFilter(filter: Static<typeof FieldFilter>): any {
 }
 
 export function convertQueryFilter<T>(filter: QueryFilter): FilterQuery<T> {
+	if (!filter || Object.keys(filter).length === 0) return {};
 	if (filter.operator === "and" || filter.operator === "or") {
 		return {
 			[filter.operator === "and" ? "$and" : "$or"]:
