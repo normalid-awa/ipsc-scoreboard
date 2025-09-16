@@ -9,7 +9,7 @@ import {
 
 @Entity()
 export class User {
-	[Config]?: DefineConfig<{ forceObject: true }>;
+	[Config]?: DefineConfig<{ forceObject: false }>;
 
 	@PrimaryKey({ type: "uuid", defaultRaw: "gen_random_uuid()" })
 	id!: string;

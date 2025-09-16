@@ -1,7 +1,15 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+	Config,
+	DefineConfig,
+	Entity,
+	PrimaryKey,
+	Property,
+} from "@mikro-orm/core";
 
 @Entity()
 export class Organization {
+	[Config]?: DefineConfig<{ forceObject: false }>;
+
 	@PrimaryKey({ type: "uuid", defaultRaw: "gen_random_uuid()" })
 	id!: string;
 
