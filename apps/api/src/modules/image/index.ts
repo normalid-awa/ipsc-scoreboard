@@ -3,18 +3,15 @@ import orm from "@/database/orm.js";
 import { authPlugin } from "@/plugins/auth.js";
 import { envPlugin } from "@/plugins/env.js";
 import { Elysia, file, status, t } from "elysia";
-import { mkdir, rename, rm, stat } from "fs/promises";
-import crypto from "crypto";
 import path from "path";
-import { createWriteStream } from "fs";
-import { rel } from "@mikro-orm/core";
-import { User } from "@/database/entities/user.entity.js";
+import { imagePlugin } from "@/plugins/image.js";
 
 export const imageRoute = new Elysia({
 	prefix: "/image",
 })
 	.use(envPlugin)
 	.use(authPlugin)
+	.use(imagePlugin)
 	.get(
 		"/:id",
 		async ({ params, env, set }) => {
@@ -43,54 +40,8 @@ export const imageRoute = new Elysia({
 	)
 	.post(
 		"/",
-		async ({ env, user, body }) => {
-			let tempFilePath = path.join(
-				env.FILE_UPLOAD_PATH,
-				`${Math.random().toString(36).substring(2, 15)}`,
-			);
-
-			try {
-				await stat(path.dirname(tempFilePath));
-			} catch (e) {
-				await mkdir(path.dirname(tempFilePath), { recursive: true });
-			}
-
-			try {
-				const hash = crypto.createHash("sha256");
-				const writeStream = createWriteStream(tempFilePath);
-				for await (const chunk of body.file.stream().values()) {
-					const data = Buffer.from(chunk);
-					writeStream.write(data);
-					hash.update(data);
-				}
-				writeStream.end();
-				writeStream.close();
-				const hashValue = hash.digest("hex");
-
-				const filePath = path.join(env.FILE_UPLOAD_PATH, hashValue);
-
-				try {
-					await stat(filePath);
-					console.log(`${hashValue} File already exists`);
-					await rm(tempFilePath);
-				} catch (e) {
-					await rename(tempFilePath, filePath);
-				}
-
-				const image = new Image();
-				image.filename = body.file.name;
-				image.mimetype = body.file.type;
-				image.size = body.file.size;
-				image.hash = hashValue;
-				image.uploader = rel(User, user.id);
-
-				await orm.em.persist(image).flush();
-				return image;
-			} catch (e) {
-				console.error(e);
-				await rm(tempFilePath);
-				return status(500);
-			}
+		async ({ user, body, image }) => {
+			return await image.storeImage(body.file, user.id);
 		},
 		{
 			isAuth: true,
@@ -103,13 +54,8 @@ export const imageRoute = new Elysia({
 	)
 	.delete(
 		"/:id",
-		async ({ user, params }) => {
-			const image = await orm.em.findOne(Image, { uuid: params.id });
-			if (!image) return status(404);
-			if (image.uploader.id !== user.id) return status(401);
-			await orm.em.remove(image).flush();
-			await orm.em.clearCache(`image:${params.id}`);
-			return status(204);
+		async ({ user, params, image }) => {
+			return await image.deleteImage(params.id, user.id);
 		},
 		{
 			isAuth: true,
