@@ -26,7 +26,7 @@ export const imageRoute = new Elysia({
 
 			set.headers["pragma"] = "public";
 			set.headers["content-disposition"] =
-				`inline; filename="${res.filename}"`;
+				`inline; filename="${encodeURIComponent(res.filename)}"`;
 			set.headers["content-type"] = res.mimetype;
 			set.headers["content-length"] = res.size;
 
