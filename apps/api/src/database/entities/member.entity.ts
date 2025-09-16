@@ -10,7 +10,7 @@ import { User } from "./user.entity.js";
 
 @Entity()
 export class Member {
-	@PrimaryKey({ type: "text" })
+	@PrimaryKey({ type: "uuid", defaultRaw: "gen_random_uuid()" })
 	id!: string;
 
 	@ManyToOne({

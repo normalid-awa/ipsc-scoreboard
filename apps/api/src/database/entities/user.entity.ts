@@ -1,7 +1,16 @@
-import { Entity, type Opt, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+	Config,
+	DefineConfig,
+	Entity,
+	type Opt,
+	PrimaryKey,
+	Property,
+} from "@mikro-orm/core";
 
 @Entity()
 export class User {
+	[Config]?: DefineConfig<{ forceObject: true }>;
+
 	@PrimaryKey({ type: "uuid", defaultRaw: "gen_random_uuid()" })
 	id!: string;
 

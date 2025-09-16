@@ -8,12 +8,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
         },
         "name": {
           "name": "name",
@@ -217,12 +218,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
         },
         "expiresAt": {
           "name": "expiresAt",
@@ -359,21 +361,22 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
         },
         "organization_id": {
           "name": "organization_id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "mappedType": "uuid"
         },
         "user_id": {
           "name": "user_id",
@@ -467,21 +470,22 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
         },
         "organization_id": {
           "name": "organization_id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "mappedType": "uuid"
         },
         "email": {
           "name": "email",
@@ -854,12 +858,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
         },
         "accountId": {
           "name": "accountId",
@@ -1023,12 +1028,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
         },
         "identifier": {
           "name": "identifier",

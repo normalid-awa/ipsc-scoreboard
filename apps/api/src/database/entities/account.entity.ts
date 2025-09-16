@@ -9,7 +9,7 @@ import { User } from "./user.entity.js";
 
 @Entity()
 export class Account {
-	@PrimaryKey({ type: "text" })
+	@PrimaryKey({ type: "uuid", defaultRaw: "gen_random_uuid()" })
 	id!: string;
 
 	@Property({ fieldName: "accountId", type: "text" })
