@@ -14,10 +14,12 @@ import { FieldFilter, Sport } from "@ipsc_scoreboard/api";
 import DoneIcon from "@mui/icons-material/Done";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import Box from "@mui/material/Box";
+import { ShooterCard } from "@/components/ShooterCard";
+import Divider from "@mui/material/Divider";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 export const ROUTE_ORDER = PREV_ROUTE_ORDER + 1;
 
@@ -39,9 +41,11 @@ function SportFilterChip(props: {
 	onDisable: () => void;
 	enabled: boolean;
 	label: string;
+	size?: "small" | "medium";
 }) {
 	return (
 		<Chip
+			size={props.size || "medium"}
 			label={props.label}
 			variant={props.enabled ? "filled" : "outlined"}
 			color={props.enabled ? "primary" : "default"}
@@ -57,6 +61,9 @@ function SportFilter(props: {
 	filters: string[];
 	setFilters: (filters: Sport[]) => void;
 }) {
+	const theme = useTheme();
+	const smallVariant = useMediaQuery(theme.breakpoints.down("sm"));
+
 	function removeFilter(filter: Sport) {
 		const newFilters = props.filters.filter((v) => v !== filter) as Sport[];
 		props.setFilters(newFilters);
@@ -69,9 +76,15 @@ function SportFilter(props: {
 	}
 
 	return (
-		<Stack direction={"row"} spacing={1} gap={1} flexWrap={"wrap"}>
+		<Stack
+			direction={"row"}
+			spacing={smallVariant ? 0.5 : 1}
+			gap={smallVariant ? 0.5 : 1}
+			flexWrap={"wrap"}
+		>
 			{Object.keys(Sport).map((v) => (
 				<SportFilterChip
+					size={smallVariant ? "small" : "medium"}
 					key={v}
 					label={v}
 					onEnable={() => addFilter(Sport[v as keyof typeof Sport])}
@@ -105,6 +118,9 @@ function valueOrUndefined<V>(cond: boolean, ret: V): [V] | [] {
 }
 
 function RouteComponent() {
+	const theme = useTheme();
+	const smallVariant = useMediaQuery(theme.breakpoints.down("sm"));
+
 	const [currentPage, setCurrentPage] = useState(0);
 	const [limit, setLimit] = useState(10);
 
@@ -153,12 +169,20 @@ function RouteComponent() {
 					</Stack>
 				</Paper>
 				<Paper variant="outlined" sx={{ flexGrow: 1 }}>
-					<Stack>
+					<Stack spacing={1} sx={{ p: 1 }}>
 						{data?.data?.items.map((v) => {
 							return (
-								<p key={v.id}>
-									{v.id} {v.identifier}
-								</p>
+								<ShooterCard
+									size="medium"
+									key={v.id}
+									icon={
+										v.image
+											? `/api/image/${v.image?.uuid}`
+											: undefined
+									}
+									identifier={v.identifier}
+									sport={v.sport}
+								/>
 							);
 						})}
 					</Stack>
@@ -168,31 +192,47 @@ function RouteComponent() {
 						</Typography>
 					)}
 				</Paper>
-				<Box
-					sx={{
-						display: "flex",
-						justifyContent: "space-around",
-					}}
+				<Stack
+					spacing={2}
+					direction={"row"}
+					justifyContent={"center"}
+					divider={<Divider orientation="vertical" />}
 				>
-					<ButtonGroup variant="text">
-						<Button
-							disabled={!data?.data?.hasPrevPage}
-							startIcon={<ArrowLeftIcon />}
-							onClick={() => setCurrentPage(currentPage - 1)}
-							sx={{ width: 180 }}
+					<Button
+						size={smallVariant ? "small" : "medium"}
+						disabled={!data?.data?.hasPrevPage}
+						startIcon={<ArrowLeftIcon />}
+						onClick={() => setCurrentPage(currentPage - 1)}
+						sx={{ width: 180 }}
+					>
+						Previous Page
+					</Button>
+					<Typography
+						alignContent={"center"}
+						align={"center"}
+						variant={smallVariant ? "body2" : "h6"}
+						sx={{ display: "inline-block" }}
+					>
+						Page{" "}
+						<p
+							style={{
+								lineBreak: "loose",
+								display: "inline-block",
+							}}
 						>
-							Previous Page
-						</Button>
-						<Button
-							disabled={!data?.data?.hasNextPage}
-							onClick={() => setCurrentPage(currentPage + 1)}
-							sx={{ width: 180 }}
-							endIcon={<ArrowRightIcon />}
-						>
-							Next Page
-						</Button>
-					</ButtonGroup>
-				</Box>
+							{data?.data?.currentPage} / {data?.data?.totalPages}
+						</p>
+					</Typography>
+					<Button
+						size={smallVariant ? "small" : "medium"}
+						disabled={!data?.data?.hasNextPage}
+						onClick={() => setCurrentPage(currentPage + 1)}
+						sx={{ width: 180 }}
+						endIcon={<ArrowRightIcon />}
+					>
+						Next Page
+					</Button>
+				</Stack>
 			</Stack>
 		</>
 	);
