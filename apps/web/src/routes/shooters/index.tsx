@@ -13,6 +13,11 @@ import Chip from "@mui/material/Chip";
 import { FieldFilter, Sport } from "@ipsc_scoreboard/api";
 import DoneIcon from "@mui/icons-material/Done";
 import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import Box from "@mui/material/Box";
 
 export const ROUTE_ORDER = PREV_ROUTE_ORDER + 1;
 
@@ -64,7 +69,7 @@ function SportFilter(props: {
 	}
 
 	return (
-		<Stack direction={"row"} spacing={1}>
+		<Stack direction={"row"} spacing={1} gap={1} flexWrap={"wrap"}>
 			{Object.keys(Sport).map((v) => (
 				<SportFilterChip
 					key={v}
@@ -100,10 +105,8 @@ function valueOrUndefined<V>(cond: boolean, ret: V): [V] | [] {
 }
 
 function RouteComponent() {
-	const [currentPage, setCurrentPage] = useState<{
-		before?: string;
-		after?: string;
-	}>({});
+	const [currentPage, setCurrentPage] = useState(0);
+	const [limit, setLimit] = useState(10);
 
 	const [textFilter, setTextFilter] = useState("");
 
@@ -112,9 +115,8 @@ function RouteComponent() {
 	const { data } = useQuery(
 		constructShooterProfileQueryOption({
 			pagination: {
-				before: currentPage.before,
-				after: currentPage.after,
-				first: 5,
+				limit: limit,
+				offset: currentPage * limit,
 			},
 			filter: {
 				operator: "and",
@@ -136,43 +138,62 @@ function RouteComponent() {
 
 	return (
 		<>
-			<Typography variant="h4">Shooters</Typography>
-			<Paper sx={{ p: 2 }} elevation={3}>
-				<Stack>
-					<TextFilter text={textFilter} setFilter={setTextFilter} />
-					<SportFilter
-						filters={sportsFilters}
-						setFilters={setSportsFilters}
-					/>
-				</Stack>
-			</Paper>
-			<div>
-				{data?.data?.items.map((v) => {
-					return (
-						<p key={v.id}>
-							{v.id} {v.identifier}
-						</p>
-					);
-				})}
-				<button
-					onClick={() =>
-						setCurrentPage({
-							before: data?.data?.startCursor ?? undefined,
-						})
-					}
+			<Stack sx={{ height: "100%" }} spacing={1}>
+				<Typography variant="h4">Shooters</Typography>
+				<Paper elevation={3}>
+					<Stack spacing={1} sx={{ p: 2 }}>
+						<TextFilter
+							text={textFilter}
+							setFilter={setTextFilter}
+						/>
+						<SportFilter
+							filters={sportsFilters}
+							setFilters={setSportsFilters}
+						/>
+					</Stack>
+				</Paper>
+				<Paper variant="outlined" sx={{ flexGrow: 1 }}>
+					<Stack>
+						{data?.data?.items.map((v) => {
+							return (
+								<p key={v.id}>
+									{v.id} {v.identifier}
+								</p>
+							);
+						})}
+					</Stack>
+					{data?.data?.items.length === 0 && (
+						<Typography sx={{ pt: 5 }} variant="h2" align="center">
+							{`No shooters found : (`}
+						</Typography>
+					)}
+				</Paper>
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-around",
+					}}
 				>
-					prev
-				</button>
-				<button
-					onClick={() =>
-						setCurrentPage({
-							after: data?.data?.endCursor ?? undefined,
-						})
-					}
-				>
-					next
-				</button>
-			</div>
+					<ButtonGroup variant="text">
+						<Button
+							disabled={!data?.data?.hasPrevPage}
+							startIcon={<ArrowLeftIcon />}
+							onClick={() => setCurrentPage(currentPage - 1)}
+							sx={{ width: 180 }}
+						>
+							Previous Page
+						</Button>
+						<Button
+							disabled={!data?.data?.hasNextPage}
+							onClick={() => setCurrentPage(currentPage + 1)}
+							sx={{ width: 180 }}
+							endIcon={<ArrowRightIcon />}
+						>
+							Next Page
+						</Button>
+					</ButtonGroup>
+				</Box>
+			</Stack>
 		</>
 	);
 }
