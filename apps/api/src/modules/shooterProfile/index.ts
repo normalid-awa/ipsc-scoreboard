@@ -6,10 +6,10 @@ import { authPlugin } from "@/plugins/auth.js";
 import { imagePlugin } from "@/plugins/image.js";
 import { Sport } from "@/sport.js";
 import {
-	paginationDto,
-	parsePaginationParams,
-	serializePaginationResult,
-} from "@/util/pagination.js";
+	cursorBasedPaginationDto,
+	parseCursorBasedPaginationParams,
+	serializeCursorBasedPaginationResult,
+} from "@/util/cursorBasedPagination.js";
 import "@/util/queryFilter.js";
 import { convertQueryFilter, QueryFilter } from "@/util/queryFilter.js";
 import { rel, wrap } from "@mikro-orm/core";
@@ -38,13 +38,13 @@ export const shooterProfileRoute = new Elysia({
 			const shooterProfiles = await orm.em.findByCursor(
 				ShooterProfile,
 				convertQueryFilter<ShooterProfile>(query.filter),
-				parsePaginationParams(query.pagination),
+				parseCursorBasedPaginationParams(query.pagination),
 			);
-			return serializePaginationResult(shooterProfiles);
+			return serializeCursorBasedPaginationResult(shooterProfiles);
 		},
 		{
 			query: t.Object({
-				pagination: paginationDto(["id"]),
+				pagination: cursorBasedPaginationDto(["id"]),
 				filter: QueryFilter,
 			}),
 		},
