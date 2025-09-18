@@ -20,6 +20,7 @@ import { ShooterCard } from "@/components/ShooterCard";
 import Divider from "@mui/material/Divider";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import Skeleton from "@mui/material/Skeleton";
 
 export const ROUTE_ORDER = PREV_ROUTE_ORDER + 1;
 
@@ -128,7 +129,7 @@ function RouteComponent() {
 
 	const [sportsFilters, setSportsFilters] = useState<Sport[]>([]);
 
-	const { data } = useQuery(
+	const { data, isLoading } = useQuery(
 		constructShooterProfileQueryOption({
 			pagination: {
 				limit: limit,
@@ -178,7 +179,10 @@ function RouteComponent() {
 						/>
 					</Stack>
 				</Paper>
-				<Paper variant="outlined" sx={{ flexGrow: 1 }}>
+				<Paper
+					variant="outlined"
+					sx={{ flexGrow: 1, overflow: "auto" }}
+				>
 					<Stack spacing={1} sx={{ p: 1 }}>
 						{data?.data?.items.map((v) => {
 							return (
@@ -195,6 +199,16 @@ function RouteComponent() {
 								/>
 							);
 						})}
+						{isLoading &&
+							new Array(3)
+								.fill(undefined)
+								.map(() => (
+									<Skeleton
+										variant="rounded"
+										height={80}
+										animation="wave"
+									/>
+								))}
 					</Stack>
 					{data?.data?.items.length === 0 && (
 						<Typography sx={{ pt: 5 }} variant="h2" align="center">
