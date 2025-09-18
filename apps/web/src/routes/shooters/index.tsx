@@ -142,11 +142,21 @@ function RouteComponent() {
 						operator: "in",
 						value: sportsFilters,
 					} satisfies FieldFilter),
-					...valueOrUndefined(textFilter.length > 0, {
-						field: "user.name",
-						operator: "like",
-						value: `%${textFilter}%`,
-					} satisfies FieldFilter),
+					{
+						operator: "or",
+						value: [
+							...valueOrUndefined(textFilter.length > 0, {
+								field: "user.name",
+								operator: "like",
+								value: `%${textFilter}%`,
+							} satisfies FieldFilter),
+							...valueOrUndefined(textFilter.length > 0, {
+								field: "identifier",
+								operator: "like",
+								value: `%${textFilter}%`,
+							} satisfies FieldFilter),
+						],
+					},
 				],
 			},
 		}),
