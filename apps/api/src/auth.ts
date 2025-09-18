@@ -28,6 +28,7 @@ const transporter = nodemailer.createTransport({
 
 const authConfig = {
 	database: mikroOrmAdapter(orm),
+	basePath: "/auth",
 	logger: {
 		level: process.env.NODE_ENV === "development" ? "debug" : "warn",
 	},
@@ -36,6 +37,9 @@ const authConfig = {
 		ipAddress: {
 			ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
 			disableIpTracking: false,
+		},
+		database: {
+			generateId: false,
 		},
 	},
 	emailAndPassword: {

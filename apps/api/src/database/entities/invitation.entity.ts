@@ -1,4 +1,6 @@
 import {
+	Config,
+	DefineConfig,
 	Entity,
 	ManyToOne,
 	PrimaryKey,
@@ -10,12 +12,15 @@ import { User } from "./user.entity.js";
 
 @Entity()
 export class Invitation {
-	@PrimaryKey({ type: "text" })
+	[Config]?: DefineConfig<{ forceObject: false }>;
+
+	@PrimaryKey({ type: "uuid", defaultRaw: "gen_random_uuid()" })
 	id!: string;
 
 	@ManyToOne({
 		entity: () => Organization,
 		deleteRule: "cascade",
+		serializer: (user: User) => user.id,
 	})
 	organization!: Rel<Organization>;
 
@@ -34,6 +39,7 @@ export class Invitation {
 	@ManyToOne({
 		entity: () => User,
 		deleteRule: "cascade",
+		serializer: (user: User) => user.id,
 	})
 	inviter!: Rel<User>;
 }

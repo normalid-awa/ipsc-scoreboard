@@ -3,6 +3,7 @@ import { TsMorphMetadataProvider } from "@mikro-orm/reflection";
 import { Migrator } from "@mikro-orm/migrations";
 import "dotenv/config";
 import env from "../env.js";
+import { SoftDeleteHandler } from "mikro-orm-soft-delete";
 
 export default defineConfig({
 	clientUrl: env.DATABASE_URL,
@@ -14,5 +15,9 @@ export default defineConfig({
 	},
 	metadataProvider: TsMorphMetadataProvider,
 	debug: process.env.NODE_ENV === "development",
-	extensions: [Migrator],
+	extensions: [Migrator, SoftDeleteHandler],
+	ignoreUndefinedInQuery: true,
+	serialization: {
+		forceObject: true,
+	},
 });

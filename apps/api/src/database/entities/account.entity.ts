@@ -1,4 +1,6 @@
 import {
+	Config,
+	DefineConfig,
 	Entity,
 	ManyToOne,
 	PrimaryKey,
@@ -9,7 +11,9 @@ import { User } from "./user.entity.js";
 
 @Entity()
 export class Account {
-	@PrimaryKey({ type: "text" })
+	[Config]?: DefineConfig<{ forceObject: false }>;
+
+	@PrimaryKey({ type: "uuid", defaultRaw: "gen_random_uuid()" })
 	id!: string;
 
 	@Property({ fieldName: "accountId", type: "text" })
@@ -21,6 +25,7 @@ export class Account {
 	@ManyToOne({
 		entity: () => User,
 		deleteRule: "cascade",
+		serializer: (user: User) => user.id,
 	})
 	user!: Rel<User>;
 
