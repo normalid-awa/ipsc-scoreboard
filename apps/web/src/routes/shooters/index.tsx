@@ -202,8 +202,9 @@ function RouteComponent() {
 						{isLoading &&
 							new Array(3)
 								.fill(undefined)
-								.map(() => (
+								.map((_v, k) => (
 									<Skeleton
+										key={k}
 										variant="rounded"
 										height={80}
 										animation="wave"
