@@ -114,7 +114,7 @@ function TextFilter(props: {
 	);
 }
 
-function valueOrUndefined<V>(cond: boolean, ret: V): [V] | [] {
+function emptyArrayOrNot<V>(cond: boolean, ret: V): [V] | [] {
 	return cond ? [ret] : [];
 }
 
@@ -138,7 +138,7 @@ function RouteComponent() {
 			filter: {
 				operator: "and",
 				value: [
-					...valueOrUndefined(sportsFilters.length > 0, {
+					...emptyArrayOrNot(sportsFilters.length > 0, {
 						field: "sport",
 						operator: "in",
 						value: sportsFilters,
@@ -146,12 +146,12 @@ function RouteComponent() {
 					{
 						operator: "or",
 						value: [
-							...valueOrUndefined(textFilter.length > 0, {
+							...emptyArrayOrNot(textFilter.length > 0, {
 								field: "user.name",
 								operator: "like",
 								value: `%${textFilter}%`,
 							} satisfies FieldFilter),
-							...valueOrUndefined(textFilter.length > 0, {
+							...emptyArrayOrNot(textFilter.length > 0, {
 								field: "identifier",
 								operator: "like",
 								value: `%${textFilter}%`,
@@ -181,7 +181,7 @@ function RouteComponent() {
 				</Paper>
 				<Paper
 					variant="outlined"
-					sx={{ flexGrow: 1, overflow: "auto" }}
+					sx={{ flexGrow: 1, overflow: "auto", minHeight: 200 }}
 				>
 					<Stack spacing={1} sx={{ p: 1 }}>
 						{data?.data?.items.map((v) => {
