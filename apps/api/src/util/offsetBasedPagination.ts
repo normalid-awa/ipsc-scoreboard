@@ -45,6 +45,7 @@ export function serializeOffsetBasedPaginationResult<Entity>(
 	const hasNextPage = totalCount > limit + offset;
 	const hasPrevPage = offset > 0;
 	const currentPage = Math.floor(offset / limit) + 1;
+	const totalPages = Math.ceil(totalCount / limit);
 
 	return {
 		items: results,
@@ -52,6 +53,7 @@ export function serializeOffsetBasedPaginationResult<Entity>(
 		hasNextPage,
 		hasPrevPage,
 		currentPage,
+		totalPages,
 		limit,
 		offset,
 	};
