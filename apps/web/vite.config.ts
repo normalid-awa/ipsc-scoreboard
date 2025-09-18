@@ -8,6 +8,13 @@ import env from "@/env";
 
 const config = defineConfig((confEnv) => {
 	const loadedEnv = loadEnv(confEnv.mode, process.cwd()) as typeof env;
+	let https = undefined;
+	if (confEnv.mode == "development") {
+		https = {
+			key: readFileSync("../../key.pem"),
+			cert: readFileSync("../../cert.pem"),
+		};
+	}
 	return {
 		server: {
 			host: "0.0.0.0",
@@ -19,10 +26,7 @@ const config = defineConfig((confEnv) => {
 					secure: false,
 				},
 			},
-			https: {
-				key: readFileSync("../../key.pem"),
-				cert: readFileSync("../../cert.pem"),
-			},
+			https,
 		},
 		plugins: [
 			// this is the plugin that enables path aliases
