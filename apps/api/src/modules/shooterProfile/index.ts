@@ -5,11 +5,12 @@ import orm from "@/database/orm.js";
 import { authPlugin } from "@/plugins/auth.js";
 import { imagePlugin } from "@/plugins/image.js";
 import { Sport } from "@/sport.js";
+import {} from "@/util/cursorBasedPagination.js";
 import {
-	cursorBasedPaginationDto,
-	parseCursorBasedPaginationParams,
-	serializeCursorBasedPaginationResult,
-} from "@/util/cursorBasedPagination.js";
+	offsetBasedPaginationDto,
+	parseOffsetBasedPaginationParams,
+	serializeOffsetBasedPaginationResult,
+} from "@/util/offsetBasedPagination.js";
 import "@/util/queryFilter.js";
 import { convertQueryFilter, QueryFilter } from "@/util/queryFilter.js";
 import { rel, wrap } from "@mikro-orm/core";
@@ -35,16 +36,20 @@ export const shooterProfileRoute = new Elysia({
 	.get(
 		"/",
 		async ({ query }) => {
-			const shooterProfiles = await orm.em.findByCursor(
+			const [shooterProfiles, totalCount] = await orm.em.findAndCount(
 				ShooterProfile,
 				convertQueryFilter<ShooterProfile>(query.filter),
-				parseCursorBasedPaginationParams(query.pagination),
+				parseOffsetBasedPaginationParams(query.pagination),
 			);
-			return serializeCursorBasedPaginationResult(shooterProfiles);
+			return serializeOffsetBasedPaginationResult(
+				shooterProfiles,
+				totalCount,
+				query.pagination,
+			);
 		},
 		{
 			query: t.Object({
-				pagination: cursorBasedPaginationDto(["id"]),
+				pagination: offsetBasedPaginationDto(),
 				filter: QueryFilter,
 			}),
 		},
