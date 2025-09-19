@@ -3,6 +3,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react-swc";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
+import { devtools } from "@tanstack/devtools-vite";
 import { readFileSync } from "fs";
 import env from "@/env";
 
@@ -39,6 +40,11 @@ const config = defineConfig((confEnv) => {
 				target: "cloudflare-module",
 			}),
 			viteReact(),
+			devtools({
+				enhancedLogs: {
+					enabled: true,
+				},
+			}),
 		],
 	};
 });

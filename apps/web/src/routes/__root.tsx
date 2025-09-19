@@ -3,9 +3,15 @@ import {
 	Scripts,
 	createRootRouteWithContext,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanstackDevtools } from "@tanstack/react-devtools";
-import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
+import {
+	TanStackRouterDevtools,
+	TanStackRouterDevtoolsPanel,
+} from "@tanstack/react-router-devtools";
+import {
+	ReactQueryDevtools,
+	ReactQueryDevtoolsPanel,
+} from "@tanstack/react-query-devtools";
 import appCss from "../styles.css?url";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -95,7 +101,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 							name: "Tanstack Router",
 							render: <TanStackRouterDevtoolsPanel />,
 						},
-						TanStackQueryDevtools,
+						{
+							name: "Tanstack Query",
+							render: <ReactQueryDevtoolsPanel />,
+						},
 					]}
 				/>
 				<Scripts />
