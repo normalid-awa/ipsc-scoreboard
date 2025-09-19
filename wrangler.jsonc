@@ -1,11 +1,11 @@
 {
-	"$schema": "../../node_modules/wrangler/config-schema.json",
+	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "ipsc-scoreboard",
-	"main": ".output/server/index.mjs",
+	"main": "apps/web/.output/server/index.mjs",
 	"compatibility_date": "2025-09-18",
 	"compatibility_flags": ["nodejs_compat"],
 	"assets": {
-		"directory": ".output/public",
+		"directory": "apps/web/.output/public",
 	},
 	"observability": {
 		"enabled": true,
