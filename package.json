@@ -11,7 +11,8 @@
 		"build:web": "npm run build --workspace=apps/web",
 		"build": "npm run build:api && npm run build:web",
 		"dev:api": "npm run dev --workspace=apps/api",
-		"dev:web": "npm run dev --workspace=apps/web"
+		"dev:web": "npm run dev --workspace=apps/web",
+		"start": "npm run start --workspace=apps/web"
 	},
 	"dependencies": {
 		"@t3-oss/env-core": "^0.13.8",
