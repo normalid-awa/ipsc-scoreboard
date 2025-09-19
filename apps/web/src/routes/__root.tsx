@@ -92,7 +92,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						</ThemeProvider>
 					</AuthQueryProvider>
 				</main>
-				<TanstackDevtools
+				{/* TODO: Don't know why it works in dev but can't build */}
+				{/* <TanstackDevtools
 					config={{
 						position: "bottom-left",
 					}}
@@ -106,7 +107,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 							render: <ReactQueryDevtoolsPanel />,
 						},
 					]}
-				/>
+				/> */}
+				<TanStackRouterDevtools />
+				<ReactQueryDevtools />
 				<Scripts />
 			</body>
 		</html>
