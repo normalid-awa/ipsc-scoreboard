@@ -11,7 +11,10 @@ const env = createEnv({
 	clientPrefix: "VITE_",
 
 	client: {
-		VITE_BACKEND_API_URL: z.string().url(),
+		VITE_BACKEND_API_URL: z
+			.string()
+			.url()
+			.default("http://localhost:3000/api"),
 		VITE_TITLE_PREFIX: z.string().default("IPSC Scoreboard |"),
 	},
 
