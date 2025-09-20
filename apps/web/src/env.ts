@@ -1,5 +1,6 @@
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
+import { vite } from "@t3-oss/env-core/presets-zod";
 
 const env = createEnv({
 	server: {},
@@ -35,6 +36,7 @@ const env = createEnv({
 	 * explicitly specify this option as true.
 	 */
 	emptyStringAsUndefined: true,
+	extends: [vite()],
 });
 
 export default env;
