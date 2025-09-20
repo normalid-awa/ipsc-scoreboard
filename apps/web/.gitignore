@@ -12,3 +12,4 @@ count.txt
 todos.json
 count.txt
 .env.*
+.wrangler
