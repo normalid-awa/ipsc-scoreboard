@@ -27,7 +27,7 @@
 		"@types/node": "^24.3.0",
 		"devcert": "^1.2.2",
 		"typescript": "^5.9.2",
-		"vite": "^6.3.5"
+		"vite": "^7.1.6"
 	},
 	"workspaces": [
 		"apps/web",
