@@ -1,8 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react-swc";
 import viteTsConfigPaths from "vite-tsconfig-paths";
-import tailwindcss from "@tailwindcss/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { readFileSync } from "fs";
 import env from "@/env";
@@ -30,21 +29,19 @@ const config = defineConfig((confEnv) => {
 			https,
 		},
 		plugins: [
-			// this is the plugin that enables path aliases
 			viteTsConfigPaths({
 				projects: ["./tsconfig.json"],
 			}),
-			tailwindcss(),
 			tanstackStart({
 				customViteReactPlugin: true,
-				target: "cloudflare-pages",
+				target: "cloudflare-page",
 			}),
-			viteReact(),
 			devtools({
 				enhancedLogs: {
 					enabled: true,
 				},
 			}),
+			viteReact(),
 		],
 		build: {
 			rollupOptions: {

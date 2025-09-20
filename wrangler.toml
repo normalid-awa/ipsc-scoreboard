@@ -1,7 +1,11 @@
+"$schema" = "node_modules/wrangler/config-schema.json"
 name = "ipsc-scoreboard"
-# pages_build_output_dir = "apps/web/dist"
-compatibility_date = "2025-09-18"
+main = "apps/web/.output/server/index.mjs"
+compatibility_date = "2025-09-19"
 compatibility_flags = ["nodejs_compat", "nodejs_compat_populate_process_env"]
+
+[assets]
+directory = ".output/public"
 
 [observability]
 enabled = true
