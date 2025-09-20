@@ -1,6 +1,5 @@
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
-import { vite } from "@t3-oss/env-core/presets-zod";
 
 const env = createEnv({
 	server: {},
@@ -20,7 +19,7 @@ const env = createEnv({
 	 * What object holds the environment variables at runtime. This is usually
 	 * `process.env` or `import.meta.env`.
 	 */
-	runtimeEnv: import.meta.env,
+	runtimeEnv: process.env,
 
 	/**
 	 * By default, this library will feed the environment variables directly to
@@ -36,7 +35,6 @@ const env = createEnv({
 	 * explicitly specify this option as true.
 	 */
 	emptyStringAsUndefined: true,
-	extends: [vite()],
 });
 
 export default env;
