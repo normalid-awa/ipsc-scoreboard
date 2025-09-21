@@ -83,18 +83,14 @@ function SportFilter(props: {
 			gap={smallVariant ? 0.5 : 1}
 			flexWrap={"wrap"}
 		>
-			{Object.keys(Sport).map((v) => (
+			{Object.values(Sport).map((v) => (
 				<SportFilterChip
 					size={smallVariant ? "small" : "medium"}
 					key={v}
 					label={v}
-					onEnable={() => addFilter(Sport[v as keyof typeof Sport])}
-					onDisable={() =>
-						removeFilter(Sport[v as keyof typeof Sport])
-					}
-					enabled={props.filters.includes(
-						Sport[v as keyof typeof Sport],
-					)}
+					onEnable={() => addFilter(v)}
+					onDisable={() => removeFilter(v)}
+					enabled={props.filters.includes(v)}
 				/>
 			))}
 		</Stack>
