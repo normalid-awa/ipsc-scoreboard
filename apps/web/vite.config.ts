@@ -34,7 +34,7 @@ const config = defineConfig((confEnv) => {
 			}),
 			tanstackStart({
 				customViteReactPlugin: true,
-				target: "cloudflare-pages",
+				target: "node-server",
 			}),
 			devtools({
 				enhancedLogs: {
