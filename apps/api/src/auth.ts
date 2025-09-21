@@ -26,7 +26,7 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
-const authConfig = {
+const authConfig: BetterAuthOptions = {
 	database: mikroOrmAdapter(orm),
 	basePath: "/auth",
 	logger: {
