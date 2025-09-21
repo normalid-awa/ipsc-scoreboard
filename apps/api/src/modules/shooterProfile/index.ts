@@ -49,8 +49,8 @@ export const shooterProfileRoute = new Elysia({
 		},
 		{
 			query: t.Object({
-				pagination: offsetBasedPaginationDto(),
-				filter: QueryFilter,
+				pagination: t.Optional(offsetBasedPaginationDto()),
+				filter: t.Optional(QueryFilter),
 			}),
 		},
 	)

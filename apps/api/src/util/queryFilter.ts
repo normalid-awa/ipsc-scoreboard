@@ -100,7 +100,7 @@ export const LogicalFilters = t.Object({
 	),
 });
 
-export const QueryFilter = t.Optional(LogicalFilters);
+export const QueryFilter = LogicalFilters;
 export type QueryFilter = Static<typeof QueryFilter>;
 
 function processFieldFilter(filter: Static<typeof FieldFilter>): any {

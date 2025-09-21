@@ -1,6 +1,6 @@
 import { api } from "@/api";
 import { authClient } from "@/auth/auth.client";
-import { Sport } from "@ipsc_scoreboard/api";
+import { App, Sport } from "@ipsc_scoreboard/api";
 import { createCollection } from "@tanstack/db";
 import {
 	QueryClient,
@@ -15,7 +15,7 @@ import z from "zod";
 import { useLiveQuery } from "@tanstack/react-db";
 
 export const constructShooterProfileQueryOption = (
-	param: Parameters<(typeof api)["shooter-profile"]["get"]>[0]["query"],
+	param: App["~Routes"]["api"]["shooter-profile"]["get"]["query"],
 ) =>
 	queryOptions({
 		queryKey: ["shooterProfile", "list", param],
@@ -33,7 +33,6 @@ export function useSelfShooterProfiles() {
 		queryFn: () =>
 			api["shooter-profile"].get({
 				query: {
-					pagination: {},
 					filter: {
 						operator: "and",
 						value: [
@@ -60,17 +59,11 @@ export function useMutateShooterProfile() {
 			identifier: string;
 			image?: File;
 		}) => {
-			const res = await api["shooter-profile"]({ id: param.id }).patch(
-				{
-					sport: param.sport,
-					identifier: param.identifier,
-					image: param.image,
-				},
-				{
-					headers: {},
-					query: {},
-				},
-			);
+			const res = await api["shooter-profile"]({ id: param.id }).patch({
+				sport: param.sport,
+				identifier: param.identifier,
+				image: param.image,
+			});
 			if (res.error) throw res.error;
 			return res.data;
 		},
@@ -97,17 +90,11 @@ export function useCreateShooterProfile() {
 			identifier: string;
 			image?: File;
 		}) => {
-			const res = await api["shooter-profile"].post(
-				{
-					sport: param.sport,
-					identifier: param.identifier,
-					image: param.image,
-				},
-				{
-					headers: {},
-					query: {},
-				},
-			);
+			const res = await api["shooter-profile"].post({
+				sport: param.sport,
+				identifier: param.identifier,
+				image: param.image,
+			});
 			if (res.error) throw res.error;
 			return res.data;
 		},
@@ -130,13 +117,7 @@ export function useDeleteShooterProfile() {
 	return useMutation({
 		mutationKey: ["deleteShooterProfile"],
 		mutationFn: async (id: number) => {
-			const res = await api["shooter-profile"]({ id }).delete(
-				{},
-				{
-					headers: {},
-					query: {},
-				},
-			);
+			const res = await api["shooter-profile"]({ id }).delete({});
 			if (res.error) throw res.error;
 			return res.data;
 		},

@@ -21,15 +21,26 @@ export function offsetBasedPaginationDto() {
  *  Used for findAndCount
  * */
 export function parseOffsetBasedPaginationParams<Entity>(
-	param: Static<typeof offsetBasedPaginationSchema>,
+	param?: Static<typeof offsetBasedPaginationSchema>,
 ): FindOptions<Entity> {
 	return {
-		limit: param.limit || DEFAULT_LIMIT,
-		offset: param.offset || DEFAULT_OFFSET,
+		limit: param?.limit || DEFAULT_LIMIT,
+		offset: param?.offset || DEFAULT_OFFSET,
 		orderBy: {
-			[param.sortField || "id"]: param.sortDirection || "DESC",
+			[param?.sortField || "id"]: param?.sortDirection || "DESC",
 		} as OrderDefinition<Entity>,
 	};
+}
+
+export interface PaginatedResult<Entity> {
+	items: Entity[];
+	length: number;
+	hasNextPage: boolean;
+	hasPrevPage: boolean;
+	currentPage: number;
+	totalPages: number;
+	limit: number;
+	offset: number;
 }
 
 /**
@@ -38,8 +49,16 @@ export function parseOffsetBasedPaginationParams<Entity>(
 export function serializeOffsetBasedPaginationResult<Entity>(
 	results: Entity[],
 	totalCount: number,
-	paginationParams: Static<typeof offsetBasedPaginationSchema>,
-) {
+	paginationParams?: Static<typeof offsetBasedPaginationSchema>,
+): PaginatedResult<Entity> {
+	if (!paginationParams)
+		paginationParams = {
+			limit: DEFAULT_LIMIT,
+			offset: DEFAULT_OFFSET,
+			sortField: "id",
+			sortDirection: "DESC",
+		};
+
 	const limit = paginationParams.limit || DEFAULT_LIMIT;
 	const offset = paginationParams.offset || DEFAULT_OFFSET;
 	const hasNextPage = totalCount > limit + offset;
