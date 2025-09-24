@@ -3,6 +3,7 @@ import viteReact from "@vitejs/plugin-react-swc";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { devtools } from "@tanstack/devtools-vite";
+import { cloudflare } from "@cloudflare/vite-plugin";
 import { readFileSync } from "fs";
 import env from "@/env";
 
@@ -32,10 +33,8 @@ const config = defineConfig((confEnv) => {
 			viteTsConfigPaths({
 				projects: ["./tsconfig.json"],
 			}),
-			tanstackStart({
-				customViteReactPlugin: true,
-				target: "node-server",
-			}),
+			tanstackStart(),
+			cloudflare(),
 			devtools({
 				enhancedLogs: {
 					enabled: true,
