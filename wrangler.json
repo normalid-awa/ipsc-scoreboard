@@ -12,6 +12,9 @@
 		"binding": "ASSETS",
 		"directory": "apps/web/dist/client"
 	},
+	"build": {
+		"watch_dir": "app/web/*"
+	},
 	"observability": {
 		"enabled": true,
 	}
