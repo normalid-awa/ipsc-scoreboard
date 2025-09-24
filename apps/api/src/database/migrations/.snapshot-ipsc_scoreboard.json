@@ -297,21 +297,21 @@
         },
         "aaipsc_paper_targets": {
           "name": "aaipsc_paper_targets",
-          "type": "text[]",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "array"
+          "mappedType": "json"
         },
         "aaipsc_steel_targets": {
           "name": "aaipsc_steel_targets",
-          "type": "text[]",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "array"
+          "mappedType": "json"
         },
         "idpa_paper_targets": {
           "name": "idpa_paper_targets",
@@ -333,39 +333,39 @@
         },
         "ipsc_paper_targets": {
           "name": "ipsc_paper_targets",
-          "type": "text[]",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "array"
+          "mappedType": "json"
         },
         "ipsc_steel_targets": {
           "name": "ipsc_steel_targets",
-          "type": "text[]",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "array"
+          "mappedType": "json"
         },
         "uspsa_paper_targets": {
           "name": "uspsa_paper_targets",
-          "type": "text[]",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "array"
+          "mappedType": "json"
         },
         "uspsa_steel_targets": {
           "name": "uspsa_steel_targets",
-          "type": "text[]",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "array"
+          "mappedType": "json"
         },
         "uspsa_scoring_method": {
           "name": "uspsa_scoring_method",

@@ -43,7 +43,7 @@ export class Stage {
 
 @Entity()
 export class IpscStage extends Stage {
-	@Property()
+	@Property({ type: "jsonb" })
 	ipscPaperTargets!: {
 		targetId: number;
 		requiredHits: number;
@@ -51,7 +51,7 @@ export class IpscStage extends Stage {
 		isNoPenaltyMiss: boolean;
 	}[];
 
-	@Property()
+	@Property({ type: "jsonb" })
 	ipscSteelTargets!: {
 		targetId: number;
 		isNoShoot: boolean;
@@ -83,7 +83,7 @@ export class IdpaStage extends Stage {
 
 @Entity()
 export class AaipscStage extends Stage {
-	@Property()
+	@Property({ type: "jsonb" })
 	aaipscPaperTargets!: {
 		targetId: number;
 		requiredHits: number;
@@ -91,7 +91,7 @@ export class AaipscStage extends Stage {
 		isNoPenaltyMiss: boolean;
 	}[];
 
-	@Property()
+	@Property({ type: "jsonb" })
 	aaipscSteelTargets!: {
 		targetId: number;
 		isNoShoot: boolean;
@@ -120,7 +120,7 @@ export enum UspsaScoringMethod {
 
 @Entity()
 export class UspsaStage extends Stage {
-	@Property()
+	@Property({ type: "jsonb" })
 	uspsaPaperTargets!: {
 		targetId: number;
 		requiredHits: number;
@@ -128,7 +128,7 @@ export class UspsaStage extends Stage {
 		isNoPenaltyMiss: boolean;
 	}[];
 
-	@Property()
+	@Property({ type: "jsonb" })
 	uspsaSteelTargets!: {
 		targetId: number;
 		isNoShoot: boolean;
