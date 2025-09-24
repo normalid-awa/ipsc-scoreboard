@@ -21,6 +21,7 @@ export const app = new Elysia({
 			allowedHeaders: ["Content-Type", "Authorization"],
 		}),
 	)
+	.get("/ping", () => "pong")
 	.on("beforeHandle", () => RequestContext.enter(orm.em))
 	.on("afterHandle", ({ response }) => {
 		return Utils.isEntity(response) ? wrap(response).toObject() : response;
