@@ -9,7 +9,7 @@ import {
 	Property,
 } from "@mikro-orm/core";
 import { User } from "./user.entity.js";
-import { SportMap } from "@/sport.js";
+import { SportEnum, SportMap } from "@/sport.js";
 
 type StageDiscriminator = {
 	[k in keyof typeof SportMap]: `${Capitalize<Lowercase<k & string>>}Stage`;
@@ -44,6 +44,17 @@ END`;
 	return sql;
 }
 
+export const isIpscStage = (stage: Stage): stage is IpscStage =>
+	stage.type === "IPSC";
+export const isIdpaStage = (stage: Stage): stage is IdpaStage =>
+	stage.type === "IDPA";
+export const isAaipscStage = (stage: Stage): stage is AaipscStage =>
+	stage.type === "AAIPSC";
+export const isUspsaStage = (stage: Stage): stage is UspsaStage =>
+	stage.type === "USPSA";
+
+export type UnionStage = IpscStage | IdpaStage | AaipscStage | UspsaStage;
+
 @Entity({
 	discriminatorColumn: "type",
 	discriminatorMap: {
@@ -58,6 +69,9 @@ export class Stage {
 	@PrimaryKey()
 	id!: number;
 
+	@Enum()
+	type!: SportEnum | "Stage";
+
 	@Property()
 	title!: string;
 
@@ -70,6 +84,12 @@ export class Stage {
 
 	@ManyToOne()
 	creator!: User;
+
+	@Property()
+	createdAt = new Date();
+
+	@Property({ onUpdate: () => new Date() })
+	updatedAt = new Date();
 }
 
 @Entity()
