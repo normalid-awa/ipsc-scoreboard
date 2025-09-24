@@ -5,7 +5,8 @@
 	"compatibility_date": "2025-09-24",
 	"compatibility_flags": [
 		"nodejs_compat",
-		"nodejs_compat_populate_process_env"
+		"nodejs_compat_populate_process_env",
+		"allow_custom_ports"
 	],
 	"placement": { "mode": "smart" },
 	"assets": {
