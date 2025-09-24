@@ -8,6 +8,7 @@ import { RequestContext, Utils, wrap } from "@mikro-orm/core";
 import orm from "./database/orm.js";
 import "./util/queryFilter.js";
 import { imageRoute } from "./modules/image/index.js";
+import { stagesRoute } from "./modules/stages/index.js";
 
 export const app = new Elysia({
 	adapter: node(),
@@ -28,6 +29,7 @@ export const app = new Elysia({
 	.mount(auth.handler)
 	.use(shooterProfileRoute)
 	.use(imageRoute)
+	.use(stagesRoute)
 	.listen(3001, ({ hostname, port }) => {
 		console.log(`🦊 Elysia is running at ${hostname}:${port}`);
 	});

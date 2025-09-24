@@ -144,7 +144,7 @@ export const shooterProfileRoute = new Elysia({
 				const imageId = (await image.storeImage(body.image, user.id))
 					.uuid;
 				if (shooterProfile.image) {
-					orm.em.remove(shooterProfile.image).flush();
+					image.deleteImage(shooterProfile.image.uuid, user.id);
 				}
 				//@ts-ignore
 				body.image = rel(Image, imageId);
