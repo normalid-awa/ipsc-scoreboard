@@ -381,6 +381,15 @@
             "Fixed Time"
           ],
           "mappedType": "enum"
+        },
+        "minimum_rounds": {
+          "name": "minimum_rounds",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         }
       },
       "name": "stage",

@@ -1,4 +1,6 @@
 import {
+	BeforeCreate,
+	BeforeUpdate,
 	Entity,
 	Enum,
 	Formula,
@@ -12,6 +14,35 @@ import { SportMap } from "@/sport.js";
 type StageDiscriminator = {
 	[k in keyof typeof SportMap]: `${Capitalize<Lowercase<k & string>>}Stage`;
 };
+
+function calculateMinimumRounds(
+	paperTarget: { requiredHits: number }[],
+	steelTargets: { isNoShoot: boolean }[],
+) {
+	let rounds = 0;
+	paperTarget.forEach((v) => {
+		rounds += v.requiredHits;
+	});
+	steelTargets.forEach((v) => {
+		if (!v.isNoShoot) rounds++;
+	});
+	return rounds;
+}
+
+function generateStageTypeSql(
+	typeMap: Record<number, string>,
+	minimumRoundField: string,
+) {
+	let sql = `CASE`;
+	for (const [key, value] of Object.entries(typeMap)) {
+		sql += `
+	WHEN ${minimumRoundField} <= ${key} THEN '${value}'`;
+	}
+	sql += `
+	ELSE 'uncategorized'
+END`;
+	return sql;
+}
 
 @Entity({
 	discriminatorColumn: "type",
@@ -57,18 +88,24 @@ export class IpscStage extends Stage {
 		isNoShoot: boolean;
 	}[];
 
-	@Formula(
-		(alias) =>
-			`sum(cast(${alias}.ipsc_papper_targets->>'requiredHits' as integer)) + sum(cast(${alias}.ipsc_steel_targets->>'isNoShoot' as integer))`,
-	)
+	@Property()
 	minimumRounds!: number;
 
-	@Property({ persist: false })
-	get stageType(): "short" | "medium" | "long" | "uncategorized" {
-		if (this.minimumRounds <= 12) return "short";
-		else if (this.minimumRounds <= 24) return "medium";
-		else if (this.minimumRounds <= 32) return "long";
-		return "uncategorized";
+	@Formula((alias) =>
+		generateStageTypeSql(
+			{ 12: "short", 24: "medium", 32: "long" },
+			`${alias}.minimum_rounds`,
+		),
+	)
+	stageType!: "short" | "medium" | "long" | "uncategorized";
+
+	@BeforeCreate()
+	@BeforeUpdate()
+	updateMinimumRounds() {
+		this.minimumRounds = calculateMinimumRounds(
+			this.ipscPaperTargets,
+			this.ipscSteelTargets,
+		);
 	}
 }
 
@@ -97,18 +134,24 @@ export class AaipscStage extends Stage {
 		isNoShoot: boolean;
 	}[];
 
-	@Formula(
-		(alias) =>
-			`sum(cast(${alias}.aaipsc_papper_targets->>'requiredHits' as integer)) + sum(cast(${alias}.aaipsc_steel_targets->>'isNoShoot' as integer))`,
-	)
+	@Property()
 	minimumRounds!: number;
 
-	@Property({ persist: false })
-	get stageType(): "short" | "medium" | "long" | "uncategorized" {
-		if (this.minimumRounds <= 12) return "short";
-		else if (this.minimumRounds <= 24) return "medium";
-		else if (this.minimumRounds <= 32) return "long";
-		return "uncategorized";
+	@Formula((alias) =>
+		generateStageTypeSql(
+			{ 12: "short", 20: "medium", 32: "long" },
+			`${alias}.minimum_rounds`,
+		),
+	)
+	stageType!: "short" | "medium" | "long" | "uncategorized";
+
+	@BeforeCreate()
+	@BeforeUpdate()
+	updateMinimumRounds() {
+		this.minimumRounds = calculateMinimumRounds(
+			this.aaipscPaperTargets,
+			this.aaipscSteelTargets,
+		);
 	}
 }
 
@@ -141,17 +184,23 @@ export class UspsaStage extends Stage {
 	})
 	uspsaScoringMethod!: UspsaScoringMethod;
 
-	@Formula(
-		(alias) =>
-			`sum(cast(${alias}.uspsa_papper_targets->>'requiredHits' as integer)) + sum(cast(${alias}.uspsa_steel_targets->>'isNoShoot' as integer))`,
-	)
+	@Property()
 	minimumRounds!: number;
 
-	@Property({ persist: false })
-	get stageType(): "short" | "medium" | "long" | "uncategorized" {
-		if (this.minimumRounds <= 12) return "short";
-		else if (this.minimumRounds <= 20) return "medium";
-		else if (this.minimumRounds <= 32) return "long";
-		return "uncategorized";
+	@Formula((alias) =>
+		generateStageTypeSql(
+			{ 12: "short", 20: "medium", 32: "long" },
+			`${alias}.minimum_rounds`,
+		),
+	)
+	readonly stageType!: "short" | "medium" | "long" | "uncategorized";
+
+	@BeforeCreate()
+	@BeforeUpdate()
+	updateMinimumRounds() {
+		this.minimumRounds = calculateMinimumRounds(
+			this.uspsaPaperTargets,
+			this.uspsaSteelTargets,
+		);
 	}
 }
