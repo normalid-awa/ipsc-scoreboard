@@ -46,7 +46,7 @@ export function isRouteAListedRoute(
 }
 
 // Create a new router instance
-export const createRouter = () => {
+export const getRouter = () => {
 	const rqContext = TanstackQuery.getContext();
 	const { api: _api } = treaty<App>(env.VITE_BACKEND_API_URL);
 
