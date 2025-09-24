@@ -50,7 +50,16 @@ export class IpscStage extends Stage {
 	walkthroughTime!: number;
 }
 
-export class IdpaStage extends Stage {}
+export class IdpaStage extends Stage {
+	@Property()
+	paperTargets!: number;
+
+	@Property()
+	steelTargets!: number;
+
+	@Property()
+	walkthroughTime!: number;
+}
 
 export class AaipscStage extends Stage {}
 
