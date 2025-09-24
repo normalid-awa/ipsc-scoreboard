@@ -4,8 +4,7 @@ import { User } from "@/database/entities/user.entity.js";
 import orm from "@/database/orm.js";
 import { authPlugin } from "@/plugins/auth.js";
 import { imagePlugin } from "@/plugins/image.js";
-import { Sport } from "@/sport.js";
-import {} from "@/util/cursorBasedPagination.js";
+import { SportEnum } from "@/sport.js";
 import {
 	offsetBasedPaginationDto,
 	parseOffsetBasedPaginationParams,
@@ -18,7 +17,7 @@ import { Elysia, status, t } from "elysia";
 
 const createShooterDto = t.Object({
 	identifier: t.String(),
-	sport: t.Enum(Sport),
+	sport: t.Enum(SportEnum),
 	image: t.Optional(
 		t.Nullable(
 			t.File({

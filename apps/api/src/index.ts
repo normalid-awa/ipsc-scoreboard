@@ -1,6 +1,6 @@
 import { Static } from "elysia";
 import { app } from "./server.js";
-import { Sport } from "./sport.js";
+import { SportEnum, SportMap } from "./sport.js";
 import {
 	QueryFilter as TQueryFilter,
 	LogicalFilters as TLogicalFilters,
@@ -8,7 +8,7 @@ import {
 } from "./util/queryFilter.js";
 
 export type App = typeof app;
-export { Sport };
+export { SportEnum, SportMap };
 
 export type QueryFilter = Static<typeof TQueryFilter>;
 export type LogicalFilters = Static<typeof TLogicalFilters>;
