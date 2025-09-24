@@ -29,6 +29,7 @@ export class Stage {
 	creator!: User;
 }
 
+@Entity()
 export class IpscStage extends Stage {
 	@Property()
 	paperTargets!: {
@@ -69,6 +70,7 @@ export class IpscStage extends Stage {
 	}
 }
 
+@Entity()
 export class IdpaStage extends Stage {
 	@Property()
 	paperTargets!: number;
@@ -126,6 +128,7 @@ export enum UspsaScoringMethod {
 	FixedTime = "Fixed Time",
 }
 
+@Entity()
 export class UspsaStage extends Stage {
 	@Property()
 	paperTargets!: {
