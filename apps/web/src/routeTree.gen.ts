@@ -14,6 +14,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as NewUserRouteImport } from './routes/newUser'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShootersIndexRouteImport } from './routes/shooters/index'
+import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as AccountShooterProfileManagementRouteImport } from './routes/account/shooterProfileManagement'
 import { Route as AccountResetPasswordRouteImport } from './routes/account/resetPassword'
 import { Route as AccountManagementRouteImport } from './routes/account/management'
@@ -43,6 +44,11 @@ const ShootersIndexRoute = ShootersIndexRouteImport.update({
   path: '/shooters/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSplatRoute = ApiSplatRouteImport.update({
+  id: '/api/$',
+  path: '/api/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountShooterProfileManagementRoute =
   AccountShooterProfileManagementRouteImport.update({
     id: '/account/shooterProfileManagement',
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/api/$': typeof ApiSplatRoute
   '/shooters': typeof ShootersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/api/$': typeof ApiSplatRoute
   '/shooters': typeof ShootersIndexRoute
 }
 export interface FileRoutesById {
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/api/$': typeof ApiSplatRoute
   '/shooters/': typeof ShootersIndexRoute
 }
 export interface FileRouteTypes {
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/api/$'
     | '/shooters'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/api/$'
     | '/shooters'
   id:
     | '__root__'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/api/$'
     | '/shooters/'
   fileRoutesById: FileRoutesById
 }
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   AccountManagementRoute: typeof AccountManagementRoute
   AccountResetPasswordRoute: typeof AccountResetPasswordRoute
   AccountShooterProfileManagementRoute: typeof AccountShooterProfileManagementRoute
+  ApiSplatRoute: typeof ApiSplatRoute
   ShootersIndexRoute: typeof ShootersIndexRoute
 }
 
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShootersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/$': {
+      id: '/api/$'
+      path: '/api/$'
+      fullPath: '/api/$'
+      preLoaderRoute: typeof ApiSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/shooterProfileManagement': {
       id: '/account/shooterProfileManagement'
       path: '/account/shooterProfileManagement'
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountManagementRoute: AccountManagementRoute,
   AccountResetPasswordRoute: AccountResetPasswordRoute,
   AccountShooterProfileManagementRoute: AccountShooterProfileManagementRoute,
+  ApiSplatRoute: ApiSplatRoute,
   ShootersIndexRoute: ShootersIndexRoute,
 }
 export const routeTree = rootRouteImport
