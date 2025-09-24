@@ -57,7 +57,7 @@ export class IpscStage extends Stage {
 	walkthroughTime!: number;
 
 	@Property({ persist: false })
-	get stageType(): "short" | "medium" | "long" | "uncategorized" {
+	get minimumRounds(): number {
 		let shoots = 0;
 		this.paperTargets.forEach((target) => {
 			shoots += target.requiredHits;
@@ -65,10 +65,14 @@ export class IpscStage extends Stage {
 		this.steelTargets.forEach((target) => {
 			if (!target.isNoShoot) shoots += 1;
 		});
+		return shoots;
+	}
 
-		if (shoots <= 12) return "short";
-		else if (shoots <= 24) return "medium";
-		else if (shoots <= 32) return "long";
+	@Property({ persist: false })
+	get stageType(): "short" | "medium" | "long" | "uncategorized" {
+		if (this.minimumRounds <= 12) return "short";
+		else if (this.minimumRounds <= 24) return "medium";
+		else if (this.minimumRounds <= 32) return "long";
 		return "uncategorized";
 	}
 }
@@ -104,7 +108,7 @@ export class AaipscStage extends Stage {
 	walkthroughTime!: number;
 
 	@Property({ persist: false })
-	get stageType(): "short" | "medium" | "long" | "uncategorized" {
+	get minimumRounds(): number {
 		let shoots = 0;
 		this.paperTargets.forEach((target) => {
 			shoots += target.requiredHits;
@@ -112,10 +116,14 @@ export class AaipscStage extends Stage {
 		this.steelTargets.forEach((target) => {
 			if (!target.isNoShoot) shoots += 1;
 		});
+		return shoots;
+	}
 
-		if (shoots <= 12) return "short";
-		else if (shoots <= 24) return "medium";
-		else if (shoots <= 32) return "long";
+	@Property({ persist: false })
+	get stageType(): "short" | "medium" | "long" | "uncategorized" {
+		if (this.minimumRounds <= 12) return "short";
+		else if (this.minimumRounds <= 24) return "medium";
+		else if (this.minimumRounds <= 32) return "long";
 		return "uncategorized";
 	}
 }
