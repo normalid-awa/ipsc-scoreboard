@@ -106,8 +106,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -226,8 +225,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -259,9 +257,18 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "length": 255,
           "mappedType": "string"
+        },
+        "walkthrough_time": {
+          "name": "walkthrough_time",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
         },
         "creator_id": {
           "name": "creator_id",
@@ -280,6 +287,7 @@
           "primary": false,
           "nullable": false,
           "enumItems": [
+            "Stage",
             "IPSC",
             "IDPA",
             "AAIPSC",
@@ -287,8 +295,26 @@
           ],
           "mappedType": "enum"
         },
-        "paper_targets": {
-          "name": "paper_targets",
+        "aaipsc_paper_targets": {
+          "name": "aaipsc_paper_targets",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "array"
+        },
+        "aaipsc_steel_targets": {
+          "name": "aaipsc_steel_targets",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "array"
+        },
+        "idpa_paper_targets": {
+          "name": "idpa_paper_targets",
           "type": "int",
           "unsigned": false,
           "autoincrement": false,
@@ -296,8 +322,8 @@
           "nullable": true,
           "mappedType": "integer"
         },
-        "steel_targets": {
-          "name": "steel_targets",
+        "idpa_steel_targets": {
+          "name": "idpa_steel_targets",
           "type": "int",
           "unsigned": false,
           "autoincrement": false,
@@ -305,8 +331,44 @@
           "nullable": true,
           "mappedType": "integer"
         },
-        "scoring_method": {
-          "name": "scoring_method",
+        "ipsc_paper_targets": {
+          "name": "ipsc_paper_targets",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "array"
+        },
+        "ipsc_steel_targets": {
+          "name": "ipsc_steel_targets",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "array"
+        },
+        "uspsa_paper_targets": {
+          "name": "uspsa_paper_targets",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "array"
+        },
+        "uspsa_steel_targets": {
+          "name": "uspsa_steel_targets",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "array"
+        },
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
           "type": "uspsa_scoring_method",
           "unsigned": false,
           "autoincrement": false,
@@ -319,15 +381,6 @@
             "Fixed Time"
           ],
           "mappedType": "enum"
-        },
-        "walkthrough_time": {
-          "name": "walkthrough_time",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "integer"
         }
       },
       "name": "stage",
@@ -387,8 +440,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -539,8 +591,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -657,8 +708,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -793,8 +843,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -907,8 +956,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -946,8 +994,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ],
           "mappedType": "enum"
         },
@@ -1072,8 +1119,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -1251,8 +1297,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -1353,8 +1398,7 @@
             "IPSC",
             "IDPA",
             "USPSA",
-            "AAIPSC",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -1377,8 +1421,7 @@
         "IPSC",
         "IDPA",
         "USPSA",
-        "AAIPSC",
-        "3-Gun"
+        "AAIPSC"
       ]
     }
   }

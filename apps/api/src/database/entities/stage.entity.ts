@@ -1,4 +1,11 @@
-import { Entity, Enum, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+	Entity,
+	Enum,
+	Formula,
+	ManyToOne,
+	PrimaryKey,
+	Property,
+} from "@mikro-orm/core";
 import { User } from "./user.entity.js";
 import { SportMap } from "@/sport.js";
 
@@ -9,11 +16,12 @@ type StageDiscriminator = {
 @Entity({
 	discriminatorColumn: "type",
 	discriminatorMap: {
+		Stage: "Stage",
 		IPSC: "IpscStage",
 		IDPA: "IdpaStage",
 		AAIPSC: "AaipscStage",
 		USPSA: "UspsaStage",
-	} satisfies StageDiscriminator,
+	} satisfies StageDiscriminator | { Stage: "Stage" },
 })
 export class Stage {
 	@PrimaryKey()
@@ -23,7 +31,11 @@ export class Stage {
 	title!: string;
 
 	@Property()
-	description!: string;
+	description?: string;
+
+	/** Time in seconds */
+	@Property()
+	walkthroughTime!: number;
 
 	@ManyToOne()
 	creator!: User;
@@ -32,7 +44,7 @@ export class Stage {
 @Entity()
 export class IpscStage extends Stage {
 	@Property()
-	paperTargets!: {
+	ipscPaperTargets!: {
 		targetId: number;
 		requiredHits: number;
 		hasNoShoot: boolean;
@@ -40,26 +52,16 @@ export class IpscStage extends Stage {
 	}[];
 
 	@Property()
-	steelTargets!: {
+	ipscSteelTargets!: {
 		targetId: number;
 		isNoShoot: boolean;
 	}[];
 
-	/** Time in seconds */
-	@Property()
-	walkthroughTime!: number;
-
-	@Property({ persist: false })
-	get minimumRounds(): number {
-		let shoots = 0;
-		this.paperTargets.forEach((target) => {
-			shoots += target.requiredHits;
-		});
-		this.steelTargets.forEach((target) => {
-			if (!target.isNoShoot) shoots += 1;
-		});
-		return shoots;
-	}
+	@Formula(
+		(alias) =>
+			`sum(cast(${alias}.ipsc_papper_targets->>'requiredHits' as integer)) + sum(cast(${alias}.ipsc_steel_targets->>'isNoShoot' as integer))`,
+	)
+	minimumRounds!: number;
 
 	@Property({ persist: false })
 	get stageType(): "short" | "medium" | "long" | "uncategorized" {
@@ -73,18 +75,16 @@ export class IpscStage extends Stage {
 @Entity()
 export class IdpaStage extends Stage {
 	@Property()
-	paperTargets!: number;
+	idpaPaperTargets!: number;
 
 	@Property()
-	steelTargets!: number;
-
-	@Property()
-	walkthroughTime!: number;
+	idpaSteelTargets!: number;
 }
 
+@Entity()
 export class AaipscStage extends Stage {
 	@Property()
-	paperTargets!: {
+	aaipscPaperTargets!: {
 		targetId: number;
 		requiredHits: number;
 		hasNoShoot: boolean;
@@ -92,26 +92,16 @@ export class AaipscStage extends Stage {
 	}[];
 
 	@Property()
-	steelTargets!: {
+	aaipscSteelTargets!: {
 		targetId: number;
 		isNoShoot: boolean;
 	}[];
 
-	/** Time in seconds */
-	@Property()
-	walkthroughTime!: number;
-
-	@Property({ persist: false })
-	get minimumRounds(): number {
-		let shoots = 0;
-		this.paperTargets.forEach((target) => {
-			shoots += target.requiredHits;
-		});
-		this.steelTargets.forEach((target) => {
-			if (!target.isNoShoot) shoots += 1;
-		});
-		return shoots;
-	}
+	@Formula(
+		(alias) =>
+			`sum(cast(${alias}.aaipsc_papper_targets->>'requiredHits' as integer)) + sum(cast(${alias}.aaipsc_steel_targets->>'isNoShoot' as integer))`,
+	)
+	minimumRounds!: number;
 
 	@Property({ persist: false })
 	get stageType(): "short" | "medium" | "long" | "uncategorized" {
@@ -131,7 +121,7 @@ export enum UspsaScoringMethod {
 @Entity()
 export class UspsaStage extends Stage {
 	@Property()
-	paperTargets!: {
+	uspsaPaperTargets!: {
 		targetId: number;
 		requiredHits: number;
 		hasNoShoot: boolean;
@@ -139,32 +129,23 @@ export class UspsaStage extends Stage {
 	}[];
 
 	@Property()
-	steelTargets!: {
+	uspsaSteelTargets!: {
 		targetId: number;
 		isNoShoot: boolean;
 	}[];
 
 	@Enum({
+		name: "uspsa_scoring_method",
 		items: () => UspsaScoringMethod,
 		nativeEnumName: "uspsa_scoring_method",
 	})
-	scoringMethod!: UspsaScoringMethod;
+	uspsaScoringMethod!: UspsaScoringMethod;
 
-	/** Time in seconds */
-	@Property()
-	walkthroughTime!: number;
-
-	@Property({ persist: false })
-	get minimumRounds(): number {
-		let shoots = 0;
-		this.paperTargets.forEach((target) => {
-			shoots += target.requiredHits;
-		});
-		this.steelTargets.forEach((target) => {
-			if (!target.isNoShoot) shoots += 1;
-		});
-		return shoots;
-	}
+	@Formula(
+		(alias) =>
+			`sum(cast(${alias}.uspsa_papper_targets->>'requiredHits' as integer)) + sum(cast(${alias}.uspsa_steel_targets->>'isNoShoot' as integer))`,
+	)
+	minimumRounds!: number;
 
 	@Property({ persist: false })
 	get stageType(): "short" | "medium" | "long" | "uncategorized" {
