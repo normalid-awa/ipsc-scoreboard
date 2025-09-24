@@ -1,11 +1,15 @@
 {
 	"$schema": "../../node_modules/wrangler/config-schema.json",
 	"name": "ipsc-scoreboard",
-	"compatibility_date": "2025-09-02",
-	"compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"],
 	"main": "./dist/server/server.js",
-    "assets": {
-        "binding": "ASSETS",
-        "directory": "./dist/client"
-    }
+	"compatibility_date": "2025-09-24",
+	"compatibility_flags": [
+		"nodejs_compat",
+		"nodejs_compat_populate_process_env"
+	],
+	"placement": { "mode": "smart" },
+	"assets": {
+		"binding": "ASSETS",
+		"directory": "./dist/client"
+	}
 }
