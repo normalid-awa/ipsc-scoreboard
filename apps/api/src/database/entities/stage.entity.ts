@@ -1,4 +1,11 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+	Entity,
+	Enum,
+	Formula,
+	ManyToOne,
+	PrimaryKey,
+	Property,
+} from "@mikro-orm/core";
 import { User } from "./user.entity.js";
 import { SportMap } from "@/sport.js";
 
@@ -48,6 +55,22 @@ export class IpscStage extends Stage {
 	/** Time in seconds */
 	@Property()
 	walkthroughTime!: number;
+
+	@Property({ persist: false })
+	get stageType(): "short" | "medium" | "long" | "uncategorized" {
+		let shoots = 0;
+		this.paperTargets.forEach((target) => {
+			shoots += target.requiredHits;
+		});
+		this.steelTargets.forEach((target) => {
+			if (!target.isNoShoot) shoots += 1;
+		});
+
+		if (shoots <= 12) return "short";
+		else if (shoots <= 24) return "medium";
+		else if (shoots <= 32) return "long";
+		return "uncategorized";
+	}
 }
 
 export class IdpaStage extends Stage {
@@ -79,6 +102,22 @@ export class AaipscStage extends Stage {
 	/** Time in seconds */
 	@Property()
 	walkthroughTime!: number;
+
+	@Property({ persist: false })
+	get stageType(): "short" | "medium" | "long" | "uncategorized" {
+		let shoots = 0;
+		this.paperTargets.forEach((target) => {
+			shoots += target.requiredHits;
+		});
+		this.steelTargets.forEach((target) => {
+			if (!target.isNoShoot) shoots += 1;
+		});
+
+		if (shoots <= 12) return "short";
+		else if (shoots <= 24) return "medium";
+		else if (shoots <= 32) return "long";
+		return "uncategorized";
+	}
 }
 
 export class UspsaStage extends Stage {}
