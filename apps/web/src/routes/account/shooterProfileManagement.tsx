@@ -19,7 +19,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { Sport } from "@ipsc_scoreboard/api";
+import { SportEnum } from "@ipsc_scoreboard/api";
 import {
 	useCreateShooterProfile,
 	useDeleteShooterProfile,
@@ -76,7 +76,7 @@ function ShooterCard(props: {
 		event.preventDefault();
 		if (editMode) {
 			const formData = new FormData(event.target as HTMLFormElement);
-			const sport = formData.get("sport") as Sport;
+			const sport = formData.get("sport") as SportEnum;
 			const identifier = formData.get("identifier") as string;
 			if (
 				sport == props.sport &&
@@ -190,7 +190,7 @@ function ShooterCard(props: {
 									name="sport"
 									defaultValue={props.sport}
 								>
-									{Object.values(Sport).map((sport) => (
+									{Object.values(SportEnum).map((sport) => (
 										<MenuItem key={sport} value={sport}>
 											{sport}
 										</MenuItem>
@@ -262,7 +262,7 @@ function AddShooterForm(props: { onCreate?: () => void }) {
 			onSubmit={async (e) => {
 				e.preventDefault();
 				const formData = new FormData(e.target as HTMLFormElement);
-				const sport = formData.get("sport") as Sport;
+				const sport = formData.get("sport") as SportEnum;
 				const identifier = formData.get("identifier") as string;
 
 				let file: File | undefined = undefined;
@@ -330,7 +330,7 @@ function AddShooterForm(props: { onCreate?: () => void }) {
 					<FormControl fullWidth required>
 						<InputLabel>Sport</InputLabel>
 						<Select label="Sport" name="sport">
-							{Object.values(Sport).map((sport) => (
+							{Object.values(SportEnum).map((sport) => (
 								<MenuItem key={sport} value={sport}>
 									{sport}
 								</MenuItem>

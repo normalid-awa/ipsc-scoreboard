@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
-import { FieldFilter, Sport } from "@ipsc_scoreboard/api";
+import { FieldFilter, SportEnum } from "@ipsc_scoreboard/api";
 import DoneIcon from "@mui/icons-material/Done";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -60,19 +60,21 @@ function SportFilterChip(props: {
 
 function SportFilter(props: {
 	filters: string[];
-	setFilters: (filters: Sport[]) => void;
+	setFilters: (filters: SportEnum[]) => void;
 }) {
 	const theme = useTheme();
 	const smallVariant = useMediaQuery(theme.breakpoints.down("sm"));
 
-	function removeFilter(filter: Sport) {
-		const newFilters = props.filters.filter((v) => v !== filter) as Sport[];
+	function removeFilter(filter: SportEnum) {
+		const newFilters = props.filters.filter(
+			(v) => v !== filter,
+		) as SportEnum[];
 		props.setFilters(newFilters);
 	}
 
-	function addFilter(filter: Sport) {
+	function addFilter(filter: SportEnum) {
 		if (!props.filters.includes(filter)) {
-			props.setFilters([...props.filters, filter] as Sport[]);
+			props.setFilters([...props.filters, filter] as SportEnum[]);
 		}
 	}
 
@@ -83,7 +85,7 @@ function SportFilter(props: {
 			gap={smallVariant ? 0.5 : 1}
 			flexWrap={"wrap"}
 		>
-			{Object.values(Sport).map((v) => (
+			{Object.values(SportEnum).map((v) => (
 				<SportFilterChip
 					size={smallVariant ? "small" : "medium"}
 					key={v}
@@ -123,7 +125,7 @@ function RouteComponent() {
 
 	const [textFilter, setTextFilter] = useState("");
 
-	const [sportsFilters, setSportsFilters] = useState<Sport[]>([]);
+	const [sportsFilters, setSportsFilters] = useState<SportEnum[]>([]);
 
 	const { data, isLoading } = useQuery(
 		constructShooterProfileQueryOption({
