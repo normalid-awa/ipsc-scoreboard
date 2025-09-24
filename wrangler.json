@@ -17,5 +17,9 @@
 	},
 	"observability": {
 		"enabled": true,
-	}
+	},
+	"vars": {
+		"VITE_BACKEND_API_URL": "http://di.dragoncustom.top:3001"
+	},
+	"keep_vars": true
 }
