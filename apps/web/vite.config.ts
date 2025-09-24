@@ -46,7 +46,7 @@ const config = defineConfig((confEnv) => {
 		],
 		build: {
 			rollupOptions: {
-				external: ["@t3-oss/env-core"],
+				// external: ["@t3-oss/env-core"],
 			},
 		},
 	};
