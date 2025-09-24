@@ -14,7 +14,7 @@ export default defineConfig({
 		pathTs: "src/database/migrations",
 	},
 	metadataProvider: TsMorphMetadataProvider,
-	debug: process.env.NODE_ENV === "development",
+	debug: process.env.NODE_ENV !== "production",
 	extensions: [Migrator, SoftDeleteHandler],
 	ignoreUndefinedInQuery: true,
 	serialization: {
