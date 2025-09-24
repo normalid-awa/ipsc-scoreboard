@@ -2,16 +2,9 @@ import { createEnv } from "@t3-oss/env-core";
 import z from "zod";
 import "dotenv/config";
 
-const parsedEnv = { ...process.env };
-
-//@ts-ignore
-parsedEnv.FRONTEND_URL = !process.env.FRONTEND_URL
-	? undefined
-	: process.env.FRONTEND_URL?.split(",");
-
 const env = createEnv({
 	server: {
-		FRONTEND_URL: z.array(z.string().url()),
+		FRONTEND_URL: z.string().url(),
 
 		BETTER_AUTH_URL: z.string().url(),
 		BETTER_AUTH_SECRET: z.string(),
@@ -36,7 +29,7 @@ const env = createEnv({
 
 		FILE_UPLOAD_PATH: z.string(),
 	},
-	runtimeEnv: parsedEnv,
+	runtimeEnv: process.env,
 });
 
 export default env;

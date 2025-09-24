@@ -32,7 +32,7 @@ const authConfig: BetterAuthOptions = {
 	logger: {
 		level: process.env.NODE_ENV === "development" ? "debug" : "warn",
 	},
-	trustedOrigins: env.FRONTEND_URL,
+	trustedOrigins: [env.FRONTEND_URL],
 	advanced: {
 		ipAddress: {
 			ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
