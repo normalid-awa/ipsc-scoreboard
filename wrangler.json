@@ -11,5 +11,8 @@
 	"assets": {
 		"binding": "ASSETS",
 		"directory": "apps/web/dist/client"
+	},
+	"observability": {
+		"enabled": true,
 	}
 }
