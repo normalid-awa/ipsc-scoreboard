@@ -1,11 +1,4 @@
-import {
-	Entity,
-	Enum,
-	Formula,
-	ManyToOne,
-	PrimaryKey,
-	Property,
-} from "@mikro-orm/core";
+import { Entity, Enum, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { User } from "./user.entity.js";
 import { SportMap } from "@/sport.js";
 
@@ -20,7 +13,6 @@ type StageDiscriminator = {
 		IDPA: "IdpaStage",
 		AAIPSC: "AaipscStage",
 		USPSA: "UspsaStage",
-		ThreeGun: "ThreegunStage",
 	} satisfies StageDiscriminator,
 })
 export class Stage {
@@ -179,5 +171,3 @@ export class UspsaStage extends Stage {
 		return "uncategorized";
 	}
 }
-
-export class ThreegunStage extends Stage {}

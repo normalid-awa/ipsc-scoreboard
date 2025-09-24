@@ -3,7 +3,6 @@ export enum SportEnum {
 	IDPA = "IDPA",
 	USPSA = "USPSA",
 	AAIPSC = "AAIPSC",
-	ThreeGun = "3-Gun",
 }
 
 export const SportMap = {
@@ -11,5 +10,4 @@ export const SportMap = {
 	IDPA: "IDPA",
 	AAIPSC: "AAIPSC",
 	USPSA: "USPSA",
-	ThreeGun: "3-Gun",
 } as const;
