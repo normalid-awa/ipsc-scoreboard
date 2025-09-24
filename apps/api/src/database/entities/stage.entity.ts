@@ -61,7 +61,25 @@ export class IdpaStage extends Stage {
 	walkthroughTime!: number;
 }
 
-export class AaipscStage extends Stage {}
+export class AaipscStage extends Stage {
+	@Property()
+	paperTargets!: {
+		targetId: number;
+		requiredHits: number;
+		hasNoShoot: boolean;
+		isNoPenaltyMiss: boolean;
+	}[];
+
+	@Property()
+	steelTargets!: {
+		targetId: number;
+		isNoShoot: boolean;
+	}[];
+
+	/** Time in seconds */
+	@Property()
+	walkthroughTime!: number;
+}
 
 export class UspsaStage extends Stage {}
 
