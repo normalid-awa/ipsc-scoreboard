@@ -6,7 +6,7 @@ import { authPlugin } from "@/plugins/auth.js";
 import { imagePlugin } from "@/plugins/image.js";
 import { SportEnum } from "@/sport.js";
 import {
-	offsetBasedPaginationDto,
+	OffsetBasedPaginationSchema,
 	parseOffsetBasedPaginationParams,
 	serializeOffsetBasedPaginationResult,
 } from "@/util/offsetBasedPagination.js";
@@ -48,7 +48,7 @@ export const shooterProfileRoute = new Elysia({
 		},
 		{
 			query: t.Object({
-				pagination: t.Optional(offsetBasedPaginationDto()),
+				pagination: t.Optional(OffsetBasedPaginationSchema),
 				filter: t.Optional(QueryFilter),
 			}),
 		},
