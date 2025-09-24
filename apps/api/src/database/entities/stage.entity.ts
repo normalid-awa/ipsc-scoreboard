@@ -128,6 +128,56 @@ export class AaipscStage extends Stage {
 	}
 }
 
-export class UspsaStage extends Stage {}
+export enum UspsaScoringMethod {
+	Comstock = "Comstock",
+	VirginiaCount = "Virginia Count",
+	FixedTime = "Fixed Time",
+}
+
+export class UspsaStage extends Stage {
+	@Property()
+	paperTargets!: {
+		targetId: number;
+		requiredHits: number;
+		hasNoShoot: boolean;
+		isNoPenaltyMiss: boolean;
+	}[];
+
+	@Property()
+	steelTargets!: {
+		targetId: number;
+		isNoShoot: boolean;
+	}[];
+
+	@Enum({
+		items: () => UspsaScoringMethod,
+		nativeEnumName: "uspsa_scoring_method",
+	})
+	scoringMethod!: UspsaScoringMethod;
+
+	/** Time in seconds */
+	@Property()
+	walkthroughTime!: number;
+
+	@Property({ persist: false })
+	get minimumRounds(): number {
+		let shoots = 0;
+		this.paperTargets.forEach((target) => {
+			shoots += target.requiredHits;
+		});
+		this.steelTargets.forEach((target) => {
+			if (!target.isNoShoot) shoots += 1;
+		});
+		return shoots;
+	}
+
+	@Property({ persist: false })
+	get stageType(): "short" | "medium" | "long" | "uncategorized" {
+		if (this.minimumRounds <= 12) return "short";
+		else if (this.minimumRounds <= 20) return "medium";
+		else if (this.minimumRounds <= 32) return "long";
+		return "uncategorized";
+	}
+}
 
 export class ThreegunStage extends Stage {}
