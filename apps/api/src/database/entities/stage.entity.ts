@@ -101,7 +101,7 @@ export class IpscStage extends Stage {
 
 	@BeforeCreate()
 	@BeforeUpdate()
-	updateMinimumRounds() {
+	protected updateMinimumRounds() {
 		this.minimumRounds = calculateMinimumRounds(
 			this.ipscPaperTargets,
 			this.ipscSteelTargets,
@@ -147,7 +147,7 @@ export class AaipscStage extends Stage {
 
 	@BeforeCreate()
 	@BeforeUpdate()
-	updateMinimumRounds() {
+	protected updateMinimumRounds() {
 		this.minimumRounds = calculateMinimumRounds(
 			this.aaipscPaperTargets,
 			this.aaipscSteelTargets,
@@ -197,7 +197,7 @@ export class UspsaStage extends Stage {
 
 	@BeforeCreate()
 	@BeforeUpdate()
-	updateMinimumRounds() {
+	protected updateMinimumRounds() {
 		this.minimumRounds = calculateMinimumRounds(
 			this.uspsaPaperTargets,
 			this.uspsaSteelTargets,
