@@ -34,7 +34,9 @@ const config = defineConfig((confEnv) => {
 				projects: ["./tsconfig.json"],
 			}),
 			tanstackStart(),
-			cloudflare(),
+			cloudflare({
+				configPath: "../../wrangler.json",
+			}),
 			devtools({
 				enhancedLogs: {
 					enabled: true,
