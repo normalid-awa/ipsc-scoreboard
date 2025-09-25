@@ -4,6 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev --port 3000 --mode development",
+		"cf-preview": "npx wrangler dev --ip=\"0.0.0.0\" --port=3000 --local-protocol=\"https\" --https-key-path=\"../../key.pem\" --https-cert-path=\"../../cert.pem\"",
 		"start": "node .output/server/index.mjs",
 		"build": "vite build",
 		"serve": "vite preview",
