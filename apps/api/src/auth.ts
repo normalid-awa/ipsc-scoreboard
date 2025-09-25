@@ -78,18 +78,18 @@ const authConfig: BetterAuthOptions = {
 		github: {
 			clientId: env.AUTH_GITHUB_ID as string,
 			clientSecret: env.AUTH_GITHUB_SECRET as string,
-			redirectURI: `${env.FRONTEND_URL}/api/auth/callback/github`,
+			redirectURI: `${env.BETTER_AUTH_URL}/api/auth/callback/github`,
 		},
 		google: {
 			clientId: env.AUTH_GOOGLE_ID as string,
 			clientSecret: env.AUTH_GOOGLE_SECRET as string,
-			redirectURI: `${env.FRONTEND_URL}/api/auth/callback/google`,
+			redirectURI: `${env.BETTER_AUTH_URL}/api/auth/callback/google`,
 		},
 		microsoft: {
 			clientId: env.AUTH_MICROSOFT_ENTRA_ID_ID as string,
 			clientSecret: env.AUTH_MICROSOFT_ENTRA_ID_SECRET as string,
 			tenantId: env.AUTH_MICROSOFT_ENTRA_ID_ISSUER as string,
-			redirectURI: `${env.FRONTEND_URL}/api/auth/callback/microsoft`,
+			redirectURI: `${env.BETTER_AUTH_URL}/api/auth/callback/microsoft`,
 		},
 	},
 	plugins: [

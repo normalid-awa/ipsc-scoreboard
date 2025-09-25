@@ -18,8 +18,6 @@ const config = defineConfig((confEnv) => {
 		server: {
 			host: "0.0.0.0",
 			allowedHosts: true,
-			// To disable http2, due to backend is not support http2
-			proxy: {},
 			https,
 		},
 		plugins: [

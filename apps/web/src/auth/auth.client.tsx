@@ -12,8 +12,10 @@ import {
 	organizationClient,
 	multiSessionClient,
 } from "better-auth/client/plugins";
+import env from "@/env";
 
 export const authClient = createAuthClient({
+	baseURL: env.VITE_BACKEND_API_URL,
 	plugins: [
 		usernameClient(),
 		emailOTPClient(),

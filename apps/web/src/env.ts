@@ -11,10 +11,7 @@ const env = createEnv({
 	clientPrefix: "VITE_",
 
 	client: {
-		VITE_BACKEND_API_URL: z
-			.string()
-			.url()
-			.default("http://localhost:3000/api"),
+		VITE_BACKEND_API_URL: z.string().url(),
 		VITE_TITLE_PREFIX: z.string().default("IPSC Scoreboard |"),
 	},
 
@@ -22,7 +19,7 @@ const env = createEnv({
 	 * What object holds the environment variables at runtime. This is usually
 	 * `process.env` or `import.meta.env`.
 	 */
-	runtimeEnv: process.env,
+	runtimeEnv: import.meta.env,
 
 	/**
 	 * By default, this library will feed the environment variables directly to
