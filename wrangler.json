@@ -19,7 +19,7 @@
 		"enabled": true,
 	},
 	"vars": {
-		"VITE_BACKEND_API_URL": "http://di.dragoncustom.top:3001"
+		"VITE_BACKEND_API_URL": ""
 	},
 	"keep_vars": true
 }
