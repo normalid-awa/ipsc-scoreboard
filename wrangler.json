@@ -22,7 +22,14 @@
 		"enabled": true,
 	},
 	"vars": {
-		"VITE_BACKEND_API_URL": ""
+		"VITE_BACKEND_API_URL": "<PLACEHOLDER>"
+	},
+	"env": {
+		"production":{
+			"vars": {
+				"VITE_BACKEND_API_URL": "https://ipsc-scoreboard.rluosteam.workers.dev/"
+			}
+		}
 	},
 	"keep_vars": true
 }
