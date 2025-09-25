@@ -13,8 +13,11 @@
 		"directory": "apps/web/dist/client"
 	},
 	"build": {
-		"watch_dir": "*"
+		"watch_dir": "apps/web/*",
+		"cwd": "apps/web",
+		"command": "npm run build"
 	},
+	"find_additional_modules": true,
 	"observability": {
 		"enabled": true,
 	},
