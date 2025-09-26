@@ -2,7 +2,7 @@ import { createEnv } from "@t3-oss/env-core";
 import { vite } from "@t3-oss/env-core/presets-zod";
 import { z } from "zod";
 
-console.debug({
+console.debug(process.env.VITE_BACKEND_API_URL, {
 	...process.env,
 	...import.meta.env,
 });
