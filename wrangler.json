@@ -22,7 +22,7 @@
 		"enabled": true,
 	},
 	"vars": {
-		"VITE_BACKEND_API_URL": "https://ipsc-scoreboard.rluosteam.workers.dev"
+		"VITE_BACKEND_API_URL": "https://di.dragoncustom.top:3001"
 	},
 	"keep_vars": true
 }
