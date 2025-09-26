@@ -21,8 +21,4 @@
 	"observability": {
 		"enabled": true,
 	},
-	"vars": {
-		"VITE_BACKEND_API_URL": ""
-	},
-	"keep_vars": true
 }
