@@ -15,8 +15,6 @@ const config = defineConfig((confEnv) => {
 		};
 	}
 
-	Object.assign(process.env, loadEnv(confEnv.mode, process.cwd(), ""));
-
 	return {
 		server: {
 			host: "0.0.0.0",

@@ -25,11 +25,7 @@ const env = createEnv({
 	 * What object holds the environment variables at runtime. This is usually
 	 * `process.env` or `import.meta.env`.
 	 */
-
-	runtimeEnvStrict: {
-		VITE_BACKEND_API_URL: process.env.VITE_BACKEND_API_URL,
-		VITE_TITLE_PREFIX: process.env.VITE_TITLE_PREFIX,
-	},
+	runtimeEnv: import.meta.env,
 
 	/**
 	 * By default, this library will feed the environment variables directly to
