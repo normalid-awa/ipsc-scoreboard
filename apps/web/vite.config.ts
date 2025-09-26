@@ -1,11 +1,10 @@
-import { defineConfig, ServerOptions } from "vite";
+import { defineConfig, loadEnv, ServerOptions } from "vite";
 import viteReact from "@vitejs/plugin-react-swc";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { readFileSync } from "fs";
-import env from "@/env";
 
 const config = defineConfig((confEnv) => {
 	let https: ServerOptions["https"] | undefined = undefined;
@@ -15,19 +14,10 @@ const config = defineConfig((confEnv) => {
 			cert: readFileSync("../../cert.pem"),
 		};
 	}
+
+	Object.assign(process.env, loadEnv(confEnv.mode, process.cwd(), ""));
+
 	return {
-		environments: {
-			ipsc_scoreboard: {
-				define: {
-					"process.env.VITE_BACKEND_API_URL": import.meta.env
-						.VITE_BACKEND_API_URL,
-					"process.env.VITE_TITLE_PREFIX": import.meta.env
-						.VITE_TITLE_PREFIX,
-				} satisfies {
-					[K in keyof typeof env as `process.env.${K}`]: unknown;
-				},
-			},
-		},
 		server: {
 			host: "0.0.0.0",
 			allowedHosts: true,
@@ -39,7 +29,7 @@ const config = defineConfig((confEnv) => {
 			}),
 			tanstackStart(),
 			cloudflare({
-				configPath: "../../wrangler.json",
+				configPath: "../../wrangler.jsonc",
 			}),
 			devtools({
 				enhancedLogs: {

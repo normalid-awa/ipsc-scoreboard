@@ -5,20 +5,20 @@
 	"compatibility_date": "2025-09-24",
 	"compatibility_flags": [
 		"nodejs_compat",
-		"nodejs_compat_populate_process_env"
+		"nodejs_compat_populate_process_env",
 	],
 	"placement": { "mode": "smart" },
 	"assets": {
 		"binding": "ASSETS",
-		"directory": "apps/web/dist/client"
+		"directory": "apps/web/dist/client",
 	},
 	"build": {
 		"watch_dir": "apps/web/*",
 		"cwd": "apps/web",
-		"command": "npm run build"
+		"command": "npm run build",
 	},
-	"find_additional_modules": true,
 	"observability": {
 		"enabled": true,
 	},
+	"legacy_env": true,
 }
