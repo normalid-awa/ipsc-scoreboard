@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv, ServerOptions } from "vite";
+import { defineConfig, ServerOptions } from "vite";
 import viteReact from "@vitejs/plugin-react-swc";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
