@@ -1,7 +1,10 @@
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 
-console.error(process.env.VITE_BACKEND_API_URL, process.env, import.meta.env);
+export const clientEnvSchema = z.object({
+	VITE_BACKEND_API_URL: z.string().url(),
+	VITE_TITLE_PREFIX: z.string().default("IPSC Scoreboard |"),
+});
 
 const env = createEnv({
 	/**
@@ -12,10 +15,7 @@ const env = createEnv({
 
 	isServer: import.meta.env.SSR,
 
-	client: {
-		VITE_BACKEND_API_URL: z.string().url(),
-		VITE_TITLE_PREFIX: z.string().default("IPSC Scoreboard |"),
-	},
+	client: clientEnvSchema.shape,
 
 	/**
 	 * What object holds the environment variables at runtime. This is usually

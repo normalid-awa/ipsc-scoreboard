@@ -21,4 +21,5 @@
 		"enabled": true,
 	},
 	"legacy_env": true,
+	"keep_vars": true,
 }
