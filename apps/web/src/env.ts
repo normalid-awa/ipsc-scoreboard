@@ -1,4 +1,5 @@
 import { createEnv } from "@t3-oss/env-core";
+import { vite } from "@t3-oss/env-core/presets-zod";
 import { z } from "zod";
 
 export const clientEnvSchema = z.object({
@@ -37,8 +38,6 @@ const env = createEnv({
 	 * explicitly specify this option as true.
 	 */
 	emptyStringAsUndefined: true,
-
-	skipValidation: import.meta.env.PROD,
 
 	// TODO: Don't know why this doesn't work
 	// extends: [vite()],
