@@ -10,12 +10,12 @@ import {
 	ManyToOne,
 	PrimaryKey,
 	Property,
-	Ref,
 	type Rel,
 } from "@mikro-orm/core";
 import { User } from "./user.entity.js";
 import { SportEnum, SportMap } from "../../sport.js";
 import { Image } from "./image.entity.js";
+import { Static, t } from "elysia";
 
 type StageDiscriminator = {
 	[k in keyof typeof SportMap]: `${Capitalize<Lowercase<k & string>>}Stage`;
@@ -123,21 +123,25 @@ export class Stage {
 	updatedAt = new Date();
 }
 
+export const ipscPaperTargetSchema = t.Object({
+	targetId: t.Integer(),
+	requiredHits: t.Integer(),
+	hasNoShoot: t.Boolean(),
+	isNoPenaltyMiss: t.Boolean(),
+});
+
+export const ipscSteelTargetSchema = t.Object({
+	targetId: t.Integer(),
+	isNoShoot: t.Boolean(),
+});
+
 @Entity()
 export class IpscStage extends Stage {
 	@Property({ type: "jsonb" })
-	ipscPaperTargets!: {
-		targetId: number;
-		requiredHits: number;
-		hasNoShoot: boolean;
-		isNoPenaltyMiss: boolean;
-	}[];
+	ipscPaperTargets!: Static<typeof ipscPaperTargetSchema>[];
 
 	@Property({ type: "jsonb" })
-	ipscSteelTargets!: {
-		targetId: number;
-		isNoShoot: boolean;
-	}[];
+	ipscSteelTargets!: Static<typeof ipscSteelTargetSchema>[];
 
 	@Property({ name: "minimum_rounds" })
 	minimumRounds!: number;

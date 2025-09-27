@@ -9,7 +9,7 @@
 		"declaration": true,
 		"declarationMap": true,
 		"noUncheckedIndexedAccess": true,
-		"exactOptionalPropertyTypes": true,
+		"exactOptionalPropertyTypes": false,
 		"noUnusedLocals": true,
 		"strict": true,
 		"isolatedModules": true,
