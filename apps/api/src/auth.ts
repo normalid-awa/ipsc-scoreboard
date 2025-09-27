@@ -41,6 +41,7 @@ const authConfig: BetterAuthOptions = {
 		database: {
 			generateId: false,
 		},
+		cookiePrefix: "ipsc-scoreboard",
 	},
 	emailAndPassword: {
 		enabled: true,
