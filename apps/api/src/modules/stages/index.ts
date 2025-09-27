@@ -18,6 +18,7 @@ import {
 import { convertQueryFilter, QueryFilter } from "@/util/queryFilter.js";
 import { Elysia, Static, status, t } from "elysia";
 import {
+	createAaipscStageSchema,
 	createIdpaStageSchema,
 	createIpscStageSchema,
 	createStageSchema,
@@ -246,6 +247,25 @@ export const stagesRoute = new Elysia({
 		{
 			isAuth: true,
 			body: createIdpaStageSchema,
+		},
+	)
+	.post(
+		"/aaipsc",
+		async ({ body, user }) => {
+			let [stage, ...images] = initStage(
+				new AaipscStage(),
+				body,
+				user.id,
+			);
+			stage.aaipscPaperTargets = body.aaipscPaperTargets;
+			stage.aaipscSteelTargets = body.aaipscSteelTargets;
+			await orm.em.persist([stage, ...images]).flush();
+			await stage.images.init();
+			return stage;
+		},
+		{
+			isAuth: true,
+			body: createAaipscStageSchema,
 		},
 	)
 	// #endregion

@@ -173,21 +173,25 @@ export class IdpaStage extends Stage {
 	idpaSteelTargets!: number;
 }
 
+export const aaipscPaperTargetSchema = t.Object({
+	targetId: t.Integer(),
+	requiredHits: t.Integer(),
+	hasNoShoot: t.Boolean(),
+	isNoPenaltyMiss: t.Boolean(),
+});
+
+export const aaipscSteelTargetSchema = t.Object({
+	targetId: t.Integer(),
+	isNoShoot: t.Boolean(),
+});
+
 @Entity()
 export class AaipscStage extends Stage {
 	@Property({ type: "jsonb" })
-	aaipscPaperTargets!: {
-		targetId: number;
-		requiredHits: number;
-		hasNoShoot: boolean;
-		isNoPenaltyMiss: boolean;
-	}[];
+	aaipscPaperTargets!: Static<typeof aaipscPaperTargetSchema>[];
 
 	@Property({ type: "jsonb" })
-	aaipscSteelTargets!: {
-		targetId: number;
-		isNoShoot: boolean;
-	}[];
+	aaipscSteelTargets!: Static<typeof aaipscSteelTargetSchema>[];
 
 	@Property({ name: "minimum_rounds" })
 	minimumRounds!: number;

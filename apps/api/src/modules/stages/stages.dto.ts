@@ -1,4 +1,6 @@
 import {
+	aaipscPaperTargetSchema,
+	aaipscSteelTargetSchema,
 	ipscPaperTargetSchema,
 	ipscSteelTargetSchema,
 } from "@/database/entities/stage.entity.js";
@@ -24,5 +26,13 @@ export const createIdpaStageSchema = t.Composite([
 	t.Object({
 		idpaPaperTargets: t.Integer(),
 		idpaSteelTargets: t.Integer(),
+	}),
+]);
+
+export const createAaipscStageSchema = t.Composite([
+	createStageSchema,
+	t.Object({
+		aaipscPaperTargets: t.Array(aaipscPaperTargetSchema),
+		aaipscSteelTargets: t.Array(aaipscSteelTargetSchema),
 	}),
 ]);
