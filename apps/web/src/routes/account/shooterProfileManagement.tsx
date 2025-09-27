@@ -150,7 +150,7 @@ function ShooterCard(props: {
 										src={
 											icon
 												? icon.src
-												: `/api/image/${props.image}`
+												: `${env.VITE_BACKEND_API_URL}/api/image/${props.image}`
 										}
 									/>
 								}
@@ -214,7 +214,7 @@ function ShooterCard(props: {
 					<ListItemAvatar>
 						<Avatar
 							sx={{ width: 65, height: 65, m: 1, mr: 2 }}
-							src={`/api/image/${props.image}`}
+							src={`${env.VITE_BACKEND_API_URL}/api/image/${props.image}`}
 						/>
 					</ListItemAvatar>
 					<ListItemText
