@@ -58,19 +58,18 @@ export type UnionStage = IpscStage | IdpaStage | AaipscStage | UspsaStage;
 @Entity({
 	discriminatorColumn: "type",
 	discriminatorMap: {
-		Stage: "Stage",
 		IPSC: "IpscStage",
 		IDPA: "IdpaStage",
 		AAIPSC: "AaipscStage",
 		USPSA: "UspsaStage",
-	} satisfies StageDiscriminator | { Stage: "Stage" },
+	} satisfies StageDiscriminator,
 })
 export class Stage {
 	@PrimaryKey()
 	id!: number;
 
 	@Enum()
-	type!: SportEnum | "Stage";
+	type!: SportEnum;
 
 	@Property()
 	title!: string;

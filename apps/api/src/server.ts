@@ -11,6 +11,7 @@ import { imageRoute } from "./modules/image/index.js";
 import { serve } from "@hono/node-server";
 import { createServer } from "node:https";
 import { readFileSync } from "node:fs";
+import { stagesRoute } from "./modules/stages/index.js";
 
 export const app = new Elysia({
 	adapter: node(),
@@ -31,6 +32,7 @@ export const app = new Elysia({
 	})
 	.mount(auth.handler)
 	.use(shooterProfileRoute)
+	.use(stagesRoute)
 	.use(imageRoute)
 	.compile();
 
