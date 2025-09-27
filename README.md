@@ -9,5 +9,12 @@
 
 # Client-side setup
 
+# Deployment
+## Frontend
+### Cloudflare worker
+1. Create a cloudflare worker.
+2. Fill in the client side environment variable in **build time environment variable**
+3. Fill in the server side environment variable in **runtime environment variable**
+
 # Contributing
 1. Commit messages should follow the [conventional commit standard](https://www.conventionalcommits.org/en/v1.0.0/).

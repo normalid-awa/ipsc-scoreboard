@@ -8,7 +8,9 @@ import { RequestContext, Utils, wrap } from "@mikro-orm/core";
 import orm from "./database/orm.js";
 import "./util/queryFilter.js";
 import { imageRoute } from "./modules/image/index.js";
-import { stagesRoute } from "./modules/stages/index.js";
+import { serve } from "@hono/node-server";
+import { createServer } from "node:https";
+import { readFileSync } from "node:fs";
 
 export const app = new Elysia({
 	adapter: node(),
@@ -19,9 +21,10 @@ export const app = new Elysia({
 			origin: env.FRONTEND_URL,
 			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 			credentials: true,
-			allowedHeaders: ["Content-Type", "Authorization"],
+			allowedHeaders: ["Content-Type", "Authorization", "Credentials"],
 		}),
 	)
+	.get("/ping", () => "pong")
 	.on("beforeHandle", () => RequestContext.enter(orm.em))
 	.on("afterHandle", ({ response }) => {
 		return Utils.isEntity(response) ? wrap(response).toObject() : response;
@@ -29,9 +32,16 @@ export const app = new Elysia({
 	.mount(auth.handler)
 	.use(shooterProfileRoute)
 	.use(imageRoute)
-	.use(stagesRoute)
-	.listen(3001, ({ hostname, port }) => {
-		console.log(`🦊 Elysia is running at ${hostname}:${port}`);
-	});
+	.compile();
+
+serve({
+	fetch: app.fetch,
+	port: 3001,
+	createServer,
+	serverOptions: {
+		cert: readFileSync("../../cert.pem"),
+		key: readFileSync("../../key.pem"),
+	},
+});
 
 export type Context = InferContext<typeof app>;

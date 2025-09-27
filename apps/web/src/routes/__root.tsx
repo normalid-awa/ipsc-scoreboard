@@ -3,15 +3,8 @@ import {
 	Scripts,
 	createRootRouteWithContext,
 } from "@tanstack/react-router";
-import { TanstackDevtools } from "@tanstack/react-devtools";
-import {
-	TanStackRouterDevtools,
-	TanStackRouterDevtoolsPanel,
-} from "@tanstack/react-router-devtools";
-import {
-	ReactQueryDevtools,
-	ReactQueryDevtoolsPanel,
-} from "@tanstack/react-query-devtools";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import appCss from "../styles.css?url";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";

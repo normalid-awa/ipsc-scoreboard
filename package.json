@@ -12,7 +12,7 @@
 		"build": "npm run build:api && npm run build:web",
 		"dev:api": "npm run dev --workspace=apps/api",
 		"dev:web": "npm run dev --workspace=apps/web",
-		"start": "npm run start --workspace=apps/web"
+		"cf-preview": "npx wrangler dev --ip=\"0.0.0.0\" --port=3000 --local-protocol=\"https\" --https-key-path=\"key.pem\" --https-cert-path=\"cert.pem\""
 	},
 	"dependencies": {
 		"@t3-oss/env-core": "^0.13.8",
@@ -26,6 +26,7 @@
 		"@types/node": "^24.3.0",
 		"devcert": "^1.2.2",
 		"typescript": "^5.9.2",
+		"cross-env": "^10.0.0",
 		"vite": "^7.1.6"
 	},
 	"workspaces": [

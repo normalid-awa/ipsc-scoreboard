@@ -17,12 +17,12 @@ let emailVerificationHtmlTemplate: string;
 let passwordResetVerificationCodeHtmlTemplate: string;
 
 const transporter = nodemailer.createTransport({
-	host: process.env.SMTP_HOST as string,
-	port: parseInt(process.env.SMTP_PORT as string),
+	host: env.SMTP_HOST,
+	port: env.SMTP_PORT,
 	secure: false, // true for 465, false for other ports
 	auth: {
-		user: process.env.SMTP_USER as string,
-		pass: process.env.SMTP_PASSWORD as string,
+		user: env.SMTP_USER,
+		pass: env.SMTP_PASSWORD,
 	},
 });
 
@@ -30,7 +30,7 @@ const authConfig: BetterAuthOptions = {
 	database: mikroOrmAdapter(orm),
 	basePath: "/auth",
 	logger: {
-		level: process.env.NODE_ENV === "development" ? "debug" : "warn",
+		level: env.NODE_ENV === "production" ? "warn" : "debug",
 	},
 	trustedOrigins: [env.FRONTEND_URL],
 	advanced: {
@@ -41,6 +41,7 @@ const authConfig: BetterAuthOptions = {
 		database: {
 			generateId: false,
 		},
+		cookiePrefix: "ipsc-scoreboard",
 	},
 	emailAndPassword: {
 		enabled: true,
@@ -62,7 +63,7 @@ const authConfig: BetterAuthOptions = {
 				).toString();
 
 			const info = await transporter.sendMail({
-				from: process.env.SMTP_EMAIL_VERIFY_FROM as string,
+				from: env.SMTP_EMAIL_VERIFY_FROM as string,
 				to: user.email,
 				subject: "Verify your email address",
 				text: `Click the link to verify your email: ${url}`,
@@ -76,20 +77,20 @@ const authConfig: BetterAuthOptions = {
 	},
 	socialProviders: {
 		github: {
-			clientId: process.env.AUTH_GITHUB_ID as string,
-			clientSecret: process.env.AUTH_GITHUB_SECRET as string,
-			redirectURI: `${env.FRONTEND_URL}/api/auth/callback/github`,
+			clientId: env.AUTH_GITHUB_ID as string,
+			clientSecret: env.AUTH_GITHUB_SECRET as string,
+			redirectURI: `${env.BETTER_AUTH_URL}/api/auth/callback/github`,
 		},
 		google: {
-			clientId: process.env.AUTH_GOOGLE_ID as string,
-			clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
-			redirectURI: `${env.FRONTEND_URL}/api/auth/callback/google`,
+			clientId: env.AUTH_GOOGLE_ID as string,
+			clientSecret: env.AUTH_GOOGLE_SECRET as string,
+			redirectURI: `${env.BETTER_AUTH_URL}/api/auth/callback/google`,
 		},
 		microsoft: {
-			clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID as string,
-			clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET as string,
-			tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER as string,
-			redirectURI: `${env.FRONTEND_URL}/api/auth/callback/microsoft`,
+			clientId: env.AUTH_MICROSOFT_ENTRA_ID_ID as string,
+			clientSecret: env.AUTH_MICROSOFT_ENTRA_ID_SECRET as string,
+			tenantId: env.AUTH_MICROSOFT_ENTRA_ID_ISSUER as string,
+			redirectURI: `${env.BETTER_AUTH_URL}/api/auth/callback/microsoft`,
 		},
 	},
 	plugins: [
@@ -121,7 +122,7 @@ const authConfig: BetterAuthOptions = {
 				}
 
 				const info = await transporter.sendMail({
-					from: process.env.SMTP_EMAIL_VERIFY_FROM as string,
+					from: env.SMTP_EMAIL_VERIFY_FROM as string,
 					to: email,
 					subject: subject,
 					text: subject,

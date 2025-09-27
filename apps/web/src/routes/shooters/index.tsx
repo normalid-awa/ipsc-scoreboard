@@ -189,7 +189,7 @@ function RouteComponent() {
 									key={v.id}
 									icon={
 										v.image
-											? `/api/image/${v.image?.uuid}`
+											? `${env.VITE_BACKEND_API_URL}/api/image/${v.image?.uuid}`
 											: undefined
 									}
 									identifier={v.identifier}

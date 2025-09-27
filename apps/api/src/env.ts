@@ -1,6 +1,11 @@
 import { createEnv } from "@t3-oss/env-core";
 import z from "zod";
-import "dotenv/config";
+import dotenv from "dotenv";
+import { join } from "path";
+
+const parsedEnv = dotenv.config({
+	path: join(import.meta.dirname, `../.env.${process.env.NODE_ENV}`),
+}).parsed;
 
 const env = createEnv({
 	server: {
@@ -28,8 +33,10 @@ const env = createEnv({
 		SMTP_EMAIL_VERIFY_FROM: z.string(),
 
 		FILE_UPLOAD_PATH: z.string(),
+
+		NODE_ENV: z.enum(["development", "production", "staging"]),
 	},
-	runtimeEnv: process.env,
+	runtimeEnv: parsedEnv as Record<string, string>,
 });
 
 export default env;

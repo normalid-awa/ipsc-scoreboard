@@ -46,7 +46,7 @@ export function isRouteAListedRoute(
 }
 
 // Create a new router instance
-export const createRouter = () => {
+export const getRouter = () => {
 	const rqContext = TanstackQuery.getContext();
 	const { api: _api } = treaty<App>(env.VITE_BACKEND_API_URL);
 
@@ -77,6 +77,6 @@ export const createRouter = () => {
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {
 	interface Register {
-		router: ReturnType<typeof createRouter>;
+		router: ReturnType<typeof getRouter>;
 	}
 }
