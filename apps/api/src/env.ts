@@ -4,7 +4,10 @@ import dotenv from "dotenv";
 import { join } from "path";
 
 const parsedEnv = dotenv.config({
-	path: join(import.meta.dirname, `../.env.${process.env.NODE_ENV}`),
+	path: join(
+		import.meta.dirname,
+		`../.env.${process.env.NODE_ENV || "development"}`,
+	),
 }).parsed;
 
 const env = createEnv({

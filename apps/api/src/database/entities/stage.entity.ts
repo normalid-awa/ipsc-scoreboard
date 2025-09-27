@@ -1,15 +1,21 @@
 import {
 	BeforeCreate,
 	BeforeUpdate,
+	Cascade,
+	Collection,
 	Entity,
 	Enum,
 	Formula,
+	ManyToMany,
 	ManyToOne,
 	PrimaryKey,
 	Property,
+	Ref,
+	type Rel,
 } from "@mikro-orm/core";
 import { User } from "./user.entity.js";
-import { SportEnum, SportMap } from "@/sport.js";
+import { SportEnum, SportMap } from "../../sport.js";
+import { Image } from "./image.entity.js";
 
 type StageDiscriminator = {
 	[k in keyof typeof SportMap]: `${Capitalize<Lowercase<k & string>>}Stage`;
@@ -55,6 +61,24 @@ export const isUspsaStage = (stage?: Stage | null): stage is UspsaStage =>
 
 export type UnionStage = IpscStage | IdpaStage | AaipscStage | UspsaStage;
 
+@Entity()
+export class StageImage {
+	@ManyToOne({ primary: true, cascade: [Cascade.ALL] })
+	stage!: Rel<Stage>;
+
+	@ManyToOne({ primary: true })
+	image!: Rel<Image>;
+
+	@Property()
+	order!: number;
+
+	constructor(stage: Stage, image: Rel<Image>, order: number) {
+		this.stage = stage;
+		this.image = image;
+		this.order = order;
+	}
+}
+
 @Entity({
 	discriminatorColumn: "type",
 	discriminatorMap: {
@@ -69,7 +93,7 @@ export class Stage {
 	id!: number;
 
 	@Enum()
-	type!: SportEnum;
+	readonly type!: SportEnum;
 
 	@Property()
 	title!: string;
@@ -80,6 +104,14 @@ export class Stage {
 	/** Time in seconds */
 	@Property()
 	walkthroughTime!: number;
+
+	@ManyToMany({
+		entity: () => Image,
+		pivotEntity: () => StageImage,
+		fixedOrder: true,
+		fixedOrderColumn: "order",
+	})
+	images = new Collection<Image>(this);
 
 	@ManyToOne()
 	creator!: User;
@@ -107,7 +139,7 @@ export class IpscStage extends Stage {
 		isNoShoot: boolean;
 	}[];
 
-	@Property()
+	@Property({ name: "minimum_rounds" })
 	minimumRounds!: number;
 
 	@Formula((alias) =>
@@ -116,7 +148,7 @@ export class IpscStage extends Stage {
 			`${alias}.minimum_rounds`,
 		),
 	)
-	stageType!: "short" | "medium" | "long" | "uncategorized";
+	readonly stageType!: "short" | "medium" | "long" | "uncategorized";
 
 	@BeforeCreate()
 	@BeforeUpdate()
@@ -153,7 +185,7 @@ export class AaipscStage extends Stage {
 		isNoShoot: boolean;
 	}[];
 
-	@Property()
+	@Property({ name: "minimum_rounds" })
 	minimumRounds!: number;
 
 	@Formula((alias) =>
@@ -162,7 +194,7 @@ export class AaipscStage extends Stage {
 			`${alias}.minimum_rounds`,
 		),
 	)
-	stageType!: "short" | "medium" | "long" | "uncategorized";
+	readonly stageType!: "short" | "medium" | "long" | "uncategorized";
 
 	@BeforeCreate()
 	@BeforeUpdate()
@@ -203,7 +235,7 @@ export class UspsaStage extends Stage {
 	})
 	uspsaScoringMethod!: UspsaScoringMethod;
 
-	@Property()
+	@Property({ name: "minimum_rounds" })
 	minimumRounds!: number;
 
 	@Formula((alias) =>
