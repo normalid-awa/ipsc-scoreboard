@@ -18,3 +18,11 @@ export const createIpscStageSchema = t.Composite([
 		ipscSteelTargets: t.Array(ipscSteelTargetSchema),
 	}),
 ]);
+
+export const createIdpaStageSchema = t.Composite([
+	createStageSchema,
+	t.Object({
+		idpaPaperTargets: t.Integer(),
+		idpaSteelTargets: t.Integer(),
+	}),
+]);

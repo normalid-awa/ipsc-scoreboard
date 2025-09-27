@@ -17,7 +17,11 @@ import {
 } from "@/util/offsetBasedPagination.js";
 import { convertQueryFilter, QueryFilter } from "@/util/queryFilter.js";
 import { Elysia, Static, status, t } from "elysia";
-import { createIpscStageSchema, createStageSchema } from "./stages.dto.js";
+import {
+	createIdpaStageSchema,
+	createIpscStageSchema,
+	createStageSchema,
+} from "./stages.dto.js";
 import { rel } from "@mikro-orm/core";
 import { User } from "@/database/entities/user.entity.js";
 import { Image } from "@/database/entities/image.entity.js";
@@ -227,6 +231,21 @@ export const stagesRoute = new Elysia({
 		{
 			isAuth: true,
 			body: createIpscStageSchema,
+		},
+	)
+	.post(
+		"/idpa",
+		async ({ body, user }) => {
+			let [stage, ...images] = initStage(new IdpaStage(), body, user.id);
+			stage.idpaPaperTargets = body.idpaPaperTargets;
+			stage.idpaSteelTargets = body.idpaSteelTargets;
+			await orm.em.persist([stage, ...images]).flush();
+			await stage.images.init();
+			return stage;
+		},
+		{
+			isAuth: true,
+			body: createIdpaStageSchema,
 		},
 	)
 	// #endregion
