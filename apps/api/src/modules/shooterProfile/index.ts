@@ -92,10 +92,12 @@ export const shooterProfileRoute = new Elysia({
 			if (body.image) {
 				const image = new Image();
 				await image.upload(body.image, rel(User, user.id));
+				orm.em.persist(image);
 				shooterProfile.image = image;
 			}
 
-			await orm.em.persist(shooterProfile).flush();
+			orm.em.persist(shooterProfile);
+			await orm.em.flush();
 			return shooterProfile;
 		},
 		{

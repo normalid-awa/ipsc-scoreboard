@@ -84,49 +84,87 @@ export class IpscStageFactory extends Factory<IpscStage> {
 	}
 }
 
+export async function getPersistedMockImage(
+	em: EntityManager,
+	uploader: User,
+	width: number,
+	height: number,
+) {
+	const image = new Image();
+	await image.upload(
+		new File(
+			[
+				await fetch(
+					faker.image.urlPicsumPhotos({
+						width,
+						height,
+						blur: 0,
+					}),
+				).then((r) => r.blob()),
+			],
+			faker.system.commonFileName("png"),
+		),
+		uploader!,
+	);
+	em.persist(image);
+	return image;
+}
+
 export class DatabaseSeeder extends Seeder {
 	async run(em: EntityManager): Promise<void> {
-		const users = new UserFactory(em)
-			.each((user) => {
-				const profileAmount = faker.number.int({ min: 1, max: 4 });
-				const sports = faker.helpers.arrayElements(
-					Object.values(SportEnum),
-					profileAmount,
-				);
-				let i = 0;
-				const images = new ImageFactory(em)
-					.each((image) => {
-						image.uploader = user;
-					})
-					.make(profileAmount);
-				new ShooterProfileFactory(em)
-					.each((profile) => {
-						profile.sport = sports[i++]!;
-						profile.image = images[i - 1];
-					})
-					.make(profileAmount, {
-						user: user,
-					});
-			})
-			.make(10);
+		const users = new UserFactory(em).make(10);
 
-		new IpscStageFactory(em)
+		const shooterProfile = users.map((user) => {
+			const profileAmount = faker.number.int({ min: 1, max: 4 });
+			const sports = faker.helpers.arrayElements(
+				Object.values(SportEnum),
+				profileAmount,
+			);
+			let i = 0;
+			return new ShooterProfileFactory(em)
+				.each((shooterProfile) => {
+					shooterProfile.sport = sports[i++]!;
+					shooterProfile.user = user;
+				})
+				.make(profileAmount);
+		});
+
+		for await (const profiles of shooterProfile) {
+			for await (const profile of profiles) {
+				profile.image = await getPersistedMockImage(
+					em,
+					profile.user!,
+					300,
+					300,
+				);
+			}
+		}
+
+		const ipscStages = new IpscStageFactory(em)
 			.each(async (stage) => {
 				const user = faker.helpers.arrayElement(users);
 				stage.creator = user;
-
-				if (faker.datatype.boolean()) return;
-
-				new StageImageFactory(em)
-					.each((stageImage, i) => {
-						stageImage.stage = stage;
-						stageImage.order = i;
-						stageImage.image = new ImageFactory(em).makeOne({
-							uploader: user,
-						});
-					})
-					.make(faker.number.int({ min: 1, max: 5 }));
 			})
-			.make(20);
+			.make(15);
+
+		for await (const ipscStage of ipscStages) {
+			if (faker.datatype.boolean()) return;
+			const stageImages: StageImage[] = [];
+			for (let i = 0; i < faker.number.int({ min: 1, max: 5 }); i++) {
+				stageImages.push(
+					new StageImage(
+						ipscStage,
+						await getPersistedMockImage(
+							em,
+							ipscStage.creator!,
+							300,
+							300,
+						),
+						i,
+					),
+				);
+			}
+			em.persist(stageImages);
+		}
 	}
 }

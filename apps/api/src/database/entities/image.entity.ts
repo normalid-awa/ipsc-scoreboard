@@ -1,5 +1,6 @@
 import {
 	AfterCreate,
+	BeforeCreate,
 	BeforeDelete,
 	Entity,
 	type EventArgs,
@@ -9,11 +10,17 @@ import {
 } from "@mikro-orm/core";
 import { User } from "./user.entity.js";
 import { dirname, join } from "node:path";
-import { rm, stat } from "node:fs/promises";
-import env from "@/env.js";
+import { open, rm, stat } from "node:fs/promises";
+import env from "../../env.js";
 import crypto from "node:crypto";
 import { Writable } from "node:stream";
-import { createWriteStream, mkdirSync } from "node:fs";
+import {
+	createWriteStream,
+	existsSync,
+	mkdirSync,
+	write,
+	writeFile,
+} from "node:fs";
 import { file, HTTPHeaders } from "elysia";
 
 @Entity()
@@ -36,28 +43,28 @@ export class Image {
 	@ManyToOne()
 	uploader!: User;
 
-	private writeStream?: Writable;
+	private writeBuffer?: Buffer;
 
 	async upload(file: File, uploader: User) {
 		const hash = crypto.createHash("sha256");
-		this.writeStream = new Writable();
 
 		for await (const chunk of file.stream().values()) {
 			const data = Buffer.from(chunk);
-			this.writeStream.write(data);
+			if (this.writeBuffer)
+				this.writeBuffer = Buffer.concat([this.writeBuffer, data]);
+			else this.writeBuffer = data;
 			hash.update(data);
 		}
-		this.writeStream.end();
 
 		const hashValue = hash.digest("hex");
 
-		try {
-			this.filename = file.name;
-			this.mimetype = file.type;
-			this.size = file.size;
-			this.hash = hashValue;
-			this.uploader = uploader;
-		} catch (e) {}
+		console.debug(`File ${hashValue} (${file.size}B) has been uploaded`);
+
+		this.filename = file.name;
+		this.mimetype = file.type;
+		this.size = file.size;
+		this.hash = hashValue;
+		this.uploader = uploader;
 	}
 
 	async getImage(): Promise<[File, HTTPHeaders] | undefined> {
@@ -69,19 +76,17 @@ export class Image {
 		headers["content-type"] = this.mimetype;
 		headers["content-length"] = String(this.size);
 
-		try {
-			await stat(
-				join(env.FILE_UPLOAD_PATH, this.hash.slice(0, 2), this.hash),
-			);
-			const imageFile = file(
-				join(env.FILE_UPLOAD_PATH, this.hash.slice(0, 2), this.hash),
-			);
+		const path = join(
+			env.FILE_UPLOAD_PATH,
+			this.hash.slice(0, 2),
+			this.hash,
+		);
+		if (existsSync(path)) {
+			const imageFile = file(path);
 			//TODO: the bug of https://github.com/elysiajs/elysia/issues/1299
 			return [imageFile.value as File, headers];
-		} catch (e) {
-			console.error(e);
-			return;
 		}
+		return;
 	}
 
 	@AfterCreate()
@@ -91,27 +96,52 @@ export class Image {
 			args.entity.hash.slice(0, 2),
 			args.entity.hash,
 		);
+
 		try {
-			try {
-				await stat(dirname(filePath));
-			} catch (e) {
-				console.log(`Creating directory ${dirname(filePath)}`);
+			if (!existsSync(dirname(filePath)))
 				mkdirSync(dirname(filePath), { recursive: true });
+			if (!existsSync(filePath)) {
+				console.debug(
+					`Writing file ${filePath} with size of array buffer ${this.writeBuffer?.byteLength}B`,
+				);
+				writeFile(filePath, this.writeBuffer!, (err) => {
+					if (err) {
+						args.em.rollback();
+						throw err;
+					}
+				});
 			}
-			await stat(filePath);
-			console.log(`${this.hash} File already exists`);
 		} catch (e) {
-			try {
-				this.writeStream?.pipe(createWriteStream(filePath));
-			} catch (e_w) {
-				console.error(e);
-				await rm(filePath);
-				throw e;
-			}
+			args.em.rollback();
+			console.error(e);
+			throw e;
 		} finally {
-			this.writeStream?.destroy();
-			delete this.writeStream;
+			delete this.writeBuffer;
 		}
+
+		// try {
+		// 	try {
+		// 		await stat(dirname(filePath));
+		// 	} catch (e) {
+		// 		console.log(`Creating directory ${dirname(filePath)}`);
+		// 		mkdirSync(dirname(filePath), { recursive: true });
+		// 	}
+		// 	await stat(filePath);
+		// 	console.log(`${this.hash} File already exists`);
+		// } catch (e) {
+		// 	try {
+		// 		writeFile(filePath, this.writeBuffer!, (err) => {
+		// 			if (err) {
+		// 				throw err;
+		// 			}
+		// 		});
+		// 	} catch (e_w) {
+		// 		console.error(e);
+		// 		throw e;
+		// 	}
+		// } finally {
+		// 	delete this.writeBuffer;
+		// }
 	}
 
 	@BeforeDelete()
