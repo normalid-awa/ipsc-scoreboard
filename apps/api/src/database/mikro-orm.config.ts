@@ -15,7 +15,10 @@ export default defineConfig({
 		path: "dist/database/migrations",
 		pathTs: "src/database/migrations",
 	},
-	dynamicImportProvider: (path) => import(pathToFileURL(path).href),
+	dynamicImportProvider:
+		(process.env.TESTING &&
+			((path) => import(pathToFileURL(path).toString()))) ||
+		undefined,
 	metadataProvider: TsMorphMetadataProvider,
 	debug: process.env.NODE_ENV !== "production",
 	seeder: {
