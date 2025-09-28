@@ -5,6 +5,7 @@ import "dotenv/config";
 import env from "../env.js";
 import { SoftDeleteHandler } from "mikro-orm-soft-delete";
 import { SeedManager } from "@mikro-orm/seeder";
+import { pathToFileURL } from "url";
 
 export default defineConfig({
 	clientUrl: env.DATABASE_URL,
@@ -14,6 +15,7 @@ export default defineConfig({
 		path: "dist/database/migrations",
 		pathTs: "src/database/migrations",
 	},
+	dynamicImportProvider: (path) => import(pathToFileURL(path).href),
 	metadataProvider: TsMorphMetadataProvider,
 	debug: process.env.NODE_ENV !== "production",
 	seeder: {
