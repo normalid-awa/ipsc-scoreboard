@@ -4,6 +4,7 @@ import { Migrator } from "@mikro-orm/migrations";
 import "dotenv/config";
 import env from "../env.js";
 import { SoftDeleteHandler } from "mikro-orm-soft-delete";
+import { SeedManager } from "@mikro-orm/seeder";
 
 export default defineConfig({
 	clientUrl: env.DATABASE_URL,
@@ -15,7 +16,11 @@ export default defineConfig({
 	},
 	metadataProvider: TsMorphMetadataProvider,
 	debug: process.env.NODE_ENV !== "production",
-	extensions: [Migrator, SoftDeleteHandler],
+	seeder: {
+		path: "dist/database/seeders",
+		pathTs: "src/database/seeders",
+	},
+	extensions: [Migrator, SoftDeleteHandler, SeedManager],
 	ignoreUndefinedInQuery: true,
 	serialization: {
 		forceObject: true,

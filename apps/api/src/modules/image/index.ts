@@ -5,6 +5,7 @@ import { envPlugin } from "@/plugins/env.js";
 import { Elysia, file, status, t } from "elysia";
 import path from "path";
 import { imagePlugin } from "@/plugins/image.js";
+import { existsSync } from "fs";
 
 export const imageRoute = new Elysia({
 	prefix: "/image",
@@ -23,6 +24,8 @@ export const imageRoute = new Elysia({
 				},
 			);
 			if (!res) return status(404);
+			if (!existsSync(path.join(env.FILE_UPLOAD_PATH, res.hash)))
+				return status(404);
 
 			set.headers["pragma"] = "public";
 			set.headers["content-disposition"] =
@@ -31,7 +34,11 @@ export const imageRoute = new Elysia({
 			set.headers["content-length"] = res.size;
 
 			//TODO: the bug of https://github.com/elysiajs/elysia/issues/1299
-			return file(path.join(env.FILE_UPLOAD_PATH, res.hash)).value;
+			try {
+				return file(path.join(env.FILE_UPLOAD_PATH, res.hash)).value;
+			} catch (e) {
+				return status(500);
+			}
 		},
 		{
 			params: t.Object({

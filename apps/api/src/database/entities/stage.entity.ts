@@ -11,7 +11,7 @@ import {
 	PrimaryKey,
 	Property,
 	type Rel,
-} from "@mikro-orm/core";
+} from "@mikro-orm/postgresql";
 import { User } from "./user.entity.js";
 import { SportEnum, SportMap } from "../../sport.js";
 import { Image } from "./image.entity.js";
@@ -63,7 +63,7 @@ export type UnionStage = IpscStage | IdpaStage | AaipscStage | UspsaStage;
 
 @Entity()
 export class StageImage {
-	@ManyToOne({ primary: true, cascade: [Cascade.ALL] })
+	@ManyToOne({ primary: true, cascade: [Cascade.ALL], nullable: false })
 	stage!: Rel<Stage>;
 
 	@ManyToOne({ primary: true })
@@ -72,7 +72,7 @@ export class StageImage {
 	@Property()
 	order!: number;
 
-	constructor(stage: Stage, image: Rel<Image>, order: number) {
+	constructor(stage: Rel<Stage>, image: Rel<Image>, order: number) {
 		this.stage = stage;
 		this.image = image;
 		this.order = order;
@@ -98,7 +98,7 @@ export class Stage {
 	@Property()
 	title!: string;
 
-	@Property()
+	@Property({ type: "text" })
 	description?: string;
 
 	/** Time in seconds */
