@@ -12,15 +12,15 @@ import { t } from "elysia";
 export const createStageSchema = t.Object({
 	title: t.String(),
 	description: t.Optional(t.String()),
-	walkthroughTime: t.Number(),
+	walkthroughTime: t.Numeric(),
 	images: t.Optional(t.Files({ type: "image/*" })),
 });
 
 export const createIpscStageSchema = t.Composite([
 	createStageSchema,
 	t.Object({
-		ipscPaperTargets: t.Array(ipscPaperTargetSchema),
-		ipscSteelTargets: t.Array(ipscSteelTargetSchema),
+		ipscPaperTargets: t.ArrayString(ipscPaperTargetSchema),
+		ipscSteelTargets: t.ArrayString(ipscSteelTargetSchema),
 	}),
 ]);
 
@@ -35,16 +35,16 @@ export const createIdpaStageSchema = t.Composite([
 export const createAaipscStageSchema = t.Composite([
 	createStageSchema,
 	t.Object({
-		aaipscPaperTargets: t.Array(aaipscPaperTargetSchema),
-		aaipscSteelTargets: t.Array(aaipscSteelTargetSchema),
+		aaipscPaperTargets: t.ArrayString(aaipscPaperTargetSchema),
+		aaipscSteelTargets: t.ArrayString(aaipscSteelTargetSchema),
 	}),
 ]);
 
 export const createUspsaStageSchema = t.Composite([
 	createStageSchema,
 	t.Object({
-		uspsaPaperTargets: t.Array(uspsaPaperTargetSchema),
-		uspsaSteelTargets: t.Array(uspsaSteelTargetSchema),
+		uspsaPaperTargets: t.ArrayString(uspsaPaperTargetSchema),
+		uspsaSteelTargets: t.ArrayString(uspsaSteelTargetSchema),
 		uspsaScoringMethod: t.Enum(UspsaScoringMethod),
 	}),
 ]);
