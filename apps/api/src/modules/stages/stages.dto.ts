@@ -3,6 +3,9 @@ import {
 	aaipscSteelTargetSchema,
 	ipscPaperTargetSchema,
 	ipscSteelTargetSchema,
+	uspsaPaperTargetSchema,
+	UspsaScoringMethod,
+	uspsaSteelTargetSchema,
 } from "@/database/entities/stage.entity.js";
 import { t } from "elysia";
 
@@ -34,5 +37,14 @@ export const createAaipscStageSchema = t.Composite([
 	t.Object({
 		aaipscPaperTargets: t.Array(aaipscPaperTargetSchema),
 		aaipscSteelTargets: t.Array(aaipscSteelTargetSchema),
+	}),
+]);
+
+export const createUspsaStageSchema = t.Composite([
+	createStageSchema,
+	t.Object({
+		uspsaPaperTargets: t.Array(uspsaPaperTargetSchema),
+		uspsaSteelTargets: t.Array(uspsaSteelTargetSchema),
+		uspsaScoringMethod: t.Enum(UspsaScoringMethod),
 	}),
 ]);

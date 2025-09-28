@@ -220,21 +220,25 @@ export enum UspsaScoringMethod {
 	FixedTime = "Fixed Time",
 }
 
+export const uspsaPaperTargetSchema = t.Object({
+	targetId: t.Integer(),
+	requiredHits: t.Integer(),
+	hasNoShoot: t.Boolean(),
+	isNoPenaltyMiss: t.Boolean(),
+});
+
+export const uspsaSteelTargetSchema = t.Object({
+	targetId: t.Integer(),
+	isNoShoot: t.Boolean(),
+});
+
 @Entity()
 export class UspsaStage extends Stage {
 	@Property({ type: "jsonb" })
-	uspsaPaperTargets!: {
-		targetId: number;
-		requiredHits: number;
-		hasNoShoot: boolean;
-		isNoPenaltyMiss: boolean;
-	}[];
+	uspsaPaperTargets!: Static<typeof uspsaPaperTargetSchema>[];
 
 	@Property({ type: "jsonb" })
-	uspsaSteelTargets!: {
-		targetId: number;
-		isNoShoot: boolean;
-	}[];
+	uspsaSteelTargets!: Static<typeof uspsaSteelTargetSchema>[];
 
 	@Enum({
 		name: "uspsa_scoring_method",

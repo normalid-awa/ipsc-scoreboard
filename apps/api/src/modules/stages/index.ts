@@ -22,6 +22,7 @@ import {
 	createIdpaStageSchema,
 	createIpscStageSchema,
 	createStageSchema,
+	createUspsaStageSchema,
 } from "./stages.dto.js";
 import { rel } from "@mikro-orm/core";
 import { User } from "@/database/entities/user.entity.js";
@@ -266,6 +267,22 @@ export const stagesRoute = new Elysia({
 		{
 			isAuth: true,
 			body: createAaipscStageSchema,
+		},
+	)
+	.post(
+		"/uspsa",
+		async ({ body, user }) => {
+			let [stage, ...images] = initStage(new UspsaStage(), body, user.id);
+			stage.uspsaPaperTargets = body.uspsaPaperTargets;
+			stage.uspsaSteelTargets = body.uspsaSteelTargets;
+			stage.uspsaScoringMethod = body.uspsaScoringMethod;
+			await orm.em.persist([stage, ...images]).flush();
+			await stage.images.init();
+			return stage;
+		},
+		{
+			isAuth: true,
+			body: createUspsaStageSchema,
 		},
 	)
 	// #endregion
