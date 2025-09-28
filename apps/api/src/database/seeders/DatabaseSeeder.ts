@@ -110,7 +110,7 @@ export class DatabaseSeeder extends Seeder {
 			})
 			.make(10);
 
-		const stages = new IpscStageFactory(em)
+		new IpscStageFactory(em)
 			.each(async (stage) => {
 				const user = faker.helpers.arrayElement(users);
 				stage.creator = user;

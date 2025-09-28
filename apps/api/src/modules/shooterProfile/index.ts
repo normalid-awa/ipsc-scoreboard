@@ -3,7 +3,6 @@ import { ShooterProfile } from "@/database/entities/shooterProfile.entity.js";
 import { User } from "@/database/entities/user.entity.js";
 import orm from "@/database/orm.js";
 import { authPlugin } from "@/plugins/auth.js";
-import { imagePlugin } from "@/plugins/image.js";
 import { SportEnum } from "@/sport.js";
 import {
 	OffsetBasedPaginationSchema,
@@ -31,7 +30,6 @@ export const shooterProfileRoute = new Elysia({
 	prefix: "/shooter-profile",
 })
 	.use(authPlugin)
-	.use(imagePlugin)
 	.get(
 		"/",
 		async ({ query }) => {
@@ -66,7 +64,7 @@ export const shooterProfileRoute = new Elysia({
 	)
 	.post(
 		"/",
-		async ({ user, body, image }) => {
+		async ({ user, body }) => {
 			const isAvailable =
 				(await orm.em.count(ShooterProfile, {
 					user: user.id,
@@ -91,19 +89,13 @@ export const shooterProfileRoute = new Elysia({
 			shooterProfile.identifier = body.identifier;
 			shooterProfile.sport = body.sport;
 			shooterProfile.user = rel(User, user.id);
-			let imageId = null;
 			if (body.image) {
-				const imageId = (await image.storeImage(body.image, user.id))
-					.uuid;
-				shooterProfile.image = rel(Image, imageId);
+				const image = new Image();
+				await image.upload(body.image, rel(User, user.id));
+				shooterProfile.image = image;
 			}
 
-			try {
-				await orm.em.persist(shooterProfile).flush();
-			} catch (e) {
-				if (imageId) image.deleteImage(imageId, user.id);
-			}
-
+			await orm.em.persist(shooterProfile).flush();
 			return shooterProfile;
 		},
 		{
@@ -113,7 +105,7 @@ export const shooterProfileRoute = new Elysia({
 	)
 	.patch(
 		"/:id",
-		async ({ user, params, body, image }) => {
+		async ({ user, params, body }) => {
 			let isAvailable = true;
 			if (body.sport) {
 				isAvailable =
@@ -137,16 +129,14 @@ export const shooterProfileRoute = new Elysia({
 				return status(401);
 
 			if (body.image === null && shooterProfile.image) {
-				image.deleteImage(shooterProfile.image.uuid, user.id);
-			}
-			if (body.image) {
-				const imageId = (await image.storeImage(body.image, user.id))
-					.uuid;
-				if (shooterProfile.image) {
-					image.deleteImage(shooterProfile.image.uuid, user.id);
-				}
+				orm.em.remove(shooterProfile.image);
+			} else if (body.image) {
+				if (shooterProfile.image) orm.em.remove(shooterProfile.image);
+				const image = new Image();
+				image.upload(body.image, rel(User, user.id));
+				orm.em.persist(image);
 				//@ts-ignore
-				body.image = rel(Image, imageId);
+				body.image = image;
 			}
 
 			wrap(shooterProfile).assign(body);

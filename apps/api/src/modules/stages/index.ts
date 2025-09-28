@@ -67,17 +67,24 @@ async function findStages<T extends Stage = Stage>(
  * @param userId
  * @returns return a tuple of entities which should be persist to db.
  */
-function initStage<T extends Stage>(
+async function initStage<T extends Stage>(
 	entity: T,
 	params: Static<typeof createStageSchema>,
 	userId: string,
-): [T, ...StageImage[]] {
+): Promise<[T, ...StageImage[]]> {
 	entity.title = params.title;
 	entity.description = params.description;
 	entity.walkthroughTime = params.walkthroughTime;
-	const images = params.images?.map(
-		(imageId, k) => new StageImage(entity, rel(Image, imageId), k),
-	);
+	let images: StageImage[] = [];
+	if (params.images)
+		images = await Promise.all(
+			params.images.map(async (imageFile, k) => {
+				const image = new Image();
+				await image.upload(imageFile, rel(User, userId));
+				orm.em.persist(image);
+				return new StageImage(entity, image, k);
+			}),
+		);
 	entity.creator = rel(User, userId);
 	return [entity, ...(images || [])];
 }
@@ -223,10 +230,15 @@ export const stagesRoute = new Elysia({
 	.post(
 		"/ipsc",
 		async ({ body, user }) => {
-			let [stage, ...images] = initStage(new IpscStage(), body, user.id);
+			let [stage, ...images] = await initStage(
+				new IpscStage(),
+				body,
+				user.id,
+			);
 			stage.ipscPaperTargets = body.ipscPaperTargets;
 			stage.ipscSteelTargets = body.ipscSteelTargets;
-			await orm.em.persist([stage, ...images]).flush();
+			orm.em.persist([stage, ...images]);
+			await orm.em.flush();
 			await stage.images.init();
 			return stage;
 		},
@@ -238,7 +250,11 @@ export const stagesRoute = new Elysia({
 	.post(
 		"/idpa",
 		async ({ body, user }) => {
-			let [stage, ...images] = initStage(new IdpaStage(), body, user.id);
+			let [stage, ...images] = await initStage(
+				new IdpaStage(),
+				body,
+				user.id,
+			);
 			stage.idpaPaperTargets = body.idpaPaperTargets;
 			stage.idpaSteelTargets = body.idpaSteelTargets;
 			await orm.em.persist([stage, ...images]).flush();
@@ -253,7 +269,7 @@ export const stagesRoute = new Elysia({
 	.post(
 		"/aaipsc",
 		async ({ body, user }) => {
-			let [stage, ...images] = initStage(
+			let [stage, ...images] = await initStage(
 				new AaipscStage(),
 				body,
 				user.id,
@@ -272,7 +288,11 @@ export const stagesRoute = new Elysia({
 	.post(
 		"/uspsa",
 		async ({ body, user }) => {
-			let [stage, ...images] = initStage(new UspsaStage(), body, user.id);
+			let [stage, ...images] = await initStage(
+				new UspsaStage(),
+				body,
+				user.id,
+			);
 			stage.uspsaPaperTargets = body.uspsaPaperTargets;
 			stage.uspsaSteelTargets = body.uspsaSteelTargets;
 			stage.uspsaScoringMethod = body.uspsaScoringMethod;

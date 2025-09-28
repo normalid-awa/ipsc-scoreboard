@@ -13,7 +13,7 @@ export const createStageSchema = t.Object({
 	title: t.String(),
 	description: t.Optional(t.String()),
 	walkthroughTime: t.Number(),
-	images: t.Optional(t.Array(t.String({ format: "uuid" }))),
+	images: t.Optional(t.Files({ type: "image/*" })),
 });
 
 export const createIpscStageSchema = t.Composite([
