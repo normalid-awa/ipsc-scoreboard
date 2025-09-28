@@ -1,6 +1,5 @@
 import {
 	AfterCreate,
-	BeforeCreate,
 	BeforeDelete,
 	Entity,
 	type EventArgs,
@@ -10,17 +9,10 @@ import {
 } from "@mikro-orm/core";
 import { User } from "./user.entity.js";
 import { dirname, join } from "node:path";
-import { open, rm, stat } from "node:fs/promises";
+import { rm } from "node:fs/promises";
 import env from "../../env.js";
 import crypto from "node:crypto";
-import { Writable } from "node:stream";
-import {
-	createWriteStream,
-	existsSync,
-	mkdirSync,
-	write,
-	writeFile,
-} from "node:fs";
+import { existsSync, mkdirSync, writeFile } from "node:fs";
 import { file, HTTPHeaders } from "elysia";
 
 @Entity()

@@ -1,6 +1,6 @@
 import { api } from "@/api";
 import { authClient } from "@/auth/auth.client";
-import { App, Sport } from "@ipsc_scoreboard/api";
+import { App, SportEnum } from "@ipsc_scoreboard/api";
 import { createCollection } from "@tanstack/db";
 import {
 	QueryClient,
@@ -55,7 +55,7 @@ export function useMutateShooterProfile() {
 		mutationKey: ["editShooterProfile"],
 		mutationFn: async (param: {
 			id: number;
-			sport: Sport;
+			sport: SportEnum;
 			identifier: string;
 			image?: File;
 		}) => {
@@ -86,7 +86,7 @@ export function useCreateShooterProfile() {
 	return useMutation({
 		mutationKey: ["createShooterProfile"],
 		mutationFn: async (param: {
-			sport: Sport;
+			sport: SportEnum;
 			identifier: string;
 			image?: File;
 		}) => {
