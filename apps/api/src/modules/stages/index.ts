@@ -23,6 +23,7 @@ import {
 	createIpscStageSchema,
 	createStageSchema,
 	createUspsaStageSchema,
+	stagePopulateSchema,
 } from "./stages.dto.js";
 import { rel, serialize, wrap } from "@mikro-orm/core";
 import { User } from "@/database/entities/user.entity.js";
@@ -31,12 +32,19 @@ import mikroOrmConfig from "@/database/mikro-orm.config.js";
 
 async function getStageById<T extends Stage = Stage>(
 	id: number,
+	populate: Static<typeof stagePopulateSchema> = [],
 	sport?: SportEnum,
 ) {
-	const stage = await orm.em.findOne(Stage, {
-		id: id,
-		...(sport && { type: sport }),
-	});
+	const stage = await orm.em.findOne(
+		Stage,
+		{
+			id: id,
+			...(sport && { type: sport }),
+		},
+		{
+			populate,
+		},
+	);
 	if (!stage) return status(404);
 	return serialize(stage as unknown as T, mikroOrmConfig.serialization);
 }
@@ -44,6 +52,7 @@ async function getStageById<T extends Stage = Stage>(
 async function findStages<T extends Stage & object = UnionStage>(
 	filter?: Static<typeof QueryFilter>,
 	pagination?: Static<typeof OffsetBasedPaginationSchema>,
+	populate: Static<typeof stagePopulateSchema> = [],
 	sport?: SportEnum,
 ) {
 	const [stages, totalCount] = await orm.em.findAndCount(
@@ -52,14 +61,17 @@ async function findStages<T extends Stage & object = UnionStage>(
 			...convertQueryFilter<Stage>(filter),
 			...(sport && { type: sport }),
 		},
-		parseOffsetBasedPaginationParams(pagination),
+		{
+			...parseOffsetBasedPaginationParams(pagination),
+			populate,
+		},
 	);
 	return serializeOffsetBasedPaginationResult(
 		// @ts-ignore
-		serialize(stages, mikroOrmConfig.serialization),
+		stages as T[],
 		totalCount,
 		pagination,
-	) /* as PaginatedResult<EntityDTO<Loaded<T>>> */;
+	);
 }
 
 /**
@@ -136,12 +148,17 @@ export const stagesRoute = new Elysia({
 	.get(
 		"/",
 		async ({ query }) => {
-			return await findStages<UnionStage>(query.filter, query.pagination);
+			return await findStages<UnionStage>(
+				query.filter,
+				query.pagination,
+				query.populate,
+			);
 		},
 		{
 			query: t.Object({
 				pagination: t.Optional(OffsetBasedPaginationSchema),
 				filter: t.Optional(QueryFilter),
+				populate: t.Optional(stagePopulateSchema),
 			}),
 		},
 	)
@@ -154,6 +171,9 @@ export const stagesRoute = new Elysia({
 			params: t.Object({
 				id: t.Integer(),
 			}),
+			query: t.Object({
+				populate: t.Optional(stagePopulateSchema),
+			}),
 		},
 	)
 	.get(
@@ -162,6 +182,7 @@ export const stagesRoute = new Elysia({
 			return await findStages<IpscStage>(
 				query.filter,
 				query.pagination,
+				query.populate,
 				SportEnum.IPSC,
 			);
 		},
@@ -169,17 +190,25 @@ export const stagesRoute = new Elysia({
 			query: t.Object({
 				pagination: t.Optional(OffsetBasedPaginationSchema),
 				filter: t.Optional(QueryFilter),
+				populate: t.Optional(stagePopulateSchema),
 			}),
 		},
 	)
 	.get(
 		"/ipsc/:id",
-		async ({ params }) => {
-			return await getStageById<IpscStage>(params.id, SportEnum.IPSC);
+		async ({ params, query }) => {
+			return await getStageById<IpscStage>(
+				params.id,
+				query.populate,
+				SportEnum.IPSC,
+			);
 		},
 		{
 			params: t.Object({
 				id: t.Integer(),
+			}),
+			query: t.Object({
+				populate: t.Optional(stagePopulateSchema),
 			}),
 		},
 	)
@@ -189,6 +218,7 @@ export const stagesRoute = new Elysia({
 			return await findStages<IdpaStage>(
 				query.filter,
 				query.pagination,
+				query.populate,
 				SportEnum.IDPA,
 			);
 		},
@@ -196,17 +226,25 @@ export const stagesRoute = new Elysia({
 			query: t.Object({
 				pagination: t.Optional(OffsetBasedPaginationSchema),
 				filter: t.Optional(QueryFilter),
+				populate: t.Optional(stagePopulateSchema),
 			}),
 		},
 	)
 	.get(
 		"/idpa/:id",
-		async ({ params }) => {
-			return await getStageById<IdpaStage>(params.id, SportEnum.IDPA);
+		async ({ params, query }) => {
+			return await getStageById<IdpaStage>(
+				params.id,
+				query.populate,
+				SportEnum.IDPA,
+			);
 		},
 		{
 			params: t.Object({
 				id: t.Integer(),
+			}),
+			query: t.Object({
+				populate: t.Optional(stagePopulateSchema),
 			}),
 		},
 	)
@@ -216,6 +254,7 @@ export const stagesRoute = new Elysia({
 			return await findStages<AaipscStage>(
 				query.filter,
 				query.pagination,
+				query.populate,
 				SportEnum.AAIPSC,
 			);
 		},
@@ -223,17 +262,25 @@ export const stagesRoute = new Elysia({
 			query: t.Object({
 				pagination: t.Optional(OffsetBasedPaginationSchema),
 				filter: t.Optional(QueryFilter),
+				populate: t.Optional(stagePopulateSchema),
 			}),
 		},
 	)
 	.get(
 		"/aaipsc/:id",
-		async ({ params }) => {
-			return await getStageById<AaipscStage>(params.id, SportEnum.AAIPSC);
+		async ({ params, query }) => {
+			return await getStageById<AaipscStage>(
+				params.id,
+				query.populate,
+				SportEnum.AAIPSC,
+			);
 		},
 		{
 			params: t.Object({
 				id: t.Integer(),
+			}),
+			query: t.Object({
+				populate: t.Optional(stagePopulateSchema),
 			}),
 		},
 	)
@@ -243,6 +290,7 @@ export const stagesRoute = new Elysia({
 			return await findStages<UspsaStage>(
 				query.filter,
 				query.pagination,
+				query.populate,
 				SportEnum.USPSA,
 			);
 		},
@@ -250,17 +298,25 @@ export const stagesRoute = new Elysia({
 			query: t.Object({
 				pagination: t.Optional(OffsetBasedPaginationSchema),
 				filter: t.Optional(QueryFilter),
+				populate: t.Optional(stagePopulateSchema),
 			}),
 		},
 	)
 	.get(
 		"/uspsa/:id",
-		async ({ params }) => {
-			return await getStageById<UspsaStage>(params.id, SportEnum.USPSA);
+		async ({ params, query }) => {
+			return await getStageById<UspsaStage>(
+				params.id,
+				query.populate,
+				SportEnum.USPSA,
+			);
 		},
 		{
 			params: t.Object({
 				id: t.Integer(),
+			}),
+			query: t.Object({
+				populate: t.Optional(stagePopulateSchema),
 			}),
 		},
 	)

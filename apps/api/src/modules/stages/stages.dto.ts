@@ -9,6 +9,10 @@ import {
 } from "@/database/entities/stage.entity.js";
 import { t } from "elysia";
 
+export const stagePopulateSchema = t.Array(
+	t.UnionEnum(["creator.image"] as const),
+);
+
 export const createStageSchema = t.Object({
 	title: t.String(),
 	description: t.Optional(t.String()),
