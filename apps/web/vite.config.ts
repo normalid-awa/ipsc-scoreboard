@@ -14,6 +14,7 @@ const config = defineConfig((confEnv) => {
 			cert: readFileSync("../../server.crt"),
 			ca: readFileSync("../../ca.crt"),
 		};
+		process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 	}
 
 	return {

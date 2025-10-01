@@ -38,7 +38,7 @@ export const app = new Elysia({
 
 serve({
 	fetch: app.fetch,
-	port: 3001,
+	port: Number(new URL(env.BETTER_AUTH_URL).port),
 	createServer,
 	serverOptions: {
 		cert: readFileSync("../../server.crt"),
