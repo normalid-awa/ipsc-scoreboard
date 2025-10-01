@@ -119,6 +119,7 @@ async function patchStage<
 	// @ts-ignore
 	wrap(stage).assign(rest);
 	await orm.em.flush();
+	// Repopulate images to get the latest images list
 	await stage.images.init({
 		refresh: true,
 	});
