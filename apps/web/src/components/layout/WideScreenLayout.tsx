@@ -26,6 +26,7 @@ export default function WideScreenLayout(props: LayoutProps) {
 						variant="outlined"
 						sx={{
 							flexGrow: 1,
+							width: 0,
 							p: 1,
 							height: "100vh",
 							display: "flex",
@@ -35,7 +36,11 @@ export default function WideScreenLayout(props: LayoutProps) {
 						<Toolbar sx={{ m: 0 }} />
 						<Paper
 							variant="outlined"
-							sx={{ flexGrow: 1, p: 2, overflow: "auto" }}
+							sx={{
+								flexGrow: 1,
+								p: 2,
+								overflow: "auto",
+							}}
 						>
 							{props.children}
 						</Paper>
