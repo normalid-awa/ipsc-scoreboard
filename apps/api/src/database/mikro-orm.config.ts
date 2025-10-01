@@ -1,4 +1,4 @@
-import { defineConfig } from "@mikro-orm/postgresql";
+import { Options } from "@mikro-orm/postgresql";
 import { TsMorphMetadataProvider } from "@mikro-orm/reflection";
 import { Migrator } from "@mikro-orm/migrations";
 import "dotenv/config";
@@ -7,7 +7,7 @@ import { SoftDeleteHandler } from "mikro-orm-soft-delete";
 import { SeedManager } from "@mikro-orm/seeder";
 import { pathToFileURL } from "url";
 
-export default defineConfig({
+export default {
 	clientUrl: env.DATABASE_URL,
 	entities: ["dist/**/*.entity.js"],
 	entitiesTs: ["src/**/*.entity.ts"],
@@ -30,4 +30,4 @@ export default defineConfig({
 	serialization: {
 		forceObject: true,
 	},
-});
+} as const satisfies Options;

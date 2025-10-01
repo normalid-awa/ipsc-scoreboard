@@ -12,6 +12,7 @@ import { authPlugin } from "@/plugins/auth.js";
 import { SportEnum } from "@/sport.js";
 import {
 	OffsetBasedPaginationSchema,
+	PaginatedResult,
 	parseOffsetBasedPaginationParams,
 	serializeOffsetBasedPaginationResult,
 } from "@/util/offsetBasedPagination.js";
@@ -24,9 +25,10 @@ import {
 	createStageSchema,
 	createUspsaStageSchema,
 } from "./stages.dto.js";
-import { rel, wrap } from "@mikro-orm/core";
+import { EntityDTO, Loaded, rel, serialize, wrap } from "@mikro-orm/core";
 import { User } from "@/database/entities/user.entity.js";
 import { Image } from "@/database/entities/image.entity.js";
+import mikroOrmConfig from "@/database/mikro-orm.config.js";
 
 async function getStageById<T extends Stage = Stage>(
 	id: number,
@@ -37,10 +39,10 @@ async function getStageById<T extends Stage = Stage>(
 		...(sport && { type: sport }),
 	});
 	if (!stage) return status(404);
-	return stage as unknown as T;
+	return serialize(stage as unknown as T, mikroOrmConfig.serialization);
 }
 
-async function findStages<T extends Stage = Stage>(
+async function findStages<T extends Stage & object = UnionStage>(
 	filter?: Static<typeof QueryFilter>,
 	pagination?: Static<typeof OffsetBasedPaginationSchema>,
 	sport?: SportEnum,
@@ -54,10 +56,11 @@ async function findStages<T extends Stage = Stage>(
 		parseOffsetBasedPaginationParams(pagination),
 	);
 	return serializeOffsetBasedPaginationResult(
-		stages as unknown as T[],
+		// @ts-ignore
+		serialize(stages, mikroOrmConfig.serialization),
 		totalCount,
 		pagination,
-	);
+	) as PaginatedResult<EntityDTO<Loaded<T[], never>>>;
 }
 
 /**
