@@ -400,6 +400,17 @@ export const stagesRoute = new Elysia({
 		},
 	)
 	// #endregion
-	.delete("/:id", () => {}, {
-		isAuth: true,
-	});
+	.delete(
+		"/:id",
+		async ({ params, user }) => {
+			const stage = await orm.em.findOne(Stage, params.id);
+			if (!stage) return status(404);
+			if (stage.creator.id !== user.id) return status(401);
+			await orm.em.removeAndFlush(stage);
+			return status(204);
+		},
+		{
+			isAuth: true,
+			params: t.Object({ id: t.Integer() }),
+		},
+	);
