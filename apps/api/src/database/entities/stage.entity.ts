@@ -66,7 +66,7 @@ export class StageImage {
 	@ManyToOne({ primary: true, cascade: [Cascade.ALL], nullable: false })
 	stage!: Rel<Stage>;
 
-	@ManyToOne({ primary: true })
+	@ManyToOne({ primary: true, cascade: [Cascade.ALL], nullable: false })
 	image!: Rel<Image>;
 
 	@Property()
@@ -110,6 +110,7 @@ export class Stage {
 		pivotEntity: () => StageImage,
 		fixedOrder: true,
 		fixedOrderColumn: "order",
+		eager: true,
 	})
 	images = new Collection<Image>(this);
 

@@ -24,7 +24,7 @@ import {
 	createStageSchema,
 	createUspsaStageSchema,
 } from "./stages.dto.js";
-import { rel } from "@mikro-orm/core";
+import { rel, wrap } from "@mikro-orm/core";
 import { User } from "@/database/entities/user.entity.js";
 import { Image } from "@/database/entities/image.entity.js";
 
@@ -76,7 +76,7 @@ async function initStage<T extends Stage>(
 	entity.description = params.description;
 	entity.walkthroughTime = params.walkthroughTime;
 	let images: StageImage[] = [];
-	if (params.images)
+	if (params.images && Array.isArray(params.images))
 		images = await Promise.all(
 			params.images.map(async (imageFile, k) => {
 				const image = new Image();
@@ -87,6 +87,42 @@ async function initStage<T extends Stage>(
 		);
 	entity.creator = rel(User, userId);
 	return [entity, ...(images || [])];
+}
+
+async function patchStage<
+	T extends Stage,
+	P extends Partial<Static<typeof createStageSchema>>,
+>(id: number, params: P, userId: string, sport: SportEnum) {
+	const stage = (await orm.em.findOne(
+		Stage,
+		{ id, type: sport },
+		{ populate: ["images:ref"] },
+	)) as T;
+	if (!stage) return status(404);
+	if (stage.creator.id !== userId) return status(401);
+	const { images, ...rest } = params;
+	if (typeof images !== "undefined") {
+		stage.images.removeAll();
+		if (images !== null && Array.isArray(images)) {
+			await Promise.all(
+				images.map(async (imageFile, k) => {
+					const image = new Image();
+					await image.upload(imageFile, rel(User, userId));
+					orm.em.persist(image);
+					const newStageImage = new StageImage(stage, image, k);
+					orm.em.persist(newStageImage);
+					return newStageImage;
+				}),
+			);
+		}
+	}
+	// @ts-ignore
+	wrap(stage).assign(rest);
+	await orm.em.flush();
+	await stage.images.init({
+		refresh: true,
+	});
+	return stage;
 }
 
 export const stagesRoute = new Elysia({
@@ -306,9 +342,64 @@ export const stagesRoute = new Elysia({
 		},
 	)
 	// #endregion
-	.patch("/:id", () => {}, {
-		isAuth: true,
-	})
+	// #region Update
+	.patch(
+		"/ipsc/:id",
+		async ({ params, body, user }) => {
+			return await patchStage<
+				IpscStage,
+				Partial<Static<typeof createIpscStageSchema>>
+			>(params.id, body, user.id, SportEnum.IPSC);
+		},
+		{
+			isAuth: true,
+			params: t.Object({ id: t.Integer() }),
+			body: t.Partial(createIpscStageSchema),
+		},
+	)
+	.patch(
+		"/idpa/:id",
+		async ({ params, body, user }) => {
+			return await patchStage<
+				IdpaStage,
+				Partial<Static<typeof createIdpaStageSchema>>
+			>(params.id, body, user.id, SportEnum.IDPA);
+		},
+		{
+			isAuth: true,
+			params: t.Object({ id: t.Integer() }),
+			body: t.Partial(createIdpaStageSchema),
+		},
+	)
+	.patch(
+		"/aaipsc/:id",
+		async ({ params, body, user }) => {
+			return await patchStage<
+				AaipscStage,
+				Partial<Static<typeof createAaipscStageSchema>>
+			>(params.id, body, user.id, SportEnum.AAIPSC);
+		},
+		{
+			isAuth: true,
+			params: t.Object({ id: t.Integer() }),
+			body: t.Partial(createAaipscStageSchema),
+		},
+	)
+	.patch(
+		"/uspsa/:id",
+		async ({ params, body, user }) => {
+			return await patchStage<
+				UspsaStage,
+				Partial<Static<typeof createUspsaStageSchema>>
+			>(params.id, body, user.id, SportEnum.USPSA);
+		},
+		{
+			isAuth: true,
+			params: t.Object({ id: t.Integer() }),
+			body: t.Partial(createUspsaStageSchema),
+		},
+	)
+	// #endregion
 	.delete("/:id", () => {}, {
 		isAuth: true,
 	});
