@@ -81,12 +81,11 @@ export class Image {
 		return;
 	}
 
-	@AfterCreate()
-	protected async onAfterCreate(args: EventArgs<this>) {
+	async saveBufferToDisk() {
 		const filePath = join(
 			env.FILE_UPLOAD_PATH,
-			args.entity.hash.slice(0, 2),
-			args.entity.hash,
+			this.hash.slice(0, 2),
+			this.hash,
 		);
 
 		try {
@@ -97,43 +96,25 @@ export class Image {
 					`Writing file ${filePath} with size of array buffer ${this.writeBuffer?.byteLength}B`,
 				);
 				writeFile(filePath, this.writeBuffer!, (err) => {
-					if (err) {
-						args.em.rollback();
-						throw err;
-					}
+					if (err) throw err;
 				});
 			}
 		} catch (e) {
-			args.em.rollback();
-			console.error(e);
 			throw e;
 		} finally {
 			delete this.writeBuffer;
 		}
+	}
 
-		// try {
-		// 	try {
-		// 		await stat(dirname(filePath));
-		// 	} catch (e) {
-		// 		console.log(`Creating directory ${dirname(filePath)}`);
-		// 		mkdirSync(dirname(filePath), { recursive: true });
-		// 	}
-		// 	await stat(filePath);
-		// 	console.log(`${this.hash} File already exists`);
-		// } catch (e) {
-		// 	try {
-		// 		writeFile(filePath, this.writeBuffer!, (err) => {
-		// 			if (err) {
-		// 				throw err;
-		// 			}
-		// 		});
-		// 	} catch (e_w) {
-		// 		console.error(e);
-		// 		throw e;
-		// 	}
-		// } finally {
-		// 	delete this.writeBuffer;
-		// }
+	@AfterCreate()
+	protected async onAfterCreate(args: EventArgs<this>) {
+		try {
+			this.saveBufferToDisk();
+		} catch (e) {
+			args.em.rollback();
+			console.error(e);
+			throw e;
+		}
 	}
 
 	@BeforeDelete()

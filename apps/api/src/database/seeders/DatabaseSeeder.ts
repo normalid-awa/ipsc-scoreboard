@@ -106,6 +106,7 @@ export async function getPersistedMockImage(
 		),
 		uploader!,
 	);
+	await image.saveBufferToDisk();
 	em.persist(image);
 	return image;
 }
@@ -148,8 +149,8 @@ export class DatabaseSeeder extends Seeder {
 			.make(15);
 
 		for await (const ipscStage of ipscStages) {
-			if (faker.datatype.boolean()) return;
-			const stageImages: StageImage[] = [];
+			if (faker.datatype.boolean()) continue;
+			const stageImages = [];
 			for (let i = 0; i < faker.number.int({ min: 1, max: 5 }); i++) {
 				stageImages.push(
 					new StageImage(

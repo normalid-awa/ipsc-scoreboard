@@ -12,7 +12,6 @@ import { authPlugin } from "@/plugins/auth.js";
 import { SportEnum } from "@/sport.js";
 import {
 	OffsetBasedPaginationSchema,
-	PaginatedResult,
 	parseOffsetBasedPaginationParams,
 	serializeOffsetBasedPaginationResult,
 } from "@/util/offsetBasedPagination.js";
@@ -25,7 +24,7 @@ import {
 	createStageSchema,
 	createUspsaStageSchema,
 } from "./stages.dto.js";
-import { EntityDTO, Loaded, rel, serialize, wrap } from "@mikro-orm/core";
+import { rel, serialize, wrap } from "@mikro-orm/core";
 import { User } from "@/database/entities/user.entity.js";
 import { Image } from "@/database/entities/image.entity.js";
 import mikroOrmConfig from "@/database/mikro-orm.config.js";
@@ -60,7 +59,7 @@ async function findStages<T extends Stage & object = UnionStage>(
 		serialize(stages, mikroOrmConfig.serialization),
 		totalCount,
 		pagination,
-	) as PaginatedResult<EntityDTO<Loaded<T[], never>>>;
+	) /* as PaginatedResult<EntityDTO<Loaded<T>>> */;
 }
 
 /**
@@ -137,7 +136,7 @@ export const stagesRoute = new Elysia({
 	.get(
 		"/",
 		async ({ query }) => {
-			return await findStages(query.filter, query.pagination);
+			return await findStages<UnionStage>(query.filter, query.pagination);
 		},
 		{
 			query: t.Object({
