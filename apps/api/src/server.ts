@@ -41,8 +41,9 @@ serve({
 	port: 3001,
 	createServer,
 	serverOptions: {
-		cert: readFileSync("../../cert.pem"),
-		key: readFileSync("../../key.pem"),
+		cert: readFileSync("../../server.crt"),
+		key: readFileSync("../../server.key"),
+		ca: readFileSync("../../ca.crt"),
 	},
 });
 

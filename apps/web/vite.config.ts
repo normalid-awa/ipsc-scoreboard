@@ -10,8 +10,9 @@ const config = defineConfig((confEnv) => {
 	let https: ServerOptions["https"] | undefined = undefined;
 	if (confEnv.mode == "development") {
 		https = {
-			key: readFileSync("../../key.pem"),
-			cert: readFileSync("../../cert.pem"),
+			key: readFileSync("../../server.key"),
+			cert: readFileSync("../../server.crt"),
+			ca: readFileSync("../../ca.crt"),
 		};
 	}
 
