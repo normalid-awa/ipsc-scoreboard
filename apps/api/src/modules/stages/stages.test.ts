@@ -144,7 +144,8 @@ test("Test ipsc stage creation", async () => {
 				isNoShoot: false,
 			},
 		],
-	};
+		images: [],
+	} satisfies Parameters<typeof api.stage.ipsc.post>[0];
 
 	let createResult = await api.stage.ipsc.post(testStageData);
 	expect(createResult.status).toBe(200);
