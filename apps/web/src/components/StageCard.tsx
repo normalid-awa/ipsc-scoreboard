@@ -4,9 +4,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { red } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { ExpandMoreButton } from "./ExpandMoreButton";
@@ -36,17 +33,11 @@ export function StageCard(props: StageCardProps) {
 					<CardHeader
 						avatar={
 							<Avatar
-								sx={{ bgcolor: red[500] }}
 								aria-label="recipe"
 								src={props.creator.image}
 							>
 								{props.creator.name[0]}
 							</Avatar>
-						}
-						action={
-							<IconButton aria-label="settings">
-								<MoreVertIcon />
-							</IconButton>
 						}
 						title={`${props.creator.name}`}
 						subheader={`${props.stage.type} Stage`}
@@ -74,24 +65,28 @@ export function StageCard(props: StageCardProps) {
 									{props.stage.createdAt.toLocaleString()}
 								</Typography>
 							</Box>
-							<ExpandMoreButton
-								sx={{
-									width: "2.5rem",
-									height: "2.5rem",
-								}}
-								expanded={expanded}
-								onClick={() => setExpanded(!expanded)}
-							/>
+							<Box sx={{ width: "calc(2.5rem - 8px)" }} />
 						</Box>
 					</CardContent>
 				</CardOnClickWrapper>
-				<CardActions sx={{ p: 0, m: 0 }}>
-					<Collapse
-						in={expanded}
-						timeout="auto"
-						unmountOnExit
-						sx={{ flexGrow: 1 }}
-					>
+				<Box
+					sx={{
+						float: "right",
+						translate: "-8px calc(-2.5rem - 8px)",
+						height: 0,
+					}}
+				>
+					<ExpandMoreButton
+						sx={{
+							width: "2.5rem",
+							height: "2.5rem",
+						}}
+						expanded={expanded}
+						onClick={() => setExpanded(!expanded)}
+					/>
+				</Box>
+				<CardActions sx={{ p: 0, m: 0, flexDirection: "column" }}>
+					<Collapse in={expanded} timeout="auto" unmountOnExit>
 						<Paper variant="outlined">
 							{props.stage.description}
 						</Paper>

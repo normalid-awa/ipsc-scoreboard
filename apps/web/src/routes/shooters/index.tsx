@@ -9,9 +9,7 @@ import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import Chip from "@mui/material/Chip";
 import { FieldFilter, SportEnum } from "@ipsc_scoreboard/api";
-import DoneIcon from "@mui/icons-material/Done";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
@@ -21,6 +19,7 @@ import Divider from "@mui/material/Divider";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Skeleton from "@mui/material/Skeleton";
+import { SportFilter } from "@/components/SportFilter";
 
 export const ROUTE_ORDER = PREV_ROUTE_ORDER + 1;
 
@@ -36,68 +35,6 @@ export const Route = createFileRoute("/shooters/")({
 		meta: [{ title: `${env.VITE_TITLE_PREFIX} Shooters list` }],
 	}),
 });
-
-function SportFilterChip(props: {
-	onEnable: () => void;
-	onDisable: () => void;
-	enabled: boolean;
-	label: string;
-	size?: "small" | "medium";
-}) {
-	return (
-		<Chip
-			size={props.size || "medium"}
-			label={props.label}
-			variant={props.enabled ? "filled" : "outlined"}
-			color={props.enabled ? "primary" : "default"}
-			clickable
-			onClick={props.enabled ? props.onDisable : props.onEnable}
-			onDelete={props.enabled ? props.onDisable : undefined}
-			deleteIcon={props.enabled ? <DoneIcon /> : undefined}
-		/>
-	);
-}
-
-function SportFilter(props: {
-	filters: string[];
-	setFilters: (filters: SportEnum[]) => void;
-}) {
-	const theme = useTheme();
-	const smallVariant = useMediaQuery(theme.breakpoints.down("sm"));
-
-	function removeFilter(filter: SportEnum) {
-		const newFilters = props.filters.filter(
-			(v) => v !== filter,
-		) as SportEnum[];
-		props.setFilters(newFilters);
-	}
-
-	function addFilter(filter: SportEnum) {
-		if (!props.filters.includes(filter)) {
-			props.setFilters([...props.filters, filter] as SportEnum[]);
-		}
-	}
-
-	return (
-		<Stack
-			direction={"row"}
-			spacing={smallVariant ? 0.5 : 1}
-			gap={smallVariant ? 0.5 : 1}
-			flexWrap={"wrap"}
-		>
-			{Object.values(SportEnum).map((v) => (
-				<SportFilterChip
-					size={smallVariant ? "small" : "medium"}
-					key={v}
-					label={v}
-					onEnable={() => addFilter(v)}
-					onDisable={() => removeFilter(v)}
-					enabled={props.filters.includes(v)}
-				/>
-			))}
-		</Stack>
-	);
-}
 
 function TextFilter(props: {
 	text: string;

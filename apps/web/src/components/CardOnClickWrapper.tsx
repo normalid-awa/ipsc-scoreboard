@@ -6,7 +6,9 @@ export function CardOnClickWrapper(props: {
 	children: ReactNode;
 }) {
 	return props.onClick ? (
-		<CardActionArea>{props.children}</CardActionArea>
+		<CardActionArea onClick={props.onClick}>
+			{props.children}
+		</CardActionArea>
 	) : (
 		props.children
 	);

@@ -8,6 +8,12 @@ import Button from "@mui/material/Button";
 import { Link } from "@/components/MuiWrapper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import { SportFilter } from "@/components/SportFilter";
+import Paper from "@mui/material/Paper";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const stageSearchSchema = z.object({
 	page: z.number().min(1).default(1),
@@ -49,6 +55,25 @@ export const Route = createFileRoute("/stages/")({
 	},
 });
 
+function FilterBar() {
+	const theme = useTheme();
+	const smallVariant = useMediaQuery(theme.breakpoints.down("xs"));
+
+	return (
+		<Paper sx={{ p: 2 }}>
+			<Stack spacing={1}>
+				<TextField
+					size={smallVariant ? "small" : "medium"}
+					label="Search Stages"
+					variant="outlined"
+					fullWidth
+				/>
+				<SportFilter filters={[]} setFilters={() => {}} />
+			</Stack>
+		</Paper>
+	);
+}
+
 function RouteComponent() {
 	const stages =
 		Route.useLoaderData() as unknown as PaginatedResult<UnionStage>;
@@ -56,28 +81,28 @@ function RouteComponent() {
 
 	return (
 		<>
-			<Box sx={{ height: 100 }}>dd</Box>
-			<Masonry
-				columns={{ xs: 2, sm: 3, md: 4, lg: 5 }}
-				spacing={0.5}
-				sequential
-			>
-				{stages.items.map((stage) => {
-					return (
-						<StageCard
-							onClick={() => {}}
-							key={stage.id}
-							creator={{
-								name: stage.creator.name,
-								image: stage.creator.image,
-							}}
-							stage={stage}
-						/>
-					);
-				})}
-			</Masonry>
-			{stages.hasNextPage ? (
-				<Button size="large" fullWidth variant="outlined">
+			<Stack spacing={1}>
+				<FilterBar />
+				<Masonry
+					columns={{ xs: 2, sm: 3, md: 4, lg: 5 }}
+					spacing={0.5}
+					sequential
+				>
+					{stages.items.map((stage) => {
+						return (
+							<StageCard
+								onClick={() => {}}
+								key={stage.id}
+								creator={{
+									name: stage.creator.name,
+									image: stage.creator.image,
+								}}
+								stage={stage}
+							/>
+						);
+					})}
+				</Masonry>
+				{stages.hasNextPage ? (
 					<Link
 						to="."
 						search={{
@@ -94,14 +119,17 @@ function RouteComponent() {
 						}}
 						viewTransition
 					>
-						Load More Stages
+						<Button size="large" fullWidth variant="outlined">
+							Load More Stages
+						</Button>
 					</Link>
-				</Button>
-			) : (
-				<Typography variant="h5" textAlign="center" sx={{ mt: 5 }}>
-					No more stages.
-				</Typography>
-			)}
+				) : (
+					<Typography variant="h5" textAlign="center">
+						No more stages. <br />
+						<Link to=".">Back to first page</Link>
+					</Typography>
+				)}
+			</Stack>
 		</>
 	);
 }
