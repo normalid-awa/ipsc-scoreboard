@@ -25,7 +25,7 @@ import {
 	createUspsaStageSchema,
 	stagePopulateSchema,
 } from "./stages.dto.js";
-import { rel, serialize, wrap } from "@mikro-orm/core";
+import { EntityDTO, Loaded, rel, serialize, wrap } from "@mikro-orm/core";
 import { User } from "@/database/entities/user.entity.js";
 import { Image } from "@/database/entities/image.entity.js";
 import mikroOrmConfig from "@/database/mikro-orm.config.js";
@@ -68,7 +68,7 @@ async function findStages<T extends Stage & object = UnionStage>(
 	);
 	return serializeOffsetBasedPaginationResult(
 		// @ts-ignore
-		stages as T[],
+		stages as EntityDTO<Loaded<T, "*">>[],
 		totalCount,
 		pagination,
 	);
