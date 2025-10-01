@@ -40,6 +40,7 @@ export default function WideScreenLayout(props: LayoutProps) {
 								flexGrow: 1,
 								p: 2,
 								overflow: "auto",
+								maxWidth: "100%",
 							}}
 						>
 							{props.children}
