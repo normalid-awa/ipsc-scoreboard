@@ -1,4 +1,4 @@
-import { Options } from "@mikro-orm/postgresql";
+import { Options, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { TsMorphMetadataProvider } from "@mikro-orm/reflection";
 import { Migrator } from "@mikro-orm/migrations";
 import "dotenv/config";
@@ -8,6 +8,7 @@ import { SeedManager } from "@mikro-orm/seeder";
 import { pathToFileURL } from "url";
 
 export default {
+	driver: PostgreSqlDriver,
 	clientUrl: env.DATABASE_URL,
 	entities: ["dist/**/*.entity.js"],
 	entitiesTs: ["src/**/*.entity.ts"],
