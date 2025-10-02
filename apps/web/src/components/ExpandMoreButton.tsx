@@ -1,8 +1,8 @@
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ReactElement } from "react";
-import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
+import Icon from "@mui/material/Icon";
 
 export interface ExpandMoreButtonProps extends IconButtonProps {
 	icon?: ReactElement;
@@ -13,10 +13,13 @@ export function ExpandMoreButton(props: ExpandMoreButtonProps) {
 	const theme = useTheme();
 	return (
 		<IconButton {...props}>
-			<Box
+			<Icon
+				color={props.expanded ? "secondary" : "inherit"}
 				sx={{
-					rotate: props.expanded ? "180deg" : "0deg",
-					transition: theme.transitions.create(["rotate"], {
+					transform: props.expanded
+						? "rotateX(180deg)"
+						: "rotateX(0deg)",
+					transition: theme.transitions.create(["transform"], {
 						easing: theme.transitions.easing.easeInOut,
 						duration: theme.transitions.duration.standard,
 					}),
@@ -26,7 +29,7 @@ export function ExpandMoreButton(props: ExpandMoreButtonProps) {
 				}}
 			>
 				{props.icon || <ExpandMoreIcon />}
-			</Box>
+			</Icon>
 		</IconButton>
 	);
 }

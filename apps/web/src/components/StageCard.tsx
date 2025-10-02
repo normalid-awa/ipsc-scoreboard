@@ -86,9 +86,22 @@ export function StageCard(props: StageCardProps) {
 					/>
 				</Box>
 				<CardActions sx={{ p: 0, m: 0, flexDirection: "column" }}>
-					<Collapse in={expanded} timeout="auto" unmountOnExit>
-						<Paper variant="outlined">
-							{props.stage.description}
+					<Collapse
+						in={expanded}
+						timeout="auto"
+						unmountOnExit
+						sx={{ width: "100%" }}
+					>
+						<Paper
+							variant="outlined"
+							sx={{
+								width: "100%",
+							}}
+						>
+							<Typography variant="body1">
+								Description: &nbsp;
+								{props.stage.description || "No description"}
+							</Typography>
 						</Paper>
 					</Collapse>
 				</CardActions>
