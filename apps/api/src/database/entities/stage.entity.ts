@@ -50,7 +50,11 @@ END`;
 	return sql;
 }
 
-export type UnionStage = IpscStage | IdpaStage | AaipscStage | UspsaStage;
+export type UnionStage =
+	| (IpscStage & { type: SportEnum.IPSC })
+	| (IdpaStage & { type: SportEnum.IDPA })
+	| (AaipscStage & { type: SportEnum.AAIPSC })
+	| (UspsaStage & { type: SportEnum.USPSA });
 
 @Entity()
 export class StageImage {

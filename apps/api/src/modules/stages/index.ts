@@ -4,7 +4,6 @@ import {
 	IpscStage,
 	Stage,
 	StageImage,
-	UnionStage,
 	UspsaStage,
 } from "@/database/entities/stage.entity.js";
 import orm from "@/database/orm.js";
@@ -30,6 +29,8 @@ import { User } from "@/database/entities/user.entity.js";
 import { Image } from "@/database/entities/image.entity.js";
 import mikroOrmConfig from "@/database/mikro-orm.config.js";
 
+type ElysiaTypeUnionStage = IpscStage | IdpaStage | AaipscStage | UspsaStage;
+
 async function getStageById<T extends Stage = Stage>(
 	id: number,
 	populate: Static<typeof stagePopulateSchema> = [],
@@ -49,7 +50,7 @@ async function getStageById<T extends Stage = Stage>(
 	return serialize(stage as unknown as T, mikroOrmConfig.serialization);
 }
 
-async function findStages<T extends Stage & object = UnionStage>(
+async function findStages<T extends Stage & object = ElysiaTypeUnionStage>(
 	filter?: Static<typeof QueryFilter>,
 	pagination?: Static<typeof OffsetBasedPaginationSchema>,
 	populate: Static<typeof stagePopulateSchema> = [],
@@ -148,7 +149,7 @@ export const stagesRoute = new Elysia({
 	.get(
 		"/",
 		async ({ query }) => {
-			return await findStages<UnionStage>(
+			return await findStages<ElysiaTypeUnionStage>(
 				query.filter,
 				query.pagination,
 				query.populate,
@@ -165,7 +166,7 @@ export const stagesRoute = new Elysia({
 	.get(
 		"/:id",
 		async ({ params }) => {
-			return await getStageById<UnionStage>(params.id);
+			return await getStageById<ElysiaTypeUnionStage>(params.id);
 		},
 		{
 			params: t.Object({

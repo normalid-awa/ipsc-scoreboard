@@ -356,6 +356,7 @@ function RouteComponent() {
 									page: (old.page || 1) + 1,
 								}),
 							}}
+							resetScroll={false}
 							viewTransition
 						>
 							<Button size="large" fullWidth variant="outlined">
