@@ -305,75 +305,75 @@ function RouteComponent() {
 		<>
 			<Stack spacing={1}>
 				<FilterBar />
-				<Masonry
-					columns={{ xs: 1, sm: 2, md: 4, lg: 5 }}
-					spacing={0.5}
-					defaultHeight={450}
-					defaultColumns={4}
-					defaultSpacing={1}
-					sequential
-				>
-					{stages.items.map((stage) => {
-						return (
-							<StageCard
-								onClick={() =>
-									navigate({
-										to: "/stages/$stageId",
-										params: {
-											stageId: stage.id.toString(),
+				{stages.items.length > 0 && (
+					<Masonry
+						columns={{ xs: 1, sm: 2, md: 4, lg: 5 }}
+						spacing={0.5}
+						defaultHeight={450}
+						defaultColumns={4}
+						defaultSpacing={1}
+						sequential
+					>
+						{stages.items.map((stage) => {
+							return (
+								<StageCard
+									onClick={() =>
+										navigate({
+											to: "/stages/$stageId",
+											params: {
+												stageId: stage.id.toString(),
+											},
+											viewTransition: true,
+										})
+									}
+									key={stage.id}
+									creator={{
+										name: stage.creator.name,
+										image: stage.creator.image,
+									}}
+									stage={stage}
+									cardProps={{
+										style: {
+											viewTransitionName: `stage-card-${stage.id}`,
 										},
-										viewTransition: true,
-									})
-								}
-								key={stage.id}
-								creator={{
-									name: stage.creator.name,
-									image: stage.creator.image,
-								}}
-								stage={stage}
-								cardProps={{
-									style: {
-										viewTransitionName: `stage-card-${stage.id}`,
-									},
-								}}
-							/>
-						);
-					})}
-				</Masonry>
-				<Box>
-					{stages.hasNextPage ? (
-						<Link
-							to="."
-							search={(old) => ({
-								...old,
-								previousStages: stages.items,
-								page: search.page + 1,
-							})}
-							mask={{
-								to: ".",
-								search: ({ previousStages, ...old }) => ({
-									...old,
-									page: (old.page || 1) + 1,
-								}),
-							}}
-							resetScroll={false}
-							viewTransition
-						>
-							<Button size="large" fullWidth variant="outlined">
-								Load More Stages &ensp;
-								{`(${(search.previousStages?.length ?? 0) + stages.limit} of ${stages.length})`}
-							</Button>
-						</Link>
-					) : (
-						<Typography variant="h5" textAlign="center">
-							No more stages. <br />
-							<Link to=".">
-								Clear filter and back to first page
-							</Link>
-						</Typography>
-					)}
-				</Box>
+									}}
+								/>
+							);
+						})}
+					</Masonry>
+				)}
 			</Stack>
+			<Box>
+				{stages.hasNextPage ? (
+					<Link
+						to="."
+						search={(old) => ({
+							...old,
+							previousStages: stages.items,
+							page: search.page + 1,
+						})}
+						mask={{
+							to: ".",
+							search: ({ previousStages, ...old }) => ({
+								...old,
+								page: (old.page || 1) + 1,
+							}),
+						}}
+						resetScroll={false}
+						viewTransition
+					>
+						<Button size="large" fullWidth variant="outlined">
+							Load More Stages &ensp;
+							{`(${(search.previousStages?.length ?? 0) + stages.limit} of ${stages.length})`}
+						</Button>
+					</Link>
+				) : (
+					<Typography variant="h5" textAlign="center">
+						No more stages. <br />
+						<Link to=".">Clear filter and back to first page</Link>
+					</Typography>
+				)}
+			</Box>
 			<ClientOnly>
 				<ScrollTop />
 			</ClientOnly>
