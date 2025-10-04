@@ -47,6 +47,9 @@ export function StageCard(props: StageCardProps) {
 							component="img"
 							image={`${env.VITE_BACKEND_API_URL}/api/image/${props.stage.images[0].uuid}`}
 							alt={`Stage ${props.stage.title}'s thumbnail`}
+							style={{
+								viewTransitionName: `stage-image-${props.stage.id}`,
+							}}
 						/>
 					)}
 					<CardContent>

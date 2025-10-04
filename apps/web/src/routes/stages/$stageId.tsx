@@ -9,7 +9,6 @@ export const Route = createFileRoute("/stages/$stageId")({
 			.stage({ id: ctx.params.stageId })
 			.get()
 			.then((res) => res.data);
-		console.log(stage);
 		if (!stage) throw notFound();
 		return stage;
 	},
@@ -29,6 +28,9 @@ function RouteComponent() {
 						: undefined
 				}
 				alt={`${stage.title}'s thumbnail`}
+				style={{
+					viewTransitionName: `stage-image-${stage.id}`,
+				}}
 			/>
 		</div>
 	);

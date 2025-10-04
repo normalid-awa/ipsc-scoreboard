@@ -18,7 +18,6 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { SportFilter } from "@/components/SportFilter";
 import Paper from "@mui/material/Paper";
-import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
 import { wrapArray } from "@/utils/wrapArray";
@@ -200,6 +199,7 @@ function RouteComponent() {
 	const stages =
 		Route.useLoaderData() as unknown as PaginatedResult<UnionStage>;
 	const search = Route.useSearch();
+	const navigate = Route.useNavigate();
 
 	return (
 		<>
@@ -216,7 +216,15 @@ function RouteComponent() {
 					{stages.items.map((stage) => {
 						return (
 							<StageCard
-								onClick={() => {}}
+								onClick={() =>
+									navigate({
+										to: "/stages/$stageId",
+										params: {
+											stageId: stage.id.toString(),
+										},
+										viewTransition: true,
+									})
+								}
 								key={stage.id}
 								creator={{
 									name: stage.creator.name,
