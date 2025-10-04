@@ -13,6 +13,11 @@ import Collapse from "@mui/material/Collapse";
 import Paper from "@mui/material/Paper";
 import { CardOnClickWrapper } from "./CardOnClickWrapper";
 import CardActions from "@mui/material/CardActions";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableHead from "@mui/material/TableHead";
+import TableCell from "@mui/material/TableCell";
+import Table from "@mui/material/Table";
 
 export interface StageCardProps {
 	onClick?: () => void;
@@ -102,10 +107,48 @@ export function StageCard(props: StageCardProps) {
 								width: "100%",
 							}}
 						>
-							<Typography variant="body1">
-								Description: &nbsp;
-								{props.stage.description || "No description"}
-							</Typography>
+							<Box
+								sx={{
+									width: "100%",
+									overflow: "auto",
+								}}
+							>
+								<Table size="small">
+									<TableBody>
+										{(
+											[
+												[
+													"Description:",
+													props.stage.description ||
+														"No description",
+												],
+												[
+													"Minimum rounds:",
+													props.stage.minimumRounds,
+												],
+												[
+													"Walkthrough time:",
+													`${props.stage.walkthroughTime} seconds`,
+												],
+											] as const
+										).map(([head, cell]) => (
+											<TableRow key={head as string}>
+												<TableCell
+													scope="row"
+													align="right"
+												>
+													{head}
+												</TableCell>
+												<TableCell
+													sx={{ minWidth: 200 }}
+												>
+													{cell}
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							</Box>
 						</Paper>
 					</Collapse>
 				</CardActions>
