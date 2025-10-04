@@ -28,6 +28,7 @@ import Zoom from "@mui/material/Zoom";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import { useScrollTarget } from "@/components/layout/LayoutViewScrollTargetProvider";
 import { ClientOnly } from "@tanstack/react-router";
+import VerticalAlignTopIcon from "@mui/icons-material/VerticalAlignTop";
 
 const stageSearchSchema = z.object({
 	page: z.number().min(1).default(1),
@@ -168,6 +169,8 @@ function ScrollTop() {
 	const scrollTarget = useScrollTarget();
 	const showScrollToTopButton = useScrollTrigger({
 		target: scrollTarget,
+		disableHysteresis: true,
+		threshold: 100,
 	});
 
 	return (
@@ -175,8 +178,8 @@ function ScrollTop() {
 			<Fab
 				sx={{
 					position: "absolute",
-					bottom: 26,
-					right: 26,
+					bottom: (t) => t.spacing(3),
+					right: (t) => t.spacing(3),
 				}}
 				aria-label="Scroll back to top"
 				color="primary"
@@ -184,7 +187,9 @@ function ScrollTop() {
 				onClick={() => {
 					scrollTarget?.scrollTo({ top: 0, behavior: "smooth" });
 				}}
-			/>
+			>
+				<VerticalAlignTopIcon />
+			</Fab>
 		</Zoom>
 	);
 }
