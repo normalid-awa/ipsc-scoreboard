@@ -40,7 +40,6 @@ export const Route = createFileRoute("/stages/$stageId")({
 				},
 			})
 			.then((res) => res.data);
-		console.log(stage);
 		if (!stage) throw notFound();
 		return stage;
 	},
