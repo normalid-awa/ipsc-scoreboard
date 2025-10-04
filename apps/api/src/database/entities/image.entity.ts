@@ -67,6 +67,9 @@ export class Image {
 			`inline; filename="${encodeURIComponent(this.filename)}"`;
 		headers["content-type"] = this.mimetype;
 		headers["content-length"] = String(this.size);
+		headers["cache-control"] =
+			`public, max-age=${60 * 60 * 5 /** 5 miniutes */}`;
+		headers["etag"] = this.hash;
 
 		const path = join(
 			env.FILE_UPLOAD_PATH,
