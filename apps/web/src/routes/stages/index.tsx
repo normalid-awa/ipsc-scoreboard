@@ -28,6 +28,8 @@ import useScrollTrigger from "@mui/material/useScrollTrigger";
 import { useScrollTarget } from "@/components/layout/LayoutViewScrollTargetProvider";
 import { ClientOnly } from "@tanstack/react-router";
 import VerticalAlignTopIcon from "@mui/icons-material/VerticalAlignTop";
+import { ListedRouteStaticData } from "@/router";
+import SnippetFolderIcon from "@mui/icons-material/SnippetFolder";
 
 const stageSearchSchema = z.object({
 	page: z.number().min(1).default(1),
@@ -98,6 +100,12 @@ export const Route = createFileRoute("/stages/")({
 				throw res;
 			});
 	},
+	staticData: {
+		displayName: "Stages list",
+		icon: <SnippetFolderIcon />,
+		needAuth: false,
+		order: 2,
+	} satisfies ListedRouteStaticData,
 });
 
 function FilterBar() {

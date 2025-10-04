@@ -1,6 +1,5 @@
 import PeopleIcon from "@mui/icons-material/People";
 import { createFileRoute } from "@tanstack/react-router";
-import { ROUTE_ORDER as PREV_ROUTE_ORDER } from "../timer";
 import { ListedRouteStaticData } from "@/router";
 import env from "@/env";
 import { useQuery } from "@tanstack/react-query";
@@ -21,15 +20,13 @@ import { useTheme } from "@mui/material/styles";
 import Skeleton from "@mui/material/Skeleton";
 import { SportFilter } from "@/components/SportFilter";
 
-export const ROUTE_ORDER = PREV_ROUTE_ORDER + 1;
-
 export const Route = createFileRoute("/shooters/")({
 	component: RouteComponent,
 	staticData: {
 		displayName: "Shooters list",
 		icon: <PeopleIcon />,
 		needAuth: false,
-		order: ROUTE_ORDER,
+		order: 1,
 	} satisfies ListedRouteStaticData,
 	head: () => ({
 		meta: [{ title: `${env.VITE_TITLE_PREFIX} Shooters list` }],
