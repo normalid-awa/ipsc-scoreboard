@@ -6,8 +6,12 @@ import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Toolbar from "@mui/material/Toolbar";
 import Divider from "@mui/material/Divider";
+import { useRef } from "react";
+import { ScrollTargetProvider } from "./LayoutViewScrollTargetProvider";
 
 export default function WideScreenLayout(props: LayoutProps) {
+	const scrollTarget = useRef(null);
+
 	return (
 		<>
 			<Paper>
@@ -42,8 +46,11 @@ export default function WideScreenLayout(props: LayoutProps) {
 								overflow: "auto",
 								maxWidth: "100%",
 							}}
+							ref={scrollTarget}
 						>
-							{props.children}
+							<ScrollTargetProvider ref={scrollTarget.current}>
+								{props.children}
+							</ScrollTargetProvider>
 						</Paper>
 					</Paper>
 				</Box>

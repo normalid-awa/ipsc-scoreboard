@@ -3,6 +3,7 @@ import Masonry from "@mui/lab/Masonry";
 import {
 	App,
 	FieldFilter,
+	LogicalFilters,
 	PaginatedResult,
 	SportEnum,
 	UnionStage,
@@ -21,22 +22,32 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
 import { wrapArray } from "@/utils/wrapArray";
+import { debounce } from "@mui/material/utils";
+import Fab from "@mui/material/Fab";
+import Zoom from "@mui/material/Zoom";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+import { useScrollTarget } from "@/components/layout/LayoutViewScrollTargetProvider";
+import { ClientOnly } from "@tanstack/react-router";
 
 const stageSearchSchema = z.object({
 	page: z.number().min(1).default(1),
 	limit: z.number().min(1).max(20).default(10),
 	previousStages: z.optional(z.array(z.custom<UnionStage>())),
 	sportFilter: z.optional(z.array(z.nativeEnum(SportEnum)).default([])),
+	searchPhrase: z.optional(z.string().max(100)).catch(undefined),
 });
 
 export const Route = createFileRoute("/stages/")({
 	component: RouteComponent,
 	validateSearch: zodValidator(stageSearchSchema),
-	loaderDeps: ({ search: { limit, page, previousStages, sportFilter } }) => ({
+	loaderDeps: ({
+		search: { limit, page, previousStages, sportFilter, searchPhrase },
+	}) => ({
 		limit,
 		page,
 		previousStages,
 		sportFilter,
+		searchPhrase,
 	}),
 	loader({ context, deps }) {
 		return context.api.stage
@@ -54,6 +65,21 @@ export const Route = createFileRoute("/stages/")({
 								operator: "in",
 								value: deps.sportFilter!,
 							} satisfies FieldFilter),
+							...wrapArray(!!deps.searchPhrase, {
+								operator: "or",
+								value: [
+									{
+										field: "title",
+										operator: "like",
+										value: `%${deps.searchPhrase}%`,
+									},
+									{
+										field: "description",
+										operator: "like",
+										value: `%${deps.searchPhrase}%`,
+									},
+								],
+							} satisfies LogicalFilters),
 						],
 					},
 					populate: ["creator.image"],
@@ -80,6 +106,25 @@ function FilterBar() {
 	const navigate = Route.useNavigate();
 	const search = Route.useSearch();
 
+	const debouncedSearch = debounce(
+		(searchPhrase: string) =>
+			navigate({
+				to: ".",
+				search: ({ previousStages, ...old }) => ({
+					...old,
+					searchPhrase,
+				}),
+				mask: {
+					search: (old) => ({
+						page: old.page,
+						limit: old.limit,
+						searchPhrase,
+					}),
+				},
+			}),
+		500,
+	);
+
 	return (
 		<Paper sx={{ p: 2 }}>
 			<Stack spacing={1}>
@@ -88,6 +133,11 @@ function FilterBar() {
 					label="Search Stages"
 					variant="outlined"
 					fullWidth
+					name="search"
+					type="search"
+					onChange={(e) => {
+						debouncedSearch(e.target.value);
+					}}
 				/>
 				<SportFilter
 					filters={search.sportFilter || []}
@@ -96,12 +146,14 @@ function FilterBar() {
 							to: ".",
 							search: ({ previousStages, ...old }) => ({
 								...old,
+								page: 1,
 								sportFilter: filters,
 							}),
 							mask: {
 								search: (old) => ({
-									page: old.page,
+									page: 1,
 									limit: old.limit,
+									searchPhrase: old.searchPhrase,
 								}),
 							},
 						});
@@ -109,6 +161,31 @@ function FilterBar() {
 				/>
 			</Stack>
 		</Paper>
+	);
+}
+
+function ScrollTop() {
+	const scrollTarget = useScrollTarget();
+	const showScrollToTopButton = useScrollTrigger({
+		target: scrollTarget,
+	});
+
+	return (
+		<Zoom in={showScrollToTopButton} unmountOnExit>
+			<Fab
+				sx={{
+					position: "absolute",
+					bottom: 26,
+					right: 26,
+				}}
+				aria-label="Scroll back to top"
+				color="primary"
+				size="medium"
+				onClick={() => {
+					scrollTarget?.scrollTo({ top: 0, behavior: "smooth" });
+				}}
+			/>
+		</Zoom>
 	);
 }
 
@@ -122,11 +199,11 @@ function RouteComponent() {
 			<Stack spacing={1}>
 				<FilterBar />
 				<Masonry
-					defaultHeight={450}
-					defaultColumns={4}
-					defaultSpacing={0.5}
 					columns={{ xs: 2, sm: 3, md: 4, lg: 5 }}
 					spacing={0.5}
+					defaultHeight={450}
+					defaultColumns={4}
+					defaultSpacing={1}
 					sequential
 				>
 					{stages.items.map((stage) => {
@@ -151,13 +228,18 @@ function RouteComponent() {
 								...old,
 								page: search.page + 1,
 								limit: search.limit,
-								previousStages: stages.items,
+								previousStages: [
+									...stages.items,
+									...stages.items,
+									...stages.items,
+								],
 							})}
 							mask={{
 								to: ".",
 								search: {
 									page: search.page + 1,
 									limit: search.limit,
+									searchPhrase: search.searchPhrase,
 								},
 							}}
 							viewTransition
@@ -170,11 +252,16 @@ function RouteComponent() {
 					) : (
 						<Typography variant="h5" textAlign="center">
 							No more stages. <br />
-							<Link to=".">Back to first page</Link>
+							<Link to=".">
+								Clear filter and back to first page
+							</Link>
 						</Typography>
 					)}
 				</Box>
 			</Stack>
+			<ClientOnly>
+				<ScrollTop />
+			</ClientOnly>
 		</>
 	);
 }

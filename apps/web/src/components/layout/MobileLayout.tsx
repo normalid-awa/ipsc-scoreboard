@@ -10,6 +10,7 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
+import { ScrollTargetProvider } from "./LayoutViewScrollTargetProvider";
 
 function SlideOnScroll({
 	children,
@@ -113,7 +114,9 @@ export default function MobileLayout(props: LayoutProps) {
 					sx={{ p: 1, pt: 2, height: "100vh", overflow: "auto" }}
 					ref={scrollRef}
 				>
-					{props.children}
+					<ScrollTargetProvider ref={scrollRef}>
+						{props.children}
+					</ScrollTargetProvider>
 				</Paper>
 			</div>
 		</>
