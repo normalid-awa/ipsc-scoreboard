@@ -105,6 +105,9 @@ export class Stage {
 	})
 	images = new Collection<Image>(this);
 
+	@Property()
+	minimumRounds!: number;
+
 	@ManyToOne()
 	creator!: User;
 
@@ -135,9 +138,6 @@ export class IpscStage extends Stage {
 	@Property({ type: "jsonb" })
 	ipscSteelTargets!: Static<typeof ipscSteelTargetSchema>[];
 
-	@Property({ name: "minimum_rounds" })
-	minimumRounds!: number;
-
 	@Formula((alias) =>
 		generateStageTypeSql(
 			{ 12: "short", 24: "medium", 32: "long" },
@@ -163,6 +163,12 @@ export class IdpaStage extends Stage {
 
 	@Property()
 	idpaSteelTargets!: number;
+
+	@BeforeCreate()
+	@BeforeUpdate()
+	protected updateMinimumRounds() {
+		this.minimumRounds = this.idpaPaperTargets * 2 + this.idpaSteelTargets;
+	}
 }
 
 export const aaipscPaperTargetSchema = t.Object({
@@ -184,9 +190,6 @@ export class AaipscStage extends Stage {
 
 	@Property({ type: "jsonb" })
 	aaipscSteelTargets!: Static<typeof aaipscSteelTargetSchema>[];
-
-	@Property({ name: "minimum_rounds" })
-	minimumRounds!: number;
 
 	@Formula((alias) =>
 		generateStageTypeSql(
@@ -238,9 +241,6 @@ export class UspsaStage extends Stage {
 		nativeEnumName: "uspsa_scoring_method",
 	})
 	uspsaScoringMethod!: UspsaScoringMethod;
-
-	@Property({ name: "minimum_rounds" })
-	minimumRounds!: number;
 
 	@Formula((alias) =>
 		generateStageTypeSql(
