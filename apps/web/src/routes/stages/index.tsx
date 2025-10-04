@@ -233,11 +233,7 @@ function RouteComponent() {
 								...old,
 								page: search.page + 1,
 								limit: search.limit,
-								previousStages: [
-									...stages.items,
-									...stages.items,
-									...stages.items,
-								],
+								previousStages: stages.items,
 							})}
 							mask={{
 								to: ".",
