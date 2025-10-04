@@ -102,8 +102,7 @@ export const Route = createFileRoute("/stages/")({
 });
 
 function FilterBar() {
-	const theme = useTheme();
-	const smallVariant = useMediaQuery(theme.breakpoints.down("xs"));
+	const smallVariant = useMediaQuery((theme) => theme.breakpoints.down("xs"));
 	const navigate = Route.useNavigate();
 	const search = Route.useSearch();
 
@@ -172,23 +171,26 @@ function ScrollTop() {
 		disableHysteresis: true,
 		threshold: 100,
 	});
+	const largeFab = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
 	return (
 		<Zoom in={showScrollToTopButton} unmountOnExit>
 			<Fab
 				sx={{
 					position: "absolute",
-					bottom: (t) => t.spacing(3),
-					right: (t) => t.spacing(3),
+					bottom: (t) => t.spacing(largeFab ? 4 : 3),
+					right: (t) => t.spacing(largeFab ? 4 : 3),
 				}}
 				aria-label="Scroll back to top"
 				color="primary"
-				size="medium"
+				size={largeFab ? "large" : "medium"}
+				variant={largeFab ? "extended" : "circular"}
 				onClick={() => {
 					scrollTarget?.scrollTo({ top: 0, behavior: "smooth" });
 				}}
 			>
 				<VerticalAlignTopIcon />
+				{largeFab && "Scroll to top"}
 			</Fab>
 		</Zoom>
 	);
