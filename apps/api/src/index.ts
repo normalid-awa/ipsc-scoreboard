@@ -23,6 +23,13 @@ export {
 	type UspsaStage,
 } from "./database/entities/stage.entity.js";
 
+export {
+	isIpscStage,
+	isIdpaStage,
+	isAaipscStage,
+	isUspsaStage,
+} from "./util/stageDistinct.js";
+
 export { type Loaded } from "@mikro-orm/postgresql";
 
 export { type PaginatedResult } from "./util/offsetBasedPagination.js";
