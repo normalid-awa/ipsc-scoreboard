@@ -26,14 +26,21 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import Accordion from "@mui/material/Accordion";
 import { useState } from "react";
 import AccordionDetails from "@mui/material/AccordionDetails";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 
 export const Route = createFileRoute("/stages/$stageId")({
 	component: RouteComponent,
 	async loader(ctx) {
 		const stage = await ctx.context.api
 			.stage({ id: ctx.params.stageId })
-			.get()
+			.get({
+				query: {
+					populate: ["creator.image", "creator.name"],
+				},
+			})
 			.then((res) => res.data);
+		console.log(stage);
 		if (!stage) throw notFound();
 		return stage;
 	},
@@ -50,6 +57,30 @@ function BaseStageInformation({
 		<>
 			<Table size={dense ? "small" : "medium"}>
 				<TableBody>
+					<TableRow>
+						<TableCell scope="row" align="right">
+							Creator
+						</TableCell>
+						<TableCell>
+							<Box
+								sx={{
+									display: "flex",
+									flexDirection: "row",
+									alignItems: "center",
+								}}
+							>
+								<Avatar
+									src={stage.creator.image}
+									sx={{ mr: 1, height: 32, width: 32 }}
+								>
+									{stage.creator.name[0]}
+								</Avatar>
+								<Typography variant="h6">
+									{stage.creator.name}
+								</Typography>
+							</Box>
+						</TableCell>
+					</TableRow>
 					{(
 						[
 							[

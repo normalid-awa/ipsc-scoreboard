@@ -10,7 +10,7 @@ import {
 import { t } from "elysia";
 
 export const stagePopulateSchema = t.Array(
-	t.UnionEnum(["creator.image"] as const),
+	t.UnionEnum(["creator.image", "creator.name"] as const),
 );
 
 export const createStageSchema = t.Object({

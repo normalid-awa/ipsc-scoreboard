@@ -24,10 +24,9 @@ import {
 	createUspsaStageSchema,
 	stagePopulateSchema,
 } from "./stages.dto.js";
-import { EntityDTO, Loaded, rel, serialize, wrap } from "@mikro-orm/core";
+import { EntityDTO, Loaded, rel, wrap } from "@mikro-orm/core";
 import { User } from "@/database/entities/user.entity.js";
 import { Image } from "@/database/entities/image.entity.js";
-import mikroOrmConfig from "@/database/mikro-orm.config.js";
 
 type ElysiaTypeUnionStage = IpscStage | IdpaStage | AaipscStage | UspsaStage;
 
@@ -47,7 +46,7 @@ async function getStageById<T extends Stage = Stage>(
 		},
 	);
 	if (!stage) return status(404);
-	return serialize(stage as unknown as T, mikroOrmConfig.serialization);
+	return stage as unknown as T;
 }
 
 async function findStages<T extends Stage & object = ElysiaTypeUnionStage>(
@@ -165,8 +164,11 @@ export const stagesRoute = new Elysia({
 	)
 	.get(
 		"/:id",
-		async ({ params }) => {
-			return await getStageById<ElysiaTypeUnionStage>(params.id);
+		async ({ params, query }) => {
+			return await getStageById<ElysiaTypeUnionStage>(
+				params.id,
+				query.populate,
+			);
 		},
 		{
 			params: t.Object({
