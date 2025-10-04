@@ -33,7 +33,7 @@ import SnippetFolderIcon from "@mui/icons-material/SnippetFolder";
 import Slider from "@mui/material/Slider";
 import Grid from "@mui/material/Grid";
 
-const MINIMUM_ROUNDS_INFINITY = 50;
+const MINIMUM_ROUNDS_INFINITY = 40;
 
 const stageSearchSchema = z.object({
 	page: z.number().min(1).default(1),
@@ -250,6 +250,9 @@ function FilterBar() {
 								min={0}
 								step={1}
 								max={MINIMUM_ROUNDS_INFINITY}
+								valueLabelFormat={(v) =>
+									v === MINIMUM_ROUNDS_INFINITY ? "∞" : v
+								}
 								disableSwap
 							/>
 						</Box>
