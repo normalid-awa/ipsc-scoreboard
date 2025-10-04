@@ -15,7 +15,6 @@ import { CardOnClickWrapper } from "./CardOnClickWrapper";
 import CardActions from "@mui/material/CardActions";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
-import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
 import Table from "@mui/material/Table";
 
@@ -128,7 +127,7 @@ export function StageCard(props: StageCardProps) {
 												],
 												[
 													"Walkthrough time:",
-													`${props.stage.walkthroughTime} seconds`,
+													`${props.stage.walkthroughTime} seconds (${(props.stage.walkthroughTime / 60).toFixed(2)} minutes)`,
 												],
 											] as const
 										).map(([head, cell]) => (

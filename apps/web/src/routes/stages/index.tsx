@@ -306,7 +306,7 @@ function RouteComponent() {
 			<Stack spacing={1}>
 				<FilterBar />
 				<Masonry
-					columns={{ xs: 2, sm: 3, md: 4, lg: 5 }}
+					columns={{ xs: 1, sm: 2, md: 4, lg: 5 }}
 					spacing={0.5}
 					defaultHeight={450}
 					defaultColumns={4}
