@@ -1,6 +1,6 @@
 import { UnionStage } from "@ipsc_scoreboard/api";
 import Avatar from "@mui/material/Avatar";
-import Card from "@mui/material/Card";
+import Card, { CardProps } from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
@@ -21,6 +21,7 @@ export interface StageCardProps {
 		image?: string;
 	};
 	stage: UnionStage;
+	cardProps?: CardProps;
 }
 
 export function StageCard(props: StageCardProps) {
@@ -28,7 +29,7 @@ export function StageCard(props: StageCardProps) {
 
 	return (
 		<>
-			<Card sx={{ overflow: "visible" }}>
+			<Card sx={{ overflow: "visible" }} {...props.cardProps}>
 				<CardOnClickWrapper onClick={props.onClick}>
 					<CardHeader
 						avatar={

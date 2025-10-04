@@ -30,27 +30,26 @@ import { ClientOnly } from "@tanstack/react-router";
 import VerticalAlignTopIcon from "@mui/icons-material/VerticalAlignTop";
 import { ListedRouteStaticData } from "@/router";
 import SnippetFolderIcon from "@mui/icons-material/SnippetFolder";
+import Slider from "@mui/material/Slider";
+import Grid from "@mui/material/Grid";
+
+const MINIMUM_ROUNDS_INFINITY = 50;
 
 const stageSearchSchema = z.object({
 	page: z.number().min(1).default(1),
 	limit: z.number().min(1).max(20).default(10),
 	previousStages: z.optional(z.array(z.custom<UnionStage>())),
 	sportFilter: z.optional(z.array(z.nativeEnum(SportEnum)).default([])),
-	searchPhrase: z.optional(z.string().max(100)).catch(undefined),
+	searchPhrase: z.optional(z.string().max(100)).default(""),
+	minimumRounds: z
+		.optional(z.tuple([z.number(), z.number()]))
+		.default([0, MINIMUM_ROUNDS_INFINITY]),
 });
 
 export const Route = createFileRoute("/stages/")({
 	component: RouteComponent,
 	validateSearch: zodValidator(stageSearchSchema),
-	loaderDeps: ({
-		search: { limit, page, previousStages, sportFilter, searchPhrase },
-	}) => ({
-		limit,
-		page,
-		previousStages,
-		sportFilter,
-		searchPhrase,
-	}),
+	loaderDeps: ({ search }) => ({ ...search }),
 	loader({ context, deps }) {
 		return context.api.stage
 			.get({
@@ -82,6 +81,25 @@ export const Route = createFileRoute("/stages/")({
 									},
 								],
 							} satisfies LogicalFilters),
+							...wrapArray(deps.minimumRounds?.length == 2, {
+								operator: "and",
+								value: [
+									{
+										field: "minimumRounds",
+										operator: "gte",
+										value: deps.minimumRounds![0],
+									},
+									{
+										field: "minimumRounds",
+										operator: "lte",
+										value:
+											deps.minimumRounds![1] ===
+											MINIMUM_ROUNDS_INFINITY
+												? 1000
+												: deps.minimumRounds![1],
+									},
+								],
+							} satisfies LogicalFilters),
 						],
 					},
 					populate: ["creator.image"],
@@ -109,7 +127,7 @@ export const Route = createFileRoute("/stages/")({
 });
 
 function FilterBar() {
-	const smallVariant = useMediaQuery((theme) => theme.breakpoints.down("xs"));
+	const smallVariant = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 	const navigate = Route.useNavigate();
 	const search = Route.useSearch();
 
@@ -119,22 +137,45 @@ function FilterBar() {
 				to: ".",
 				search: ({ previousStages, ...old }) => ({
 					...old,
+					page: 1,
 					searchPhrase,
 				}),
 				mask: {
-					search: (old) => ({
-						page: old.page,
-						limit: old.limit,
+					search: ({ previousStages, ...old }) => ({
+						...old,
+						page: 1,
 						searchPhrase,
 					}),
 				},
+				viewTransition: true,
 			}),
 		500,
 	);
 
+	const debouncedminimumRounds = debounce(
+		(minimumRounds: [number, number]) =>
+			navigate({
+				to: ".",
+				search: ({ previousStages, ...old }) => ({
+					...old,
+					page: 1,
+					minimumRounds,
+				}),
+				mask: {
+					search: ({ previousStages, ...old }) => ({
+						...old,
+						page: 1,
+						minimumRounds,
+					}),
+				},
+				viewTransition: true,
+			}),
+		200,
+	);
+
 	return (
-		<Paper sx={{ p: 2 }}>
-			<Stack spacing={1}>
+		<Paper>
+			<Stack spacing={1} sx={{ p: smallVariant ? 0 : 1 }}>
 				<TextField
 					size={smallVariant ? "small" : "medium"}
 					label="Search Stages"
@@ -146,26 +187,74 @@ function FilterBar() {
 						debouncedSearch(e.target.value);
 					}}
 				/>
-				<SportFilter
-					filters={search.sportFilter || []}
-					setFilters={(filters) => {
-						navigate({
-							to: ".",
-							search: ({ previousStages, ...old }) => ({
-								...old,
-								page: 1,
-								sportFilter: filters,
-							}),
-							mask: {
-								search: (old) => ({
-									page: 1,
-									limit: old.limit,
-									searchPhrase: old.searchPhrase,
-								}),
-							},
-						});
-					}}
-				/>
+				<Grid
+					container
+					spacing={{ md: 2, xs: 1 }}
+					alignItems={"center"}
+				>
+					<Grid size={{ md: "auto", xs: 12 }}>
+						<SportFilter
+							filters={search.sportFilter || []}
+							setFilters={(filters) => {
+								navigate({
+									to: ".",
+									search: ({ previousStages, ...old }) => ({
+										...old,
+										page: 1,
+										sportFilter: filters,
+									}),
+									mask: {
+										search: ({
+											previousStages,
+											...old
+										}) => ({
+											...old,
+											page: 1,
+											sportFilter: filters,
+										}),
+									},
+									viewTransition: true,
+								});
+							}}
+						/>
+					</Grid>
+					<Grid size={{ md: "grow", xs: 12 }}>
+						<Box
+							sx={{
+								display: "flex",
+								flexDirection: "row",
+								alignItems: "center",
+								mx: 2,
+							}}
+						>
+							<Typography
+								variant="subtitle2"
+								sx={{ mr: 2, whiteSpace: "nowrap" }}
+							>
+								Minimum Rounds:
+							</Typography>
+							<Slider
+								size={smallVariant ? "small" : "medium"}
+								onChange={(_, value) =>
+									debouncedminimumRounds(
+										value as [number, number],
+									)
+								}
+								defaultValue={
+									search.minimumRounds || [
+										0,
+										MINIMUM_ROUNDS_INFINITY,
+									]
+								}
+								valueLabelDisplay="auto"
+								min={0}
+								step={1}
+								max={MINIMUM_ROUNDS_INFINITY}
+								disableSwap
+							/>
+						</Box>
+					</Grid>
+				</Grid>
 			</Stack>
 		</Paper>
 	);
@@ -239,6 +328,11 @@ function RouteComponent() {
 									image: stage.creator.image,
 								}}
 								stage={stage}
+								cardProps={{
+									style: {
+										viewTransitionName: `stage-card-${stage.id}`,
+									},
+								}}
 							/>
 						);
 					})}
@@ -249,17 +343,15 @@ function RouteComponent() {
 							to="."
 							search={(old) => ({
 								...old,
-								page: search.page + 1,
-								limit: search.limit,
 								previousStages: stages.items,
+								page: search.page + 1,
 							})}
 							mask={{
 								to: ".",
-								search: {
-									page: search.page + 1,
-									limit: search.limit,
-									searchPhrase: search.searchPhrase,
-								},
+								search: ({ previousStages, ...old }) => ({
+									...old,
+									page: (old.page || 1) + 1,
+								}),
 							}}
 							viewTransition
 						>
