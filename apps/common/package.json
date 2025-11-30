@@ -5,9 +5,8 @@
 	"license": "ISC",
 	"author": "",
 	"type": "module",
-	"types": "./dist/index.d.ts",
 	"exports": {
-		"*": {
+		"./*": {
 			"types": "./dist/*.d.ts",
 			"import": "./dist/*.js"
 		}
