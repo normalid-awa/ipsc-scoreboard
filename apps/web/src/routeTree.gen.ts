@@ -15,6 +15,7 @@ import { Route as NewUserRouteImport } from './routes/newUser'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StagesIndexRouteImport } from './routes/stages/index'
 import { Route as ShootersIndexRouteImport } from './routes/shooters/index'
+import { Route as StagesCreateRouteImport } from './routes/stages/create'
 import { Route as StagesStageIdRouteImport } from './routes/stages/$stageId'
 import { Route as AccountShooterProfileManagementRouteImport } from './routes/account/shooterProfileManagement'
 import { Route as AccountResetPasswordRouteImport } from './routes/account/resetPassword'
@@ -50,6 +51,11 @@ const ShootersIndexRoute = ShootersIndexRouteImport.update({
   path: '/shooters/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StagesCreateRoute = StagesCreateRouteImport.update({
+  id: '/stages/create',
+  path: '/stages/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StagesStageIdRoute = StagesStageIdRouteImport.update({
   id: '/stages/$stageId',
   path: '/stages/$stageId',
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
   '/stages/$stageId': typeof StagesStageIdRoute
+  '/stages/create': typeof StagesCreateRoute
   '/shooters': typeof ShootersIndexRoute
   '/stages': typeof StagesIndexRoute
 }
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
   '/stages/$stageId': typeof StagesStageIdRoute
+  '/stages/create': typeof StagesCreateRoute
   '/shooters': typeof ShootersIndexRoute
   '/stages': typeof StagesIndexRoute
 }
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
   '/stages/$stageId': typeof StagesStageIdRoute
+  '/stages/create': typeof StagesCreateRoute
   '/shooters/': typeof ShootersIndexRoute
   '/stages/': typeof StagesIndexRoute
 }
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
     | '/stages/$stageId'
+    | '/stages/create'
     | '/shooters'
     | '/stages'
   fileRoutesByTo: FileRoutesByTo
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
     | '/stages/$stageId'
+    | '/stages/create'
     | '/shooters'
     | '/stages'
   id:
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
     | '/stages/$stageId'
+    | '/stages/create'
     | '/shooters/'
     | '/stages/'
   fileRoutesById: FileRoutesById
@@ -157,6 +169,7 @@ export interface RootRouteChildren {
   AccountResetPasswordRoute: typeof AccountResetPasswordRoute
   AccountShooterProfileManagementRoute: typeof AccountShooterProfileManagementRoute
   StagesStageIdRoute: typeof StagesStageIdRoute
+  StagesCreateRoute: typeof StagesCreateRoute
   ShootersIndexRoute: typeof ShootersIndexRoute
   StagesIndexRoute: typeof StagesIndexRoute
 }
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShootersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stages/create': {
+      id: '/stages/create'
+      path: '/stages/create'
+      fullPath: '/stages/create'
+      preLoaderRoute: typeof StagesCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stages/$stageId': {
       id: '/stages/$stageId'
       path: '/stages/$stageId'
@@ -245,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountResetPasswordRoute: AccountResetPasswordRoute,
   AccountShooterProfileManagementRoute: AccountShooterProfileManagementRoute,
   StagesStageIdRoute: StagesStageIdRoute,
+  StagesCreateRoute: StagesCreateRoute,
   ShootersIndexRoute: ShootersIndexRoute,
   StagesIndexRoute: StagesIndexRoute,
 }
