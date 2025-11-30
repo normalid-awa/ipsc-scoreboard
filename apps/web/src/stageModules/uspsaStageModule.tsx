@@ -15,6 +15,10 @@ import {
 } from "./stageModules";
 import { EditingStageData } from "@/routes/stages/create";
 import { api } from "@/api";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 export const MixinUspsaFrontendStageModule: MixableFrontendStageModule<
 	UspsaStage
@@ -84,6 +88,29 @@ export const MixinUspsaFrontendStageModule: MixableFrontendStageModule<
 							},
 						]}
 					/>
+					<FormControl fullWidth sx={{ mt: 2 }}>
+						<InputLabel>Scoring method</InputLabel>
+						<Select
+							value={
+								this.stage.uspsaScoringMethod ??
+								UspsaScoringMethod.Comstock
+							}
+							label="Scoring method"
+							onChange={(event) => {
+								setStageData({
+									...this.stage,
+									uspsaScoringMethod: event.target
+										.value as UspsaScoringMethod,
+								});
+							}}
+						>
+							{Object.values(UspsaScoringMethod).map((method) => (
+								<MenuItem key={method} value={method}>
+									{method}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
 				</Stack>
 			);
 		}
