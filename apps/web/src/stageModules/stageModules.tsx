@@ -13,6 +13,7 @@ import { MixinIpscFrontendStageModule } from "./ipscStageModule";
 import { MixinAaipscFrontendStageModule } from "./aaipscStageModule";
 import { MixinUspsaFrontendStageModule } from "./uspsaStageModule";
 import { MixinIdpaFrontendStageModule } from "./idpaStageModule";
+import { EditingStageData } from "@/routes/stages/create";
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 type Concreatize<T> = { [K in keyof T]: T[K] };
@@ -23,9 +24,15 @@ export interface FrontendStageModule<
 	StageSpecificData extends object = Omit<StageModal, keyof Stage>,
 > {
 	stageDataInputForm: (
-		stageData: Partial<StageSpecificData>,
 		setStageData: (changes: Partial<StageSpecificData>) => void,
 	) => ReactElement;
+
+	/**
+	 * Submit stage data to backend
+	 * @param data Data to submit
+	 * @returns Whether the mutation is success (i.e. should revalidate)
+	 */
+	submitStage(data: EditingStageData<StageModal>): Promise<boolean>;
 }
 
 export type MixableFrontendStageModule<

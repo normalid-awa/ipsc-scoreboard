@@ -5,6 +5,7 @@ import {
 	MixableFrontendStageModule,
 	StageSpecificData,
 } from "./stageModules";
+import { EditingStageData } from "@/routes/stages/create";
 
 export const MixinIdpaFrontendStageModule: MixableFrontendStageModule<
 	IdpaStage
@@ -17,12 +18,16 @@ export const MixinIdpaFrontendStageModule: MixableFrontendStageModule<
 
 		//TODO: Implement IDPA specific stage data input form
 		stageDataInputForm(
-			stageData: Partial<StageSpecificData<IdpaStage>>,
 			setStageData: (
 				changes: Partial<StageSpecificData<IdpaStage>>,
 			) => void,
 		) {
 			return <Stack></Stack>;
+		}
+
+		//TOOD: Implement IDPA specific stage submission
+		async submitStage(data: EditingStageData<IdpaStage>) {
+			return false;
 		}
 	};
 };

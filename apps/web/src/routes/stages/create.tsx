@@ -21,6 +21,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useConfirm } from "material-ui-confirm";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -29,7 +30,7 @@ export const Route = createFileRoute("/stages/create")({
 	component: RouteComponent,
 });
 
-type EditingStageData<T extends Stage = UnionStage> = Partial<T> &
+export type EditingStageData<T extends Stage = UnionStage> = Partial<T> &
 	Partial<{ rawFiles: File[] }>;
 
 interface StepComponenetProps<T extends Stage = UnionStage> {
@@ -250,7 +251,7 @@ function StageSpecificDataInput(props: StepComponenetProps) {
 		return FrontendStageModules[props.stageData.type](
 			//@ts-expect-error
 			props.stageData,
-		).stageDataInputForm(props.stageData, props.setStageData);
+		).stageDataInputForm(props.setStageData);
 }
 
 const steps = [
@@ -280,6 +281,8 @@ const steps = [
 
 function RouteComponent() {
 	const [activeStep, setActiveStep] = useState(0);
+	const [stageData, setStageData] = useState<EditingStageData>({});
+	const queryClient = useQueryClient();
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -294,11 +297,14 @@ function RouteComponent() {
 		setStageData({});
 	};
 
-	const submitStage = () => {
-		console.log(stageData);
+	const submitStage = async () => {
+		if (!stageData.type) return;
+		const result = await FrontendStageModules[stageData.type](
+			// @ts-expect-error
+			stageData,
+		).submitStage(stageData);
+		if (result) queryClient.invalidateQueries({ queryKey: ["stages"] });
 	};
-
-	const [stageData, setStageData] = useState<EditingStageData>({});
 
 	return (
 		<>

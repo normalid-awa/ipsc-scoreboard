@@ -12,6 +12,8 @@ import {
 	MixableFrontendStageModule,
 	StageSpecificData,
 } from "./stageModules";
+import { api } from "@/api";
+import { EditingStageData } from "@/routes/stages/create";
 
 export const MixinIpscFrontendStageModule: MixableFrontendStageModule<
 	IpscStage
@@ -23,7 +25,6 @@ export const MixinIpscFrontendStageModule: MixableFrontendStageModule<
 		getMinimumRounds = super.getMinimumRounds;
 
 		stageDataInputForm(
-			stageData: Partial<StageSpecificData<IpscStage>>,
 			setStageData: (
 				changes: Partial<StageSpecificData<IpscStage>>,
 			) => void,
@@ -32,7 +33,7 @@ export const MixinIpscFrontendStageModule: MixableFrontendStageModule<
 				<Stack>
 					<Typography variant="h5">Steel targets</Typography>
 					<StageDataInput<IpscStage, IpscSteelTarget>
-						stageData={stageData}
+						stageData={this.stage}
 						setStageData={setStageData}
 						fieldName="ipscSteelTargets"
 						column={[
@@ -52,7 +53,7 @@ export const MixinIpscFrontendStageModule: MixableFrontendStageModule<
 					<Divider sx={{ my: 1 }} />
 					<Typography variant="h5">Paper targets</Typography>
 					<StageDataInput<IpscStage, IpscPaperTarget>
-						stageData={stageData}
+						stageData={this.stage}
 						setStageData={setStageData}
 						fieldName="ipscPaperTargets"
 						column={[
@@ -84,6 +85,19 @@ export const MixinIpscFrontendStageModule: MixableFrontendStageModule<
 					/>
 				</Stack>
 			);
+		}
+
+		async submitStage(data: EditingStageData<IpscStage>) {
+			const res = await api.stage.ipsc.post({
+				images: data.rawFiles ?? [],
+				ipscPaperTargets: data.ipscPaperTargets ?? [],
+				ipscSteelTargets: data.ipscSteelTargets ?? [],
+				title: data.title ?? "",
+				walkthroughTime: data.walkthroughTime ?? 0,
+				description: data.description,
+			});
+			if (res.error) return false;
+			return true;
 		}
 	};
 };

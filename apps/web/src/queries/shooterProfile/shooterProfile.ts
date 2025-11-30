@@ -1,29 +1,8 @@
 import { api } from "@/api";
 import { authClient } from "@/auth/auth.client";
-import { App, SportEnum } from "@ipsc_scoreboard/api";
-import { createCollection } from "@tanstack/db";
-import {
-	QueryClient,
-	queryOptions,
-	useMutation,
-	useQuery,
-	useQueryClient,
-} from "@tanstack/react-query";
+import { SportEnum } from "@ipsc_scoreboard/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useConfirm } from "material-ui-confirm";
-import { queryCollectionOptions } from "@tanstack/query-db-collection";
-import z from "zod";
-import { useLiveQuery } from "@tanstack/react-db";
-
-export const constructShooterProfileQueryOption = (
-	param: App["~Routes"]["api"]["shooter-profile"]["get"]["query"],
-) =>
-	queryOptions({
-		queryKey: ["shooterProfile", "list", param],
-		queryFn: () =>
-			api["shooter-profile"].get({
-				query: param,
-			}),
-	});
 
 export function useSelfShooterProfiles() {
 	const session = authClient.useSession();
