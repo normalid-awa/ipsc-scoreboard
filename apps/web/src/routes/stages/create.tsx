@@ -1,3 +1,4 @@
+import { AuthProtectedComponent } from "@/auth/auth.client";
 import { FrontendStageModules } from "@/stageModules/stageModules";
 import { SportEnum, Stage, UnionStage } from "@ipsc_scoreboard/api";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
@@ -27,7 +28,7 @@ import { useConfirm } from "material-ui-confirm";
 import { Dispatch, SetStateAction, useState } from "react";
 
 export const Route = createFileRoute("/stages/create")({
-	component: RouteComponent,
+	component: () => <AuthProtectedComponent component={<RouteComponent />} />,
 });
 
 export type EditingStageData<T extends Stage = UnionStage> = Partial<T> &
