@@ -31,6 +31,7 @@
 	},
 	"workspaces": [
 		"apps/web",
-		"apps/api"
+		"apps/api",
+		"apps/common"
 	]
 }
