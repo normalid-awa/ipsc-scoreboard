@@ -23,7 +23,7 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { createFileRoute } from "@tanstack/react-router";
 import { useConfirm } from "material-ui-confirm";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export const Route = createFileRoute("/stages/create")({
 	component: RouteComponent,
