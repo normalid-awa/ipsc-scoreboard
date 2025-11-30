@@ -16,33 +16,40 @@ export function calculateMinimumRounds(
 }
 
 export function calculateUniversalMinimumRounds(stageData: UnionStage) {
-	let paperTargets: { requiredHits: number }[];
-	let steelTargets: { isNoShoot: boolean }[];
+	let normalizedPaperTargets: { requiredHits: number }[];
+	let normalizedSteelTargets: { isNoShoot: boolean }[];
 	switch (stageData.type) {
 		case SportEnum.AAIPSC:
-			paperTargets = stageData.aaipscPaperTargets ?? [];
-			steelTargets = stageData.aaipscSteelTargets ?? [];
+			normalizedPaperTargets = stageData.aaipscPaperTargets ?? [];
+			normalizedSteelTargets = stageData.aaipscSteelTargets ?? [];
 			break;
 		case SportEnum.IDPA:
-			paperTargets = new Array(stageData.idpaPaperTargets ?? 0).fill({
+			normalizedPaperTargets = new Array(
+				stageData.idpaPaperTargets ?? 0,
+			).fill({
 				requiredHits: 2,
 			});
-			steelTargets = new Array(stageData.idpaSteelTargets ?? 0).fill({
+			normalizedSteelTargets = new Array(
+				stageData.idpaSteelTargets ?? 0,
+			).fill({
 				isNoShoot: false,
 			});
 			break;
 		case SportEnum.IPSC:
-			paperTargets = stageData.ipscPaperTargets ?? [];
-			steelTargets = stageData.ipscSteelTargets ?? [];
+			normalizedPaperTargets = stageData.ipscPaperTargets ?? [];
+			normalizedSteelTargets = stageData.ipscSteelTargets ?? [];
 			break;
 		case SportEnum.USPSA:
-			paperTargets = stageData.uspsaPaperTargets ?? [];
-			steelTargets = stageData.uspsaSteelTargets ?? [];
+			normalizedPaperTargets = stageData.uspsaPaperTargets ?? [];
+			normalizedSteelTargets = stageData.uspsaSteelTargets ?? [];
 			break;
 		default:
-			paperTargets = [];
-			steelTargets = [];
+			normalizedPaperTargets = [];
+			normalizedSteelTargets = [];
 	}
 
-	calculateMinimumRounds(paperTargets, steelTargets);
+	return calculateMinimumRounds(
+		normalizedPaperTargets,
+		normalizedSteelTargets,
+	);
 }
