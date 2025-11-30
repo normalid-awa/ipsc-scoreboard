@@ -17,6 +17,7 @@ import { SportEnum, SportMap } from "../../sport.js";
 import { Image } from "./image.entity.js";
 import { Static, t } from "elysia";
 import { calculateMinimumRounds } from "@/util/stageUtils.js";
+import { UspsaScoringMethod } from "./stage.externalDep.js";
 
 type StageDiscriminator = {
 	[k in keyof typeof SportMap]: `${Capitalize<Lowercase<k & string>>}Stage`;
@@ -198,12 +199,6 @@ export class AaipscStage extends Stage {
 			this.aaipscSteelTargets,
 		);
 	}
-}
-
-export enum UspsaScoringMethod {
-	Comstock = "Comstock",
-	VirginiaCount = "Virginia Count",
-	FixedTime = "Fixed Time",
 }
 
 export const uspsaPaperTargetSchema = t.Object({

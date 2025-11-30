@@ -23,6 +23,8 @@ export {
 	type UspsaStage,
 } from "./database/entities/stage.entity.js";
 
+export { UspsaScoringMethod } from "./database/entities/stage.externalDep.js";
+
 import {
 	ipscPaperTargetSchema,
 	ipscSteelTargetSchema,

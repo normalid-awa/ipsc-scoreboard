@@ -4,9 +4,9 @@ import {
 	ipscPaperTargetSchema,
 	ipscSteelTargetSchema,
 	uspsaPaperTargetSchema,
-	UspsaScoringMethod,
 	uspsaSteelTargetSchema,
 } from "@/database/entities/stage.entity.js";
+import { UspsaScoringMethod } from "@/database/entities/stage.externalDep.js";
 import { t } from "elysia";
 
 export const stagePopulateSchema = t.Array(
