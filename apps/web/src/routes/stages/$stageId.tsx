@@ -1,3 +1,4 @@
+import { Carousel } from "@/components/Carousel";
 import env from "@/env";
 import { FrontendStageModules } from "@/stageModules/stageModules";
 import { SportEnum, UnionStage } from "@ipsc_scoreboard/api";
@@ -142,24 +143,25 @@ function RouteComponent() {
 						}}
 					>
 						<Stack>
-							<CardMedia
+							<Carousel
+								direction={"row"}
 								sx={{
-									borderStartStartRadius: (t) =>
-										t.vars?.shape.borderRadius,
-									borderStartEndRadius: (t) =>
-										t.vars?.shape.borderRadius,
-								}}
-								component="img"
-								image={
-									stage.images?.length > 0
-										? `${env.VITE_BACKEND_API_URL}/api/image/${stage.images[0].uuid}`
-										: undefined
-								}
-								alt={`${stage.title}'s thumbnail`}
-								style={{
+									width: "100%",
 									viewTransitionName: `stage-image-${stage.id}`,
 								}}
-							/>
+							>
+								{stage.images.map((image) => (
+									<CardMedia
+										component="img"
+										image={
+											stage.images?.length > 0
+												? `${env.VITE_BACKEND_API_URL}/api/image/${image.uuid}`
+												: undefined
+										}
+										alt={`${stage.title}'s thumbnail`}
+									/>
+								))}
+							</Carousel>
 							<StageInformation stage={stage} dense={dense} />
 						</Stack>
 					</Paper>
