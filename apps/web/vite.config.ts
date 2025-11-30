@@ -40,7 +40,7 @@ const config = defineConfig((confEnv) => {
 		],
 		build: {
 			rollupOptions: {
-				external: ["@ipsc-scoreboare/api"],
+				external: ["@ipsc-scoreboare/api", "@ipsc-scoreboard/common"],
 			},
 		},
 	};
