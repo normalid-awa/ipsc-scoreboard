@@ -1,24 +1,34 @@
+import { api } from "@/api";
 import { StageDataInput } from "@/components/stage/StageDataInput";
+import { EditingStageData } from "@/routes/stages/create";
 import {
 	UspsaPaperTarget,
 	UspsaScoringMethod,
 	UspsaStage,
 	UspsaSteelTarget,
 } from "@ipsc_scoreboard/api";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 import Divider from "@mui/material/Divider";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import { ReactElement } from "react";
 import {
 	FrontendStageModule,
 	MixableFrontendStageModule,
 	StageSpecificData,
 } from "./stageModules";
-import { EditingStageData } from "@/routes/stages/create";
-import { api } from "@/api";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 
 export const MixinUspsaFrontendStageModule: MixableFrontendStageModule<
 	UspsaStage
@@ -133,6 +143,117 @@ export const MixinUspsaFrontendStageModule: MixableFrontendStageModule<
 			});
 			if (res.error) return false;
 			return true;
+		}
+
+		stageInfoDisplay(): ReactElement {
+			return (
+				<Stack spacing={1}>
+					<Typography variant="h5">
+						Stage type: {this.stage.stageType}
+					</Typography>
+					<Typography variant="h5">
+						Scoring method: {this.stage.uspsaScoringMethod}
+					</Typography>
+					<Grid container>
+						<Grid size={{ xs: 12, sm: "auto", md: 12 }}>
+							<Paper
+								variant="outlined"
+								sx={{ p: 1, overflowX: "auto" }}
+							>
+								<Typography variant="h6">
+									Paper targets (
+									{this.stage.uspsaPaperTargets.length})
+								</Typography>
+								<Table size={"small"}>
+									<TableHead>
+										<TableRow>
+											<TableCell>#</TableCell>
+											<TableCell>
+												Required shots
+											</TableCell>
+											<TableCell>Has noshoot</TableCell>
+											<TableCell>
+												No penalty miss
+											</TableCell>
+										</TableRow>
+									</TableHead>
+									<TableBody>
+										{this.stage.uspsaPaperTargets.map(
+											(target) => (
+												<TableRow key={target.targetId}>
+													<TableCell
+														scope="row"
+														width={20}
+													>
+														#{target.targetId}
+													</TableCell>
+													<TableCell>
+														{target.requiredHits}
+													</TableCell>
+													<TableCell>
+														{target.hasNoShoot ? (
+															<CheckIcon />
+														) : (
+															<ClearIcon />
+														)}
+													</TableCell>
+													<TableCell>
+														{target.isNoPenaltyMiss ? (
+															<CheckIcon />
+														) : (
+															<ClearIcon />
+														)}
+													</TableCell>
+												</TableRow>
+											),
+										)}
+									</TableBody>
+								</Table>
+							</Paper>
+						</Grid>
+						<Grid size={{ xs: 12, sm: "grow", md: 12 }}>
+							<Paper
+								variant="outlined"
+								sx={{ p: 1, overflowX: "auto" }}
+							>
+								<Typography variant="h6">
+									Steel targets / Poppers (
+									{this.stage.uspsaSteelTargets.length})
+								</Typography>
+								<Table size={"small"}>
+									<TableHead>
+										<TableRow>
+											<TableCell>#</TableCell>
+											<TableCell>Is noshoots</TableCell>
+										</TableRow>
+									</TableHead>
+									<TableBody>
+										{this.stage.uspsaSteelTargets.map(
+											(target) => (
+												<TableRow key={target.targetId}>
+													<TableCell
+														scope="row"
+														width={20}
+													>
+														#{target.targetId}
+													</TableCell>
+													<TableCell>
+														{target.isNoShoot ? (
+															<CheckIcon />
+														) : (
+															<ClearIcon />
+														)}
+													</TableCell>
+												</TableRow>
+											),
+										)}
+									</TableBody>
+								</Table>
+							</Paper>
+						</Grid>
+					</Grid>
+				</Stack>
+			);
 		}
 	};
 };

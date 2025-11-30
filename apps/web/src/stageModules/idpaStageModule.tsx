@@ -1,11 +1,14 @@
+import { EditingStageData } from "@/routes/stages/create";
 import { IdpaStage } from "@ipsc_scoreboard/api";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { ReactElement } from "react";
 import {
 	FrontendStageModule,
 	MixableFrontendStageModule,
 	StageSpecificData,
 } from "./stageModules";
-import { EditingStageData } from "@/routes/stages/create";
 
 export const MixinIdpaFrontendStageModule: MixableFrontendStageModule<
 	IdpaStage
@@ -28,6 +31,26 @@ export const MixinIdpaFrontendStageModule: MixableFrontendStageModule<
 		//TOOD: Implement IDPA specific stage submission
 		async submitStage(data: EditingStageData<IdpaStage>) {
 			return false;
+		}
+
+		stageInfoDisplay(): ReactElement {
+			return (
+				<Stack sx={{ p: 1 }}>
+					<Grid container>
+						<Grid size={12}>
+							<Typography variant="h6">
+								Paper tagets: {this.stage.idpaPaperTargets}
+							</Typography>
+						</Grid>
+						<Grid size={12}>
+							<Typography variant="h6">
+								Steel targets / Poppers:{" "}
+								{this.stage.idpaSteelTargets}
+							</Typography>
+						</Grid>
+					</Grid>
+				</Stack>
+			);
 		}
 	};
 };

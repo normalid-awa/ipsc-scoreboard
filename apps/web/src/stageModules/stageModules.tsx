@@ -4,6 +4,7 @@ import {
 	IpscStage,
 	SportEnum,
 	Stage,
+	UnionStage,
 	UspsaStage,
 } from "@ipsc_scoreboard/api";
 import { StageModules } from "@ipsc_scoreboard/common/stageModules";
@@ -33,6 +34,8 @@ export interface FrontendStageModule<
 	 * @returns Whether the mutation is success (i.e. should revalidate)
 	 */
 	submitStage(data: EditingStageData<StageModal>): Promise<boolean>;
+
+	stageInfoDisplay(): ReactElement;
 }
 
 export type MixableFrontendStageModule<
@@ -45,12 +48,16 @@ export type MixableFrontendStageModule<
 >;
 
 export const FrontendStageModules = {
-	[SportEnum.IPSC]: (stageData: StageSpecificData<IpscStage>) =>
-		new (MixinIpscFrontendStageModule(StageModules.IPSC))(stageData),
-	[SportEnum.AAIPSC]: (stageData: StageSpecificData<AaipscStage>) =>
-		new (MixinAaipscFrontendStageModule(StageModules.AAIPSC))(stageData),
-	[SportEnum.USPSA]: (stageData: StageSpecificData<UspsaStage>) =>
-		new (MixinUspsaFrontendStageModule(StageModules.USPSA))(stageData),
-	[SportEnum.IDPA]: (stageData: StageSpecificData<IdpaStage>) =>
-		new (MixinIdpaFrontendStageModule(StageModules.IDPA))(stageData),
+	[SportEnum.IPSC]: (
+		stageData: StageSpecificData<IpscStage> | IpscStage | UnionStage,
+	) => new (MixinIpscFrontendStageModule(StageModules.IPSC))(stageData),
+	[SportEnum.AAIPSC]: (
+		stageData: StageSpecificData<AaipscStage> | AaipscStage | UnionStage,
+	) => new (MixinAaipscFrontendStageModule(StageModules.AAIPSC))(stageData),
+	[SportEnum.USPSA]: (
+		stageData: StageSpecificData<UspsaStage> | UspsaStage | UnionStage,
+	) => new (MixinUspsaFrontendStageModule(StageModules.USPSA))(stageData),
+	[SportEnum.IDPA]: (
+		stageData: StageSpecificData<IdpaStage> | IdpaStage | UnionStage,
+	) => new (MixinIdpaFrontendStageModule(StageModules.IDPA))(stageData),
 } as const;
