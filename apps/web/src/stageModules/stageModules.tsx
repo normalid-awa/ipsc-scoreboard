@@ -1,4 +1,11 @@
-import { SportEnum, Stage } from "@ipsc_scoreboard/api";
+import {
+	AaipscStage,
+	IdpaStage,
+	IpscStage,
+	SportEnum,
+	Stage,
+	UspsaStage,
+} from "@ipsc_scoreboard/api";
 import { StageModules } from "@ipsc_scoreboard/common/stageModules";
 import { StageModule } from "@ipsc_scoreboard/common/stageModule";
 import { ReactElement } from "react";
@@ -31,8 +38,12 @@ export type MixableFrontendStageModule<
 >;
 
 export const FrontendStageModules = {
-	[SportEnum.IPSC]: MixinIpscFrontendStageModule(StageModules.IPSC),
-	[SportEnum.AAIPSC]: MixinAaipscFrontendStageModule(StageModules.AAIPSC),
-	[SportEnum.USPSA]: MixinUspsaFrontendStageModule(StageModules.USPSA),
-	[SportEnum.IDPA]: MixinIdpaFrontendStageModule(StageModules.IDPA),
+	[SportEnum.IPSC]: (stageData: StageSpecificData<IpscStage>) =>
+		new (MixinIpscFrontendStageModule(StageModules.IPSC))(stageData),
+	[SportEnum.AAIPSC]: (stageData: StageSpecificData<AaipscStage>) =>
+		new (MixinAaipscFrontendStageModule(StageModules.AAIPSC))(stageData),
+	[SportEnum.USPSA]: (stageData: StageSpecificData<UspsaStage>) =>
+		new (MixinUspsaFrontendStageModule(StageModules.USPSA))(stageData),
+	[SportEnum.IDPA]: (stageData: StageSpecificData<IdpaStage>) =>
+		new (MixinIdpaFrontendStageModule(StageModules.IDPA))(stageData),
 } as const;

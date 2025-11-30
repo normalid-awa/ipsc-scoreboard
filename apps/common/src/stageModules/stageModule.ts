@@ -4,7 +4,7 @@ export abstract class StageModule<
 	StageModal extends Stage,
 	StageSpecificData extends object = Omit<StageModal, keyof Stage>,
 > {
-	constructor(public stage: StageModal) {}
+	constructor(public stage: StageSpecificData) {}
 
 	abstract getMinimumRounds(): number;
 }

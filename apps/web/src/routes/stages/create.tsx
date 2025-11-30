@@ -23,7 +23,7 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { createFileRoute } from "@tanstack/react-router";
 import { useConfirm } from "material-ui-confirm";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/stages/create")({
 	component: RouteComponent,
@@ -247,9 +247,10 @@ function UploadStageAttachments(props: StepComponenetProps) {
 
 function StageSpecificDataInput(props: StepComponenetProps) {
 	if (props.stageData.type)
-		return new FrontendStageModules[
-			props.stageData.type
-		]().stageDataInputForm(props.stageData, props.setStageData);
+		return FrontendStageModules[props.stageData.type](
+			//@ts-expect-error
+			props.stageData,
+		).stageDataInputForm(props.stageData, props.setStageData);
 }
 
 const steps = [
@@ -305,7 +306,14 @@ function RouteComponent() {
 				<Stepper activeStep={activeStep} orientation="vertical">
 					{steps.map((step, index, arr) => (
 						<Step key={index}>
-							<StepLabel>{step.label}</StepLabel>
+							<StepLabel
+								onClick={() => {
+									if (step.nextStepChecker(stageData))
+										setActiveStep(index);
+								}}
+							>
+								{step.label}
+							</StepLabel>
 							<StepContent>
 								<Paper variant="outlined" sx={{ p: 2 }}>
 									{step.content.call(null, {
