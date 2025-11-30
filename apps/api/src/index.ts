@@ -23,6 +23,29 @@ export {
 	type UspsaStage,
 } from "./database/entities/stage.entity.js";
 
+import {
+	ipscPaperTargetSchema,
+	ipscSteelTargetSchema,
+	uspsaPaperTargetSchema,
+	uspsaSteelTargetSchema,
+	aaipscPaperTargetSchema,
+	aaipscSteelTargetSchema,
+} from "./database/entities/stage.entity.js";
+
+import {
+	calculateMinimumRounds,
+	calculateUniversalMinimumRounds,
+} from "./util/stageUtils.js";
+
+export type IpscPaperTarget = Static<typeof ipscPaperTargetSchema>;
+export type IpscSteelTarget = Static<typeof ipscSteelTargetSchema>;
+export type UspsaPaperTarget = Static<typeof uspsaPaperTargetSchema>;
+export type UspsaSteelTarget = Static<typeof uspsaSteelTargetSchema>;
+export type AaipscPaperTarget = Static<typeof aaipscPaperTargetSchema>;
+export type AaipscSteelTarget = Static<typeof aaipscSteelTargetSchema>;
+
+export { calculateMinimumRounds, calculateUniversalMinimumRounds };
+
 export {
 	isIpscStage,
 	isIdpaStage,

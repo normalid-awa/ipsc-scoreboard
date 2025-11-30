@@ -16,24 +16,11 @@ import { User } from "./user.entity.js";
 import { SportEnum, SportMap } from "../../sport.js";
 import { Image } from "./image.entity.js";
 import { Static, t } from "elysia";
+import { calculateMinimumRounds } from "@/util/stageUtils.js";
 
 type StageDiscriminator = {
 	[k in keyof typeof SportMap]: `${Capitalize<Lowercase<k & string>>}Stage`;
 };
-
-function calculateMinimumRounds(
-	paperTarget: { requiredHits: number }[],
-	steelTargets: { isNoShoot: boolean }[],
-) {
-	let rounds = 0;
-	paperTarget.forEach((v) => {
-		rounds += v.requiredHits;
-	});
-	steelTargets.forEach((v) => {
-		if (!v.isNoShoot) rounds++;
-	});
-	return rounds;
-}
 
 function generateStageTypeSql(
 	typeMap: Record<number, string>,

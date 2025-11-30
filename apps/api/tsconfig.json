@@ -1,6 +1,7 @@
 {
 	// Visit https://aka.ms/tsconfig to read more about this file
 	"compilerOptions": {
+		"baseUrl": "./src",
 		"outDir": "./dist",
 		"module": "nodenext",
 		"target": "esnext",
@@ -20,8 +21,9 @@
 		"emitDecoratorMetadata": true,
 		"esModuleInterop": true,
 		"paths": {
-			"@/*": ["./src/*"]
-		}
+			"@/*": ["./*"]
+		},
+		"plugins": [{ "transform": "typescript-transform-paths" }]
 	},
 	"ts-node": {
 		"esm": true,
