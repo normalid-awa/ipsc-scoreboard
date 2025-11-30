@@ -87,11 +87,16 @@ export const MixinIpscFrontendStageModule: MixableFrontendStageModule<
 			);
 		}
 
+		//TODO: JSON.stringify should remove after https://github.com/elysiajs/eden/pull/229 is merged
 		async submitStage(data: EditingStageData<IpscStage>) {
 			const res = await api.stage.ipsc.post({
 				images: data.rawFiles ?? [],
-				ipscPaperTargets: data.ipscPaperTargets ?? [],
-				ipscSteelTargets: data.ipscSteelTargets ?? [],
+				ipscPaperTargets: JSON.stringify(
+					data.ipscPaperTargets ?? [],
+				) as unknown as [],
+				ipscSteelTargets: JSON.stringify(
+					data.ipscSteelTargets ?? [],
+				) as unknown as [],
 				title: data.title ?? "",
 				walkthroughTime: data.walkthroughTime ?? 0,
 				description: data.description,

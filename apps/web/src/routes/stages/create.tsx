@@ -1,4 +1,5 @@
 import { AuthProtectedComponent } from "@/auth/auth.client";
+import NumberSpinner from "@/components/inputs/NumberSpinner";
 import { FrontendStageModules } from "@/stageModules/stageModules";
 import { SportEnum, Stage, UnionStage } from "@ipsc_scoreboard/api";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
@@ -92,6 +93,20 @@ function CommonDataInput(props: StepComponenetProps) {
 						props.setStageData({
 							...props.stageData,
 							description: event.currentTarget.value,
+						})
+					}
+				/>
+				<NumberSpinner
+					label={`Walkthrough / Preparation time (${props.stageData.walkthroughTime ?? 0} seconds / ${(
+						(props.stageData.walkthroughTime ?? 0) / 60
+					).toPrecision(2)} minutes)`}
+					min={1}
+					step={1}
+					value={props.stageData.walkthroughTime ?? 0}
+					onValueChange={(value) =>
+						props.setStageData({
+							...props.stageData,
+							walkthroughTime: value ?? 0,
 						})
 					}
 				/>

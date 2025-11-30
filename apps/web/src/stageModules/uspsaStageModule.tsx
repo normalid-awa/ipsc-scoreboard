@@ -1,6 +1,7 @@
 import { StageDataInput } from "@/components/stage/StageDataInput";
 import {
 	UspsaPaperTarget,
+	UspsaScoringMethod,
 	UspsaStage,
 	UspsaSteelTarget,
 } from "@ipsc_scoreboard/api";
@@ -87,11 +88,18 @@ export const MixinUspsaFrontendStageModule: MixableFrontendStageModule<
 			);
 		}
 
+		//TODO: JSON.stringify should remove after https://github.com/elysiajs/eden/pull/229 is merged
 		async submitStage(data: EditingStageData<UspsaStage>) {
-			const res = await api.stage.ipsc.post({
+			const res = await api.stage.uspsa.post({
 				images: data.rawFiles ?? [],
-				ipscPaperTargets: data.uspsaPaperTargets ?? [],
-				ipscSteelTargets: data.uspsaSteelTargets ?? [],
+				uspsaPaperTargets: JSON.stringify(
+					data.uspsaPaperTargets ?? [],
+				) as unknown as [],
+				uspsaSteelTargets: JSON.stringify(
+					data.uspsaSteelTargets ?? [],
+				) as unknown as [],
+				uspsaScoringMethod:
+					data.uspsaScoringMethod ?? UspsaScoringMethod.Comstock,
 				title: data.title ?? "",
 				walkthroughTime: data.walkthroughTime ?? 0,
 				description: data.description,
