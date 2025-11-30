@@ -12,7 +12,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
 import Button from "@mui/material/Button";
-import { Link } from "@/components/MuiWrapper";
+import { ButtonLink, Link } from "@/components/MuiWrapper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -176,17 +176,31 @@ function FilterBar() {
 	return (
 		<Paper>
 			<Stack spacing={1} sx={{ p: smallVariant ? 0 : 1 }}>
-				<TextField
-					size={smallVariant ? "small" : "medium"}
-					label="Search Stages"
-					variant="outlined"
-					fullWidth
-					name="search"
-					type="search"
-					onChange={(e) => {
-						debouncedSearch(e.target.value);
-					}}
-				/>
+				<Grid container spacing={{ md: 2, xs: 1 }}>
+					<Grid size="grow">
+						<TextField
+							size={smallVariant ? "small" : "medium"}
+							label="Search Stages"
+							variant="outlined"
+							fullWidth
+							name="search"
+							type="search"
+							onChange={(e) => {
+								debouncedSearch(e.target.value);
+							}}
+						/>
+					</Grid>
+					<Grid size={{ sm: 4, md: 3, lg: 2 }}>
+						<ButtonLink
+							to="/stages/create"
+							fullWidth
+							variant="outlined"
+							sx={{ height: "100%" }}
+						>
+							Create Stage
+						</ButtonLink>
+					</Grid>
+				</Grid>
 				<Grid
 					container
 					spacing={{ md: 2, xs: 1 }}
