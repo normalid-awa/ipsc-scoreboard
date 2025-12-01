@@ -341,10 +341,6 @@ function RouteComponent() {
 										})
 									}
 									key={stage.id}
-									creator={{
-										name: stage.creator.name,
-										image: stage.creator.image,
-									}}
 									stage={stage}
 									cardProps={{
 										style: {

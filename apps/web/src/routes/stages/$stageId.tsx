@@ -153,11 +153,8 @@ function RouteComponent() {
 								{stage.images.map((image) => (
 									<CardMedia
 										component="img"
-										image={
-											stage.images?.length > 0
-												? `${env.VITE_BACKEND_API_URL}/api/image/${image.uuid}`
-												: undefined
-										}
+										loading="lazy"
+										image={`${env.VITE_BACKEND_API_URL}/api/image/${image.uuid}`}
 										alt={`${stage.title}'s thumbnail`}
 									/>
 								))}

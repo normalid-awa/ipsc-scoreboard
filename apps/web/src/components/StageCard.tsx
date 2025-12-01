@@ -17,13 +17,10 @@ import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Table from "@mui/material/Table";
+import { Carousel } from "./Carousel";
 
 export interface StageCardProps {
 	onClick?: () => void;
-	creator: {
-		name: string;
-		image?: string;
-	};
 	stage: UnionStage;
 	cardProps?: CardProps;
 }
@@ -33,29 +30,38 @@ export function StageCard(props: StageCardProps) {
 
 	return (
 		<>
-			<Card sx={{ overflow: "visible" }} {...props.cardProps}>
+			<Card {...props.cardProps}>
 				<CardOnClickWrapper onClick={props.onClick}>
 					<CardHeader
 						avatar={
 							<Avatar
 								aria-label="recipe"
-								src={props.creator.image}
+								src={props.stage.creator.image}
 							>
-								{props.creator.name[0]}
+								{props.stage.creator.name[0]}
 							</Avatar>
 						}
-						title={`${props.creator.name}`}
+						title={`${props.stage.creator.name}`}
 						subheader={`${props.stage.type} Stage`}
 					/>
 					{props.stage.images.length > 0 && (
-						<CardMedia
-							component="img"
-							image={`${env.VITE_BACKEND_API_URL}/api/image/${props.stage.images[0].uuid}`}
-							alt={`Stage ${props.stage.title}'s thumbnail`}
-							style={{
+						<Carousel
+							hideButtons
+							direction={"row"}
+							sx={{
+								width: "100%",
 								viewTransitionName: `stage-image-${props.stage.id}`,
 							}}
-						/>
+						>
+							{props.stage.images.map((image) => (
+								<CardMedia
+									component="img"
+									loading="lazy"
+									image={`${env.VITE_BACKEND_API_URL}/api/image/${image.uuid}`}
+									alt={`${props.stage.title}'s thumbnail`}
+								/>
+							))}
+						</Carousel>
 					)}
 					<CardContent>
 						<Box sx={{ display: "flex", flexDirection: "row" }}>

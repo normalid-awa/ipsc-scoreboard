@@ -5,7 +5,9 @@ import IconButton from "@mui/material/IconButton";
 import Stack, { StackProps } from "@mui/material/Stack";
 import { Children, useCallback, useRef } from "react";
 
-export interface CarouselProps extends StackProps {}
+export interface CarouselProps extends StackProps {
+	hideButtons?: true;
+}
 
 export function Carousel(props: CarouselProps) {
 	const { children, ...stackProps } = props;
@@ -64,36 +66,40 @@ export function Carousel(props: CarouselProps) {
 					</Box>
 				))}
 			</Stack>
-			<Box
-				sx={{
-					position: "absolute",
-					top: "50%",
-					right: 10,
-					left: 10,
-					display: "flex",
-					flexDirection: props.direction,
-					justifyContent: "space-between",
-				}}
-			>
-				<IconButton
+			{props.hideButtons ? (
+				<> </>
+			) : (
+				<Box
 					sx={{
-						backdropFilter: "blur(4px) invert(0.2)",
-						userSelect: "none",
+						position: "absolute",
+						top: "50%",
+						right: 10,
+						left: 10,
+						display: "flex",
+						flexDirection: props.direction,
+						justifyContent: "space-between",
 					}}
-					onClick={scrollToPrevious}
 				>
-					<ArrowLeftIcon />
-				</IconButton>
-				<IconButton
-					sx={{
-						backdropFilter: "blur(4px) invert(0.2)",
-						userSelect: "none",
-					}}
-					onClick={scrollToNext}
-				>
-					<ArrowRightIcon />
-				</IconButton>
-			</Box>
+					<IconButton
+						sx={{
+							backdropFilter: "blur(4px) invert(0.2)",
+							userSelect: "none",
+						}}
+						onClick={scrollToPrevious}
+					>
+						<ArrowLeftIcon />
+					</IconButton>
+					<IconButton
+						sx={{
+							backdropFilter: "blur(4px) invert(0.2)",
+							userSelect: "none",
+						}}
+						onClick={scrollToNext}
+					>
+						<ArrowRightIcon />
+					</IconButton>
+				</Box>
+			)}
 		</Box>
 	);
 }
