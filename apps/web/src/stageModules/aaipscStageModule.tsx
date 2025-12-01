@@ -111,8 +111,8 @@ export const MixinAaipscFrontendStageModule: MixableFrontendStageModule<
 				walkthroughTime: data.walkthroughTime ?? 0,
 				description: data.description,
 			});
-			if (res.error) return false;
-			return true;
+			if (res.error) return;
+			return res.data.id;
 		}
 
 		stageInfoDisplay(): ReactElement {

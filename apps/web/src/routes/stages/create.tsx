@@ -24,7 +24,7 @@ import Stepper from "@mui/material/Stepper";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useConfirm } from "material-ui-confirm";
 import { Dispatch, SetStateAction, useState } from "react";
 
@@ -299,6 +299,7 @@ function RouteComponent() {
 	const [activeStep, setActiveStep] = useState(0);
 	const [stageData, setStageData] = useState<EditingStageData>({});
 	const queryClient = useQueryClient();
+	const to = Route.useNavigate();
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -319,7 +320,15 @@ function RouteComponent() {
 			// @ts-expect-error
 			stageData,
 		).submitStage(stageData);
-		if (result) queryClient.invalidateQueries({ queryKey: ["stages"] });
+		if (result) {
+			to({
+				to: "/stages/$stageId",
+				params: {
+					stageId: result.toString(),
+				},
+			});
+			queryClient.invalidateQueries({ queryKey: ["stages"] });
+		}
 	};
 
 	return (

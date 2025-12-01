@@ -30,7 +30,7 @@ export const MixinIdpaFrontendStageModule: MixableFrontendStageModule<
 
 		//TOOD: Implement IDPA specific stage submission
 		async submitStage(data: EditingStageData<IdpaStage>) {
-			return false;
+			return;
 		}
 
 		stageInfoDisplay(): ReactElement {

@@ -31,9 +31,11 @@ export interface FrontendStageModule<
 	/**
 	 * Submit stage data to backend
 	 * @param data Data to submit
-	 * @returns Whether the mutation is success (i.e. should revalidate)
+	 * @returns If success return stage id, else undefined
 	 */
-	submitStage(data: EditingStageData<StageModal>): Promise<boolean>;
+	submitStage(
+		data: EditingStageData<StageModal>,
+	): Promise<number | undefined>;
 
 	stageInfoDisplay(): ReactElement;
 }
