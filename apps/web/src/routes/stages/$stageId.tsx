@@ -8,6 +8,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Button, { ButtonProps } from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -19,7 +21,10 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/DeleteForever";
+import { useSession } from "@/auth/auth.client";
 
 export const Route = createFileRoute("/stages/$stageId")({
 	component: RouteComponent,
@@ -105,7 +110,7 @@ function StageInformation({
 	stage: UnionStage;
 	dense: boolean;
 }) {
-	const [expandInfo, setExpandInfo] = useState(true);
+	const [expandInfo, setExpandInfo] = useState(false);
 
 	return (
 		<>
@@ -127,44 +132,96 @@ function StageInformation({
 	);
 }
 
+function ModifyOptionsButton(
+	props: {
+		icon: ReactElement;
+		iconOnly?: boolean;
+		children: ReactElement | string;
+	} & ButtonProps,
+) {
+	const { icon, iconOnly, children, ...buttonProps } = props;
+	if (props.iconOnly)
+		return (
+			<Button fullWidth {...buttonProps}>
+				{props.icon}
+			</Button>
+		);
+	else
+		return (
+			<Button fullWidth {...buttonProps} startIcon={props.icon}>
+				{props.children}
+			</Button>
+		);
+}
+
+function ModifyOptions() {
+	const hideIcon = useMediaQuery((t) => t.breakpoints.down("sm"));
+	return (
+		<ButtonGroup fullWidth orientation="vertical">
+			<ModifyOptionsButton icon={<EditIcon />} iconOnly={hideIcon}>
+				Edit
+			</ModifyOptionsButton>
+			<ModifyOptionsButton
+				icon={<DeleteIcon />}
+				iconOnly={hideIcon}
+				color="error"
+			>
+				Delete
+			</ModifyOptionsButton>
+		</ButtonGroup>
+	);
+}
+
 function RouteComponent() {
 	const dense = useMediaQuery((t) => t.breakpoints.down("sm"));
 	const stage = Route.useLoaderData() as UnionStage;
+	const { data: session } = useSession();
 
 	return (
 		<>
-			<Grid container spacing={1} sx={{ height: "100%" }}>
-				<Grid size={{ xs: 12, md: 4 }} height={"100%"}>
+			<Grid container spacing={1}>
+				<Grid
+					size={{ xs: 12, md: 4 }}
+					height={dense ? "100%" : "unset"}
+				>
 					<Paper
 						elevation={3}
 						sx={{
 							height: "100%",
-							overflow: "auto",
+							overflow: dense ? "auto" : "initial",
 						}}
 					>
 						<Stack>
-							<Carousel
-								direction={"row"}
-								sx={{
-									width: "100%",
-									viewTransitionName: `stage-image-${stage.id}`,
-								}}
-							>
-								{stage.images.map((image) => (
-									<CardMedia
-										component="img"
-										loading="lazy"
-										image={`${env.VITE_BACKEND_API_URL}/api/image/${image.uuid}`}
-										alt={`${stage.title}'s thumbnail`}
-									/>
-								))}
-							</Carousel>
+							{stage.images?.length > 0 && (
+								<Carousel
+									direction={"row"}
+									sx={{
+										width: "100%",
+										viewTransitionName: `stage-image-${stage.id}`,
+									}}
+								>
+									{stage.images.map((image) => (
+										<CardMedia
+											component="img"
+											loading="lazy"
+											image={`${env.VITE_BACKEND_API_URL}/api/image/${image.uuid}`}
+											alt={`${stage.title}'s thumbnail`}
+										/>
+									))}
+								</Carousel>
+							)}
 							<StageInformation stage={stage} dense={dense} />
 						</Stack>
 					</Paper>
 				</Grid>
 				<Grid size={"grow"}>Statistics placeholder</Grid>
-				<Grid size={{ xs: 4, md: 2 }}>Modify option placeholder</Grid>
+				{session?.user.id == stage.creator.id && (
+					<Grid size={{ xs: 2, lg: 1, md: 2 }}>
+						<Paper sx={{ p: 1 }} elevation={4}>
+							<ModifyOptions />
+						</Paper>
+					</Grid>
+				)}
 			</Grid>
 		</>
 	);
