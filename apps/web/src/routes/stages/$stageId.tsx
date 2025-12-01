@@ -1,7 +1,7 @@
 import { Carousel } from "@/components/Carousel";
 import env from "@/env";
 import { FrontendStageModules } from "@/stageModules/stageModules";
-import { SportEnum, UnionStage } from "@ipsc_scoreboard/api";
+import { EntityDTO, SportEnum, UnionStage } from "@ipsc_scoreboard/api";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/stages/$stageId")({
 			})
 			.then((res) => res.data);
 		if (!stage) throw notFound();
-		return stage;
+		return stage as unknown as EntityDTO<UnionStage>;
 	},
 });
 

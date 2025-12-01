@@ -14,6 +14,8 @@ export type QueryFilter = Static<typeof TQueryFilter>;
 export type LogicalFilters = Static<typeof TLogicalFilters>;
 export type FieldFilter = Static<typeof TFieldFilter>;
 
+export { type EntityDTO };
+
 export {
 	type UnionStage,
 	type Stage,
@@ -38,6 +40,7 @@ import {
 	calculateMinimumRounds,
 	calculateUniversalMinimumRounds,
 } from "./util/stageUtils.js";
+import { EntityDTO } from "@mikro-orm/core";
 
 export type IpscPaperTarget = Static<typeof ipscPaperTargetSchema>;
 export type IpscSteelTarget = Static<typeof ipscSteelTargetSchema>;
