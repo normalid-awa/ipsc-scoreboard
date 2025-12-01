@@ -1,3 +1,4 @@
+import { calculateMinimumRounds } from "@/util/stageUtils.js";
 import {
 	BeforeCreate,
 	BeforeUpdate,
@@ -12,12 +13,12 @@ import {
 	Property,
 	type Rel,
 } from "@mikro-orm/postgresql";
-import { User } from "./user.entity.js";
-import { SportEnum, SportMap } from "../../sport.js";
-import { Image } from "./image.entity.js";
 import { Static, t } from "elysia";
-import { calculateMinimumRounds } from "@/util/stageUtils.js";
+import { SportEnum, SportMap } from "../../sport.js";
+import { SoftDeletableEntity } from "../softDelete.js";
+import { Image } from "./image.entity.js";
 import { UspsaScoringMethod } from "./stage.externalDep.js";
+import { User } from "./user.entity.js";
 
 type StageDiscriminator = {
 	[k in keyof typeof SportMap]: `${Capitalize<Lowercase<k & string>>}Stage`;
@@ -71,7 +72,7 @@ export class StageImage {
 		USPSA: "UspsaStage",
 	} satisfies StageDiscriminator,
 })
-export class Stage {
+export class Stage extends SoftDeletableEntity {
 	@PrimaryKey()
 	id!: number;
 
