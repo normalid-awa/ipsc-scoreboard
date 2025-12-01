@@ -300,6 +300,7 @@ function RouteComponent() {
 	const [stageData, setStageData] = useState<EditingStageData>({});
 	const queryClient = useQueryClient();
 	const to = Route.useNavigate();
+	const dialog = useConfirm();
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -321,13 +322,18 @@ function RouteComponent() {
 			stageData,
 		).submitStage(stageData);
 		if (result) {
+			queryClient.invalidateQueries({ queryKey: ["stages"] });
 			to({
 				to: "/stages/$stageId",
 				params: {
 					stageId: result.toString(),
 				},
 			});
-			queryClient.invalidateQueries({ queryKey: ["stages"] });
+		} else {
+			dialog({
+				hideCancelButton: true,
+				title: "Fail to create stage",
+			});
 		}
 	};
 
