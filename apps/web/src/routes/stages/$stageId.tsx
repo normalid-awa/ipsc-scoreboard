@@ -1,6 +1,7 @@
 import { api } from "@/api";
 import { useSession } from "@/auth/auth.client";
 import { Carousel } from "@/components/Carousel";
+import { FeaturePlaceHolder } from "@/components/FeaturePlaceholder";
 import env from "@/env";
 import { FrontendStageModules } from "@/stageModules/stageModules";
 import { EntityDTO, SportEnum, UnionStage } from "@ipsc_scoreboard/api";
@@ -235,7 +236,7 @@ function RouteComponent() {
 
 	return (
 		<>
-			<Grid container spacing={1}>
+			<Grid container spacing={1} sx={{ minHeight: "100%" }}>
 				<Grid
 					size={{ xs: 12, md: 4 }}
 					height={dense ? "100%" : "unset"}
@@ -270,7 +271,9 @@ function RouteComponent() {
 						</Stack>
 					</Paper>
 				</Grid>
-				<Grid size={"grow"}>Statistics placeholder</Grid>
+				<Grid size={"grow"}>
+					<FeaturePlaceHolder name="Statistics" />
+				</Grid>
 				{session?.user.id == stage.creator.id && (
 					<Grid size={{ xs: 2, lg: 1, md: 2 }}>
 						<Paper sx={{ p: 1 }} elevation={4}>
