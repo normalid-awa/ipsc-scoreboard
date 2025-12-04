@@ -1,3 +1,4 @@
+import { api } from "@/api";
 import { useSession } from "@/auth/auth.client";
 import { Carousel } from "@/components/Carousel";
 import env from "@/env";
@@ -24,6 +25,7 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { useConfirm } from "material-ui-confirm";
 import { ReactElement, useState } from "react";
 
 export const Route = createFileRoute("/stages/$stageId")({
@@ -191,8 +193,36 @@ function RouteComponent() {
 	const stage = Route.useLoaderData() as UnionStage;
 	const { data: session } = useSession();
 	const to = Route.useNavigate();
+	const confirm = useConfirm();
 
-	function onDelete() {}
+	async function onDelete() {
+		if (
+			(
+				await confirm({
+					acknowledgement: "Confirm",
+					title: "Are you sure?",
+					description: `Are you sure that you want to delete stage "${stage.title}"`,
+				})
+			).confirmed
+		) {
+			const result = await api.stage({ id: stage.id }).delete();
+			if (result.error) {
+				confirm({
+					hideCancelButton: true,
+					title: `Fail to delete stage (Status: ${result.error.status})`,
+					description: `Details: ${JSON.stringify(result.error.value, null, 4)}`,
+				});
+			} else {
+				await to({
+					to: "/stages",
+				});
+				confirm({
+					title: `Stage "${stage.title}" has been deleted`,
+					hideCancelButton: true,
+				});
+			}
+		}
+	}
 
 	function onEdit() {
 		to({
