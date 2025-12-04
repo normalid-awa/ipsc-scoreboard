@@ -20,7 +20,7 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { ReactElement, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteForever";
@@ -154,17 +154,22 @@ function ModifyOptionsButton(
 		);
 }
 
-function ModifyOptions() {
+function ModifyOptions(props: { onEdit: () => void; onDelete: () => void }) {
 	const hideIcon = useMediaQuery((t) => t.breakpoints.down("sm"));
 	return (
 		<ButtonGroup fullWidth orientation="vertical">
-			<ModifyOptionsButton icon={<EditIcon />} iconOnly={hideIcon}>
+			<ModifyOptionsButton
+				icon={<EditIcon />}
+				iconOnly={hideIcon}
+				onClick={props.onEdit}
+			>
 				Edit
 			</ModifyOptionsButton>
 			<ModifyOptionsButton
 				icon={<DeleteIcon />}
 				iconOnly={hideIcon}
 				color="error"
+				onClick={props.onDelete}
 			>
 				Delete
 			</ModifyOptionsButton>
@@ -176,6 +181,18 @@ function RouteComponent() {
 	const dense = useMediaQuery((t) => t.breakpoints.down("sm"));
 	const stage = Route.useLoaderData() as UnionStage;
 	const { data: session } = useSession();
+	const to = Route.useNavigate();
+
+	function onDelete() {}
+
+	function onEdit() {
+		to({
+			to: "/stages/create",
+			search: {
+				edit: stage.id,
+			},
+		});
+	}
 
 	return (
 		<>
@@ -218,7 +235,10 @@ function RouteComponent() {
 				{session?.user.id == stage.creator.id && (
 					<Grid size={{ xs: 2, lg: 1, md: 2 }}>
 						<Paper sx={{ p: 1 }} elevation={4}>
-							<ModifyOptions />
+							<ModifyOptions
+								onEdit={onEdit}
+								onDelete={onDelete}
+							/>
 						</Paper>
 					</Grid>
 				)}
