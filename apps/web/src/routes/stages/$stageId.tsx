@@ -1,7 +1,10 @@
+import { useSession } from "@/auth/auth.client";
 import { Carousel } from "@/components/Carousel";
 import env from "@/env";
 import { FrontendStageModules } from "@/stageModules/stageModules";
 import { EntityDTO, SportEnum, UnionStage } from "@ipsc_scoreboard/api";
+import DeleteIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -20,11 +23,8 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { ReactElement, useState } from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteForever";
-import { useSession } from "@/auth/auth.client";
 
 export const Route = createFileRoute("/stages/$stageId")({
 	component: RouteComponent,

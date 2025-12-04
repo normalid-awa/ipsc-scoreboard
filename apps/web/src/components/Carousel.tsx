@@ -85,6 +85,7 @@ export function Carousel(props: CarouselProps) {
 						sx={{
 							backdropFilter: "blur(4px) invert(0.2)",
 							userSelect: "none",
+							pointerEvents: "all",
 						}}
 						onClick={scrollToPrevious}
 					>
@@ -94,6 +95,7 @@ export function Carousel(props: CarouselProps) {
 						sx={{
 							backdropFilter: "blur(4px) invert(0.2)",
 							userSelect: "none",
+							pointerEvents: "all",
 						}}
 						onClick={scrollToNext}
 					>
