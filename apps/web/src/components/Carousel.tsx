@@ -78,6 +78,7 @@ export function Carousel(props: CarouselProps) {
 						display: "flex",
 						flexDirection: props.direction,
 						justifyContent: "space-between",
+						pointerEvents: "none",
 					}}
 				>
 					<IconButton
