@@ -1,5 +1,6 @@
 import { AuthProtectedComponent } from "@/auth/auth.client";
 import NumberSpinner from "@/components/inputs/NumberSpinner";
+import env from "@/env";
 import { FrontendStageModules } from "@/stageModules/stageModules";
 import { getImageUrlFromId } from "@/utils/imageApi";
 import { EntityDTO, SportEnum, Stage, UnionStage } from "@ipsc_scoreboard/api";
@@ -44,6 +45,24 @@ export const Route = createFileRoute("/stages/create")({
 		const stage = await ctx.context.api.stage({ id: ctx.deps.edit }).get();
 		if (stage.error?.status == 404) throw notFound();
 		return stage.data as unknown as EntityDTO<UnionStage>;
+	},
+	head(ctx) {
+		if (ctx.loaderData?.title)
+			return {
+				meta: [
+					{
+						title: `${env.VITE_TITLE_PREFIX} Editing stage: ${ctx.loaderData.title}`,
+					},
+				],
+			};
+		else
+			return {
+				meta: [
+					{
+						title: `${env.VITE_TITLE_PREFIX} Creating stage`,
+					},
+				],
+			};
 	},
 });
 

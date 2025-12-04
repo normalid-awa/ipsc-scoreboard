@@ -40,6 +40,15 @@ export const Route = createFileRoute("/stages/$stageId")({
 		if (!stage) throw notFound();
 		return stage as unknown as EntityDTO<UnionStage>;
 	},
+	head(ctx) {
+		return {
+			meta: [
+				{
+					title: `${env.VITE_TITLE_PREFIX} Viewing stage: ${ctx.loaderData?.title}`,
+				},
+			],
+		};
+	},
 });
 
 function BaseStageInformation({
