@@ -37,6 +37,8 @@ export interface FrontendStageModule<
 		data: EditingStageData<StageModal>,
 	): Promise<number | undefined>;
 
+	modifyStage(data: EditingStageData<StageModal>): Promise<boolean>;
+
 	stageInfoDisplay(): ReactElement;
 }
 

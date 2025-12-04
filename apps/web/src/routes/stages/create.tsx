@@ -1,7 +1,8 @@
 import { AuthProtectedComponent } from "@/auth/auth.client";
 import NumberSpinner from "@/components/inputs/NumberSpinner";
 import { FrontendStageModules } from "@/stageModules/stageModules";
-import { SportEnum, Stage, UnionStage } from "@ipsc_scoreboard/api";
+import { getImageUrlFromId } from "@/utils/imageApi";
+import { EntityDTO, SportEnum, Stage, UnionStage } from "@ipsc_scoreboard/api";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -24,12 +25,26 @@ import Stepper from "@mui/material/Stepper";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import { useConfirm } from "material-ui-confirm";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import z from "zod";
+
+const stageCreateParamSchema = z.object({
+	edit: z.number().optional(),
+});
 
 export const Route = createFileRoute("/stages/create")({
 	component: () => <AuthProtectedComponent component={<RouteComponent />} />,
+	validateSearch: zodValidator(stageCreateParamSchema),
+	loaderDeps: ({ search }) => ({ ...search }),
+	async loader(ctx) {
+		if (!ctx.deps.edit) return;
+		const stage = await ctx.context.api.stage({ id: ctx.deps.edit }).get();
+		if (stage.error?.status == 404) throw notFound();
+		return stage.data as unknown as EntityDTO<UnionStage>;
+	},
 });
 
 export type EditingStageData<T extends Stage = UnionStage> = Partial<T> &
@@ -131,7 +146,9 @@ function UploadStageAttachments(props: StepComponenetProps) {
 	const confirm = useConfirm();
 	return (
 		<>
-			{props.stageData.rawFiles?.length == 0 && <p>No files uploaded</p>}
+			{(props.stageData.rawFiles?.length ?? 0) == 0 && (
+				<p>No files uploaded</p>
+			)}
 			<Stack
 				direction={"row"}
 				spacing={2}
@@ -263,6 +280,7 @@ function UploadStageAttachments(props: StepComponenetProps) {
 }
 
 function StageSpecificDataInput(props: StepComponenetProps) {
+	//FIXME: Not working during edit mode
 	if (props.stageData.type)
 		return FrontendStageModules[props.stageData.type](
 			//@ts-expect-error
@@ -295,9 +313,37 @@ const steps = [
 	},
 ] as const;
 
+async function getImage(imageUrl: string) {
+	const response = await fetch(imageUrl);
+	const blob = await response.blob();
+	return new File(
+		[blob],
+		response.headers.get("content-disposition") ?? Date.now().toString(),
+		{
+			type: blob.type,
+		},
+	);
+}
+
 function RouteComponent() {
+	const initialStageData = Route.useLoaderData();
 	const [activeStep, setActiveStep] = useState(0);
-	const [stageData, setStageData] = useState<EditingStageData>({});
+	const [stageData, setStageData] = useState<EditingStageData>(() => {
+		if (!initialStageData) return {};
+		return initialStageData;
+	});
+
+	useEffect(() => {
+		(async () => {
+			const imageList: File[] = [];
+			for (const image of initialStageData?.images ?? []) {
+				const imageFile = await getImage(getImageUrlFromId(image.uuid));
+				imageList.push(imageFile);
+			}
+			setStageData({ ...stageData, rawFiles: imageList });
+		})();
+	}, [initialStageData]);
+
 	const queryClient = useQueryClient();
 	const to = Route.useNavigate();
 	const dialog = useConfirm();
@@ -316,24 +362,46 @@ function RouteComponent() {
 	};
 
 	const submitStage = async () => {
-		if (!stageData.type) return;
-		const result = await FrontendStageModules[stageData.type](
-			// @ts-expect-error
-			stageData,
-		).submitStage(stageData);
-		if (result) {
-			queryClient.invalidateQueries({ queryKey: ["stages"] });
-			to({
-				to: "/stages/$stageId",
-				params: {
-					stageId: result.toString(),
-				},
-			});
+		if (initialStageData) {
+			if (!stageData.type) return;
+			const result = await FrontendStageModules[stageData.type](
+				// @ts-expect-error
+				stageData,
+			).modifyStage(stageData);
+			if (result) {
+				queryClient.invalidateQueries({ queryKey: ["stages"] });
+				to({
+					to: "/stages/$stageId",
+					params: {
+						stageId: stageData.id!.toString(),
+					},
+				});
+			} else {
+				dialog({
+					hideCancelButton: true,
+					title: "Fail to edit stage",
+				});
+			}
 		} else {
-			dialog({
-				hideCancelButton: true,
-				title: "Fail to create stage",
-			});
+			if (!stageData.type) return;
+			const result = await FrontendStageModules[stageData.type](
+				// @ts-expect-error
+				stageData,
+			).submitStage(stageData);
+			if (result) {
+				queryClient.invalidateQueries({ queryKey: ["stages"] });
+				to({
+					to: "/stages/$stageId",
+					params: {
+						stageId: result.toString(),
+					},
+				});
+			} else {
+				dialog({
+					hideCancelButton: true,
+					title: "Fail to create stage",
+				});
+			}
 		}
 	};
 

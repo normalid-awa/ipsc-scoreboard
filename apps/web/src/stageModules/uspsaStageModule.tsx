@@ -145,6 +145,28 @@ export const MixinUspsaFrontendStageModule: MixableFrontendStageModule<
 			return res.data.id;
 		}
 
+		async modifyStage(
+			data: EditingStageData<UspsaStage>,
+		): Promise<boolean> {
+			if (!data.id) return false;
+			const res = await api.stage.uspsa({ id: data.id }).patch({
+				images: data.rawFiles ?? [],
+				uspsaPaperTargets: JSON.stringify(
+					data.uspsaPaperTargets ?? [],
+				) as unknown as [],
+				uspsaSteelTargets: JSON.stringify(
+					data.uspsaSteelTargets ?? [],
+				) as unknown as [],
+				title: data.title ?? "",
+				walkthroughTime: data.walkthroughTime ?? 0,
+				description: data.description,
+				uspsaScoringMethod:
+					data.uspsaScoringMethod ?? UspsaScoringMethod.Comstock,
+			});
+			if (res.error) return false;
+			return true;
+		}
+
 		stageInfoDisplay(): ReactElement {
 			return (
 				<Stack spacing={1}>

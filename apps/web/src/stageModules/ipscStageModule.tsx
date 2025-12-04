@@ -115,6 +115,24 @@ export const MixinIpscFrontendStageModule: MixableFrontendStageModule<
 			return res.data.id;
 		}
 
+		async modifyStage(data: EditingStageData<IpscStage>): Promise<boolean> {
+			if (!data.id) return false;
+			const res = await api.stage.ipsc({ id: data.id }).patch({
+				images: data.rawFiles ?? [],
+				ipscPaperTargets: JSON.stringify(
+					data.ipscPaperTargets ?? [],
+				) as unknown as [],
+				ipscSteelTargets: JSON.stringify(
+					data.ipscSteelTargets ?? [],
+				) as unknown as [],
+				title: data.title ?? "",
+				walkthroughTime: data.walkthroughTime ?? 0,
+				description: data.description,
+			});
+			if (res.error) return false;
+			return true;
+		}
+
 		stageInfoDisplay(): ReactElement {
 			return (
 				<Stack spacing={1}>

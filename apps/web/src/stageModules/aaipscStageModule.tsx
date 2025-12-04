@@ -115,6 +115,26 @@ export const MixinAaipscFrontendStageModule: MixableFrontendStageModule<
 			return res.data.id;
 		}
 
+		async modifyStage(
+			data: EditingStageData<AaipscStage>,
+		): Promise<boolean> {
+			if (!data.id) return false;
+			const res = await api.stage.aaipsc({ id: data.id }).patch({
+				images: data.rawFiles ?? [],
+				aaipscPaperTargets: JSON.stringify(
+					data.aaipscPaperTargets ?? [],
+				) as unknown as [],
+				aaipscSteelTargets: JSON.stringify(
+					data.aaipscSteelTargets ?? [],
+				) as unknown as [],
+				title: data.title ?? "",
+				walkthroughTime: data.walkthroughTime ?? 0,
+				description: data.description,
+			});
+			if (res.error) return false;
+			return true;
+		}
+
 		stageInfoDisplay(): ReactElement {
 			return (
 				<Stack spacing={1}>
