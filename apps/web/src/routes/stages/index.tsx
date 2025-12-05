@@ -290,7 +290,7 @@ function ScrollTop() {
 		<Zoom in={showScrollToTopButton} unmountOnExit>
 			<Fab
 				sx={{
-					position: "absolute",
+					position: "fixed",
 					bottom: (t) => t.spacing(largeFab ? 4 : 3),
 					right: (t) => t.spacing(largeFab ? 4 : 3),
 				}}
@@ -321,9 +321,10 @@ function RouteComponent() {
 				<FilterBar />
 				{stages.items.length > 0 && (
 					<Masonry
+						sx={{ maxWidth: "100%" }}
 						columns={{ xs: 1, sm: 2, md: 4, lg: 5 }}
 						spacing={0.5}
-						defaultHeight={450}
+						defaultHeight={1000}
 						defaultColumns={4}
 						defaultSpacing={1}
 						sequential
@@ -343,6 +344,9 @@ function RouteComponent() {
 									key={stage.id}
 									stage={stage}
 									cardProps={{
+										sx: {
+											width: "calc(100%/5)",
+										},
 										style: {
 											viewTransitionName: `stage-card-${stage.id}`,
 										},
