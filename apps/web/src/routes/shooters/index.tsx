@@ -86,12 +86,15 @@ function TextFilter(props: {
 	text: string;
 	setFilter: (text: string) => void;
 }) {
+	const theme = useTheme();
+	const smallVariant = useMediaQuery(theme.breakpoints.down("sm"));
 	const debouncedSearch = debounce(
 		(searchPhrase: string) => props.setFilter(searchPhrase),
 		500,
 	);
 	return (
 		<TextField
+			size={smallVariant ? "small" : "medium"}
 			label="Search"
 			defaultValue={props.text}
 			onChange={(e) => debouncedSearch(e.currentTarget.value)}
@@ -105,8 +108,6 @@ function emptyArrayOrNot<V>(cond: boolean, ret: V): [V] | [] {
 }
 
 function RouteComponent() {
-	const theme = useTheme();
-	const smallVariant = useMediaQuery(theme.breakpoints.down("sm"));
 	const data = Route.useLoaderData();
 	const navigate = Route.useNavigate();
 	const search = Route.useSearch();
