@@ -389,11 +389,15 @@ function RouteComponent() {
 			).modifyStage(stageData);
 			if (result) {
 				queryClient.invalidateQueries({ queryKey: ["stages"] });
-				to({
+				await to({
 					to: "/stages/$stageId",
 					params: {
 						stageId: stageData.id!.toString(),
 					},
+				});
+				dialog({
+					hideCancelButton: true,
+					title: `Stage '${stageData.title}' has been edited`,
 				});
 			} else {
 				dialog({
@@ -409,11 +413,15 @@ function RouteComponent() {
 			).submitStage(stageData);
 			if (result) {
 				queryClient.invalidateQueries({ queryKey: ["stages"] });
-				to({
+				await to({
 					to: "/stages/$stageId",
 					params: {
 						stageId: result.toString(),
 					},
+				});
+				dialog({
+					hideCancelButton: true,
+					title: `Stage '${stageData.title}' has been created`,
 				});
 			} else {
 				dialog({

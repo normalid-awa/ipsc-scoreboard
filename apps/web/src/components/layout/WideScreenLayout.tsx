@@ -36,6 +36,7 @@ export default function WideScreenLayout(props: LayoutProps) {
 					maxWidth: "100%",
 					display: "flex",
 					flexDirection: "column",
+					minHeight: "100vh",
 				}}
 			>
 				<Toolbar sx={{ m: 0 }} />
