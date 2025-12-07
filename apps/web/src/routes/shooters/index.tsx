@@ -1,6 +1,5 @@
 import PeopleIcon from "@mui/icons-material/People";
 import { createFileRoute } from "@tanstack/react-router";
-import { ROUTE_ORDER as PREV_ROUTE_ORDER } from "../timer";
 import { ListedRouteStaticData } from "@/router";
 import env from "@/env";
 import { useQuery } from "@tanstack/react-query";
@@ -9,9 +8,7 @@ import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import Chip from "@mui/material/Chip";
-import { FieldFilter, Sport } from "@ipsc_scoreboard/api";
-import DoneIcon from "@mui/icons-material/Done";
+import { FieldFilter, SportEnum } from "@ipsc_scoreboard/api";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
@@ -21,8 +18,7 @@ import Divider from "@mui/material/Divider";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Skeleton from "@mui/material/Skeleton";
-
-export const ROUTE_ORDER = PREV_ROUTE_ORDER + 1;
+import { SportFilter } from "@/components/SportFilter";
 
 export const Route = createFileRoute("/shooters/")({
 	component: RouteComponent,
@@ -30,72 +26,12 @@ export const Route = createFileRoute("/shooters/")({
 		displayName: "Shooters list",
 		icon: <PeopleIcon />,
 		needAuth: false,
-		order: ROUTE_ORDER,
+		order: 1,
 	} satisfies ListedRouteStaticData,
 	head: () => ({
 		meta: [{ title: `${env.VITE_TITLE_PREFIX} Shooters list` }],
 	}),
 });
-
-function SportFilterChip(props: {
-	onEnable: () => void;
-	onDisable: () => void;
-	enabled: boolean;
-	label: string;
-	size?: "small" | "medium";
-}) {
-	return (
-		<Chip
-			size={props.size || "medium"}
-			label={props.label}
-			variant={props.enabled ? "filled" : "outlined"}
-			color={props.enabled ? "primary" : "default"}
-			clickable
-			onClick={props.enabled ? props.onDisable : props.onEnable}
-			onDelete={props.enabled ? props.onDisable : undefined}
-			deleteIcon={props.enabled ? <DoneIcon /> : undefined}
-		/>
-	);
-}
-
-function SportFilter(props: {
-	filters: string[];
-	setFilters: (filters: Sport[]) => void;
-}) {
-	const theme = useTheme();
-	const smallVariant = useMediaQuery(theme.breakpoints.down("sm"));
-
-	function removeFilter(filter: Sport) {
-		const newFilters = props.filters.filter((v) => v !== filter) as Sport[];
-		props.setFilters(newFilters);
-	}
-
-	function addFilter(filter: Sport) {
-		if (!props.filters.includes(filter)) {
-			props.setFilters([...props.filters, filter] as Sport[]);
-		}
-	}
-
-	return (
-		<Stack
-			direction={"row"}
-			spacing={smallVariant ? 0.5 : 1}
-			gap={smallVariant ? 0.5 : 1}
-			flexWrap={"wrap"}
-		>
-			{Object.values(Sport).map((v) => (
-				<SportFilterChip
-					size={smallVariant ? "small" : "medium"}
-					key={v}
-					label={v}
-					onEnable={() => addFilter(v)}
-					onDisable={() => removeFilter(v)}
-					enabled={props.filters.includes(v)}
-				/>
-			))}
-		</Stack>
-	);
-}
 
 function TextFilter(props: {
 	text: string;
@@ -123,7 +59,7 @@ function RouteComponent() {
 
 	const [textFilter, setTextFilter] = useState("");
 
-	const [sportsFilters, setSportsFilters] = useState<Sport[]>([]);
+	const [sportsFilters, setSportsFilters] = useState<SportEnum[]>([]);
 
 	const { data, isLoading } = useQuery(
 		constructShooterProfileQueryOption({

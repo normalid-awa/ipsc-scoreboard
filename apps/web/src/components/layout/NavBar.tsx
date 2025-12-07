@@ -63,6 +63,7 @@ export default function NavBar(props: NavBarProps) {
 												.infoDisabledColor,
 									},
 								}}
+								viewTransition
 							>
 								<ListItemAvatar>
 									<Icon

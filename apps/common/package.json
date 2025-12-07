@@ -1,0 +1,17 @@
+{
+	"name": "@ipsc_scoreboard/common",
+	"version": "1.0.0",
+	"description": "",
+	"license": "ISC",
+	"author": "",
+	"type": "module",
+	"exports": {
+		"./*": {
+			"types": "./dist/*.d.ts",
+			"import": "./dist/*.js"
+		}
+	},
+	"scripts": {
+		"build": "tsc"
+	}
+}

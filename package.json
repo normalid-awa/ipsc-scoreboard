@@ -9,7 +9,8 @@
 	"scripts": {
 		"build:api": "npm run build --workspace=apps/api",
 		"build:web": "npm run build --workspace=apps/web",
-		"build": "npm run build:api && npm run build:web",
+		"build:common": "npm run build --workspace=apps/common",
+		"build": "npm run build:api && npm run build:common && npm run build:web",
 		"dev:api": "npm run dev --workspace=apps/api",
 		"dev:web": "npm run dev --workspace=apps/web",
 		"cf-preview": "npx wrangler dev --ip=\"0.0.0.0\" --port=3000 --local-protocol=\"https\" --https-key-path=\"key.pem\" --https-cert-path=\"cert.pem\""
@@ -31,6 +32,7 @@
 	},
 	"workspaces": [
 		"apps/web",
-		"apps/api"
+		"apps/api",
+		"apps/common"
 	]
 }

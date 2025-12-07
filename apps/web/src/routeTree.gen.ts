@@ -13,7 +13,10 @@ import { Route as TimerRouteImport } from './routes/timer'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as NewUserRouteImport } from './routes/newUser'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StagesIndexRouteImport } from './routes/stages/index'
 import { Route as ShootersIndexRouteImport } from './routes/shooters/index'
+import { Route as StagesCreateRouteImport } from './routes/stages/create'
+import { Route as StagesStageIdRouteImport } from './routes/stages/$stageId'
 import { Route as AccountShooterProfileManagementRouteImport } from './routes/account/shooterProfileManagement'
 import { Route as AccountResetPasswordRouteImport } from './routes/account/resetPassword'
 import { Route as AccountManagementRouteImport } from './routes/account/management'
@@ -38,9 +41,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StagesIndexRoute = StagesIndexRouteImport.update({
+  id: '/stages/',
+  path: '/stages/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShootersIndexRoute = ShootersIndexRouteImport.update({
   id: '/shooters/',
   path: '/shooters/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StagesCreateRoute = StagesCreateRouteImport.update({
+  id: '/stages/create',
+  path: '/stages/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StagesStageIdRoute = StagesStageIdRouteImport.update({
+  id: '/stages/$stageId',
+  path: '/stages/$stageId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountShooterProfileManagementRoute =
@@ -68,7 +86,10 @@ export interface FileRoutesByFullPath {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/stages/$stageId': typeof StagesStageIdRoute
+  '/stages/create': typeof StagesCreateRoute
   '/shooters': typeof ShootersIndexRoute
+  '/stages': typeof StagesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,7 +99,10 @@ export interface FileRoutesByTo {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/stages/$stageId': typeof StagesStageIdRoute
+  '/stages/create': typeof StagesCreateRoute
   '/shooters': typeof ShootersIndexRoute
+  '/stages': typeof StagesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,7 +113,10 @@ export interface FileRoutesById {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/stages/$stageId': typeof StagesStageIdRoute
+  '/stages/create': typeof StagesCreateRoute
   '/shooters/': typeof ShootersIndexRoute
+  '/stages/': typeof StagesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,7 +128,10 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/stages/$stageId'
+    | '/stages/create'
     | '/shooters'
+    | '/stages'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,7 +141,10 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/stages/$stageId'
+    | '/stages/create'
     | '/shooters'
+    | '/stages'
   id:
     | '__root__'
     | '/'
@@ -121,7 +154,10 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/stages/$stageId'
+    | '/stages/create'
     | '/shooters/'
+    | '/stages/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,7 +168,10 @@ export interface RootRouteChildren {
   AccountManagementRoute: typeof AccountManagementRoute
   AccountResetPasswordRoute: typeof AccountResetPasswordRoute
   AccountShooterProfileManagementRoute: typeof AccountShooterProfileManagementRoute
+  StagesStageIdRoute: typeof StagesStageIdRoute
+  StagesCreateRoute: typeof StagesCreateRoute
   ShootersIndexRoute: typeof ShootersIndexRoute
+  StagesIndexRoute: typeof StagesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -165,11 +204,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stages/': {
+      id: '/stages/'
+      path: '/stages'
+      fullPath: '/stages'
+      preLoaderRoute: typeof StagesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shooters/': {
       id: '/shooters/'
       path: '/shooters'
       fullPath: '/shooters'
       preLoaderRoute: typeof ShootersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stages/create': {
+      id: '/stages/create'
+      path: '/stages/create'
+      fullPath: '/stages/create'
+      preLoaderRoute: typeof StagesCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stages/$stageId': {
+      id: '/stages/$stageId'
+      path: '/stages/$stageId'
+      fullPath: '/stages/$stageId'
+      preLoaderRoute: typeof StagesStageIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/shooterProfileManagement': {
@@ -204,7 +264,10 @@ const rootRouteChildren: RootRouteChildren = {
   AccountManagementRoute: AccountManagementRoute,
   AccountResetPasswordRoute: AccountResetPasswordRoute,
   AccountShooterProfileManagementRoute: AccountShooterProfileManagementRoute,
+  StagesStageIdRoute: StagesStageIdRoute,
+  StagesCreateRoute: StagesCreateRoute,
   ShootersIndexRoute: ShootersIndexRoute,
+  StagesIndexRoute: StagesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

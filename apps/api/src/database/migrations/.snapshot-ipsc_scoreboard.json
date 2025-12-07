@@ -90,15 +90,23 @@
       "checks": [],
       "foreignKeys": {},
       "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
           "items": [
             "IPSC",
             "IDPA",
-            "AAIPSC",
             "USPSA",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -201,15 +209,275 @@
       "checks": [],
       "foreignKeys": {},
       "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
           "items": [
             "IPSC",
             "IDPA",
-            "AAIPSC",
             "USPSA",
-            "3-Gun"
+            "AAIPSC"
+          ]
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "enumItems": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ],
+          "mappedType": "enum"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "walkthrough_time": {
+          "name": "walkthrough_time",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "minimum_rounds": {
+          "name": "minimum_rounds",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "creator_id": {
+          "name": "creator_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "aaipsc_paper_targets": {
+          "name": "aaipsc_paper_targets",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "json"
+        },
+        "aaipsc_steel_targets": {
+          "name": "aaipsc_steel_targets",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "json"
+        },
+        "idpa_paper_targets": {
+          "name": "idpa_paper_targets",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "idpa_steel_targets": {
+          "name": "idpa_steel_targets",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "ipsc_paper_targets": {
+          "name": "ipsc_paper_targets",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "json"
+        },
+        "ipsc_steel_targets": {
+          "name": "ipsc_steel_targets",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "json"
+        },
+        "uspsa_paper_targets": {
+          "name": "uspsa_paper_targets",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "json"
+        },
+        "uspsa_steel_targets": {
+          "name": "uspsa_steel_targets",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "json"
+        },
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "type": "uspsa_scoring_method",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "nativeEnumName": "uspsa_scoring_method",
+          "enumItems": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ],
+          "mappedType": "enum"
+        }
+      },
+      "name": "stage",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "type"
+          ],
+          "composite": false,
+          "keyName": "stage_type_index",
+          "constraint": false,
+          "primary": false,
+          "unique": false
+        },
+        {
+          "keyName": "stage_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "stage_creator_id_foreign": {
+          "constraintName": "stage_creator_id_foreign",
+          "columnNames": [
+            "creator_id"
+          ],
+          "localTableName": "public.stage",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "createForeignKeyConstraint": true,
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
           ]
         }
       }
@@ -344,15 +612,23 @@
         }
       },
       "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
           "items": [
             "IPSC",
             "IDPA",
-            "AAIPSC",
             "USPSA",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -453,15 +729,23 @@
         }
       },
       "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
           "items": [
             "IPSC",
             "IDPA",
-            "AAIPSC",
             "USPSA",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -580,15 +864,23 @@
         }
       },
       "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
           "items": [
             "IPSC",
             "IDPA",
-            "AAIPSC",
             "USPSA",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -685,15 +977,121 @@
         }
       },
       "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
           "items": [
             "IPSC",
             "IDPA",
-            "AAIPSC",
             "USPSA",
-            "3-Gun"
+            "AAIPSC"
+          ]
+        }
+      }
+    },
+    {
+      "columns": {
+        "stage_id": {
+          "name": "stage_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "image_uuid": {
+          "name": "image_uuid",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "order": {
+          "name": "order",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "stage_image",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "stage_image_pkey",
+          "columnNames": [
+            "stage_id",
+            "image_uuid"
+          ],
+          "composite": true,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "stage_image_stage_id_foreign": {
+          "constraintName": "stage_image_stage_id_foreign",
+          "columnNames": [
+            "stage_id"
+          ],
+          "localTableName": "public.stage_image",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.stage",
+          "createForeignKeyConstraint": true,
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "stage_image_image_uuid_foreign": {
+          "constraintName": "stage_image_image_uuid_foreign",
+          "columnNames": [
+            "image_uuid"
+          ],
+          "localTableName": "public.stage_image",
+          "referencedColumnNames": [
+            "uuid"
+          ],
+          "referencedTableName": "public.image",
+          "createForeignKeyConstraint": true,
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
           ]
         }
       }
@@ -730,9 +1128,8 @@
           "enumItems": [
             "IPSC",
             "IDPA",
-            "AAIPSC",
             "USPSA",
-            "3-Gun"
+            "AAIPSC"
           ],
           "mappedType": "enum"
         },
@@ -841,15 +1238,23 @@
         }
       },
       "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
           "items": [
             "IPSC",
             "IDPA",
-            "AAIPSC",
             "USPSA",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -1011,15 +1416,23 @@
         }
       },
       "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
           "items": [
             "IPSC",
             "IDPA",
-            "AAIPSC",
             "USPSA",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
@@ -1104,30 +1517,46 @@
       "checks": [],
       "foreignKeys": {},
       "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
           "items": [
             "IPSC",
             "IDPA",
-            "AAIPSC",
             "USPSA",
-            "3-Gun"
+            "AAIPSC"
           ]
         }
       }
     }
   ],
   "nativeEnums": {
+    "uspsa_scoring_method": {
+      "name": "uspsa_scoring_method",
+      "schema": "public",
+      "items": [
+        "Comstock",
+        "Virginia Count",
+        "Fixed Time"
+      ]
+    },
     "shooter_profile_sport": {
       "name": "shooter_profile_sport",
       "schema": "public",
       "items": [
         "IPSC",
         "IDPA",
-        "AAIPSC",
         "USPSA",
-        "3-Gun"
+        "AAIPSC"
       ]
     }
   }

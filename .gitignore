@@ -1,3 +1,5 @@
 node_modules/
-*.pem
 .wrangler
+ca.crt
+server.crt
+server.key

@@ -1,11 +1,14 @@
-import { defineConfig } from "@mikro-orm/postgresql";
+import { Options, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { TsMorphMetadataProvider } from "@mikro-orm/reflection";
 import { Migrator } from "@mikro-orm/migrations";
 import "dotenv/config";
 import env from "../env.js";
 import { SoftDeleteHandler } from "mikro-orm-soft-delete";
+import { SeedManager } from "@mikro-orm/seeder";
+import { pathToFileURL } from "url";
 
-export default defineConfig({
+export default {
+	driver: PostgreSqlDriver,
 	clientUrl: env.DATABASE_URL,
 	entities: ["dist/**/*.entity.js"],
 	entitiesTs: ["src/**/*.entity.ts"],
@@ -13,11 +16,19 @@ export default defineConfig({
 		path: "dist/database/migrations",
 		pathTs: "src/database/migrations",
 	},
+	dynamicImportProvider:
+		(process.env.TESTING &&
+			((path) => import(pathToFileURL(path).toString()))) ||
+		undefined,
 	metadataProvider: TsMorphMetadataProvider,
 	debug: process.env.NODE_ENV !== "production",
-	extensions: [Migrator, SoftDeleteHandler],
+	seeder: {
+		path: "dist/database/seeders",
+		pathTs: "src/database/seeders",
+	},
+	extensions: [Migrator, SoftDeleteHandler, SeedManager],
 	ignoreUndefinedInQuery: true,
 	serialization: {
 		forceObject: true,
 	},
-});
+} as const satisfies Options;

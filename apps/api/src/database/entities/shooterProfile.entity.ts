@@ -1,4 +1,4 @@
-import { Sport } from "../../sport.js";
+import { SportEnum } from "../../sport.js";
 import {
 	Cascade,
 	Entity,
@@ -17,8 +17,8 @@ export class ShooterProfile extends SoftDeletableEntity {
 	@PrimaryKey()
 	id!: number;
 
-	@Enum({ items: () => Sport, nativeEnumName: "shooter_profile_sport" })
-	sport!: Sport;
+	@Enum({ nativeEnumName: "shooter_profile_sport" })
+	sport!: SportEnum;
 
 	@Property()
 	identifier!: string;

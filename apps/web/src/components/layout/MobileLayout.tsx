@@ -10,6 +10,7 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
+import { ScrollTargetProvider } from "./LayoutViewScrollTargetProvider";
 
 function SlideOnScroll({
 	children,
@@ -42,7 +43,7 @@ function CollapseOnScroll({
 	target,
 }: {
 	children: ReactElement;
-	target: Node | null;
+	target: Element | null;
 }) {
 	const trigger = useScrollTrigger({
 		target: target,
@@ -61,12 +62,7 @@ function CollapseOnScroll({
 }
 
 export default function MobileLayout(props: LayoutProps) {
-	const [scrollTarget, setScrollTarget] = useState<Node | null>(null);
 	const scrollRef = useRef<HTMLDivElement | null>(null);
-
-	useEffect(() => {
-		setScrollTarget(scrollRef.current);
-	}, []);
 
 	return (
 		<>
@@ -86,7 +82,7 @@ export default function MobileLayout(props: LayoutProps) {
 					]}
 				/>
 			</SwipeableDrawer>
-			<SlideOnScroll target={scrollTarget}>
+			<SlideOnScroll target={scrollRef.current}>
 				<div>
 					<AppTopBar
 						fold={props.fold}
@@ -106,14 +102,16 @@ export default function MobileLayout(props: LayoutProps) {
 					right: 0,
 				}}
 			>
-				<CollapseOnScroll target={scrollTarget}>
+				<CollapseOnScroll target={scrollRef.current}>
 					<Toolbar />
 				</CollapseOnScroll>
 				<Paper
 					sx={{ p: 1, pt: 2, height: "100vh", overflow: "auto" }}
 					ref={scrollRef}
 				>
-					{props.children}
+					<ScrollTargetProvider ref={scrollRef.current}>
+						{props.children}
+					</ScrollTargetProvider>
 				</Paper>
 			</div>
 		</>

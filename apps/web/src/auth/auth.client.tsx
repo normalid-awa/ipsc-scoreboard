@@ -13,6 +13,8 @@ import {
 	multiSessionClient,
 } from "better-auth/client/plugins";
 import env from "@/env";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export const authClient = createAuthClient({
 	baseURL: env.VITE_BACKEND_API_URL,
@@ -28,7 +30,42 @@ export const { signIn, signUp, useSession } = authClient;
 export function AuthProtectedComponent(props: { component: ReactElement }) {
 	const session = useSession();
 	if (session.isPending) {
-		return <Skeleton width={"100%"} height={"100%"} />;
+		return (
+			<div
+				style={{
+					height: "80vh",
+					width: "80vw",
+					position: "relative",
+					top: "50%",
+					left: "50%",
+					transform: "translate(-50%, -50%)",
+				}}
+			>
+				<Skeleton width="100%" height="100%" />
+				<div
+					style={{
+						position: "relative",
+						top: "-50%",
+						left: "50%",
+						transform: "translate(-50%, -50%)",
+						display: "flex",
+						width: "100%",
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+				>
+					<CircularProgress color="secondary" thickness={5} />
+					<Typography
+						variant="h5"
+						textAlign="right"
+						color="textSecondary"
+						sx={{ mx: 2 }}
+					>
+						Authanticating
+					</Typography>
+				</div>
+			</div>
+		);
 	}
 
 	if (!session.data)

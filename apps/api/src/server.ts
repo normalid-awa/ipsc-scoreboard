@@ -11,6 +11,7 @@ import { imageRoute } from "./modules/image/index.js";
 import { serve } from "@hono/node-server";
 import { createServer } from "node:https";
 import { readFileSync } from "node:fs";
+import { stagesRoute } from "./modules/stages/index.js";
 
 export const app = new Elysia({
 	adapter: node(),
@@ -19,7 +20,7 @@ export const app = new Elysia({
 	.use(
 		cors({
 			origin: env.FRONTEND_URL,
-			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
 			credentials: true,
 			allowedHeaders: ["Content-Type", "Authorization", "Credentials"],
 		}),
@@ -31,16 +32,18 @@ export const app = new Elysia({
 	})
 	.mount(auth.handler)
 	.use(shooterProfileRoute)
+	.use(stagesRoute)
 	.use(imageRoute)
 	.compile();
 
 serve({
 	fetch: app.fetch,
-	port: 3001,
+	port: Number(new URL(env.BETTER_AUTH_URL).port),
 	createServer,
 	serverOptions: {
-		cert: readFileSync("../../cert.pem"),
-		key: readFileSync("../../key.pem"),
+		cert: readFileSync("../../server.crt"),
+		key: readFileSync("../../server.key"),
+		ca: readFileSync("../../ca.crt"),
 	},
 });
 

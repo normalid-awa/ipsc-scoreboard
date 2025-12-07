@@ -10,9 +10,11 @@ const config = defineConfig((confEnv) => {
 	let https: ServerOptions["https"] | undefined = undefined;
 	if (confEnv.mode == "development") {
 		https = {
-			key: readFileSync("../../key.pem"),
-			cert: readFileSync("../../cert.pem"),
+			key: readFileSync("../../server.key"),
+			cert: readFileSync("../../server.crt"),
+			ca: readFileSync("../../ca.crt"),
 		};
+		process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 	}
 
 	return {
@@ -38,7 +40,7 @@ const config = defineConfig((confEnv) => {
 		],
 		build: {
 			rollupOptions: {
-				external: ["@ipsc-scoreboare/api"],
+				external: ["@ipsc-scoreboare/api", "@ipsc-scoreboard/common"],
 			},
 		},
 	};

@@ -1,18 +1,8 @@
 import { api } from "@/api";
 import { authClient } from "@/auth/auth.client";
-import { App, Sport } from "@ipsc_scoreboard/api";
-import { createCollection } from "@tanstack/db";
-import {
-	QueryClient,
-	queryOptions,
-	useMutation,
-	useQuery,
-	useQueryClient,
-} from "@tanstack/react-query";
+import { App, SportEnum } from "@ipsc_scoreboard/api";
+import { queryOptions, useMutation, useQuery } from "@tanstack/react-query";
 import { useConfirm } from "material-ui-confirm";
-import { queryCollectionOptions } from "@tanstack/query-db-collection";
-import z from "zod";
-import { useLiveQuery } from "@tanstack/react-db";
 
 export const constructShooterProfileQueryOption = (
 	param: App["~Routes"]["api"]["shooter-profile"]["get"]["query"],
@@ -55,7 +45,7 @@ export function useMutateShooterProfile() {
 		mutationKey: ["editShooterProfile"],
 		mutationFn: async (param: {
 			id: number;
-			sport: Sport;
+			sport: SportEnum;
 			identifier: string;
 			image?: File;
 		}) => {
@@ -86,7 +76,7 @@ export function useCreateShooterProfile() {
 	return useMutation({
 		mutationKey: ["createShooterProfile"],
 		mutationFn: async (param: {
-			sport: Sport;
+			sport: SportEnum;
 			identifier: string;
 			image?: File;
 		}) => {

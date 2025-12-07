@@ -4,7 +4,7 @@ import { Static, t } from "elysia";
 const DEFAULT_LIMIT = 20;
 const DEFAULT_OFFSET = 0;
 
-const offsetBasedPaginationSchema = t.Object({
+export const OffsetBasedPaginationSchema = t.Object({
 	limit: t.Optional(t.Number({ minimum: 1, default: DEFAULT_LIMIT })),
 	offset: t.Optional(t.Number({ minimum: 0, default: DEFAULT_OFFSET })),
 	sortField: t.Optional(t.String({ default: "id" })),
@@ -13,15 +13,11 @@ const offsetBasedPaginationSchema = t.Object({
 	),
 });
 
-export function offsetBasedPaginationDto() {
-	return offsetBasedPaginationSchema;
-}
-
 /**
  *  Used for findAndCount
  * */
 export function parseOffsetBasedPaginationParams<Entity>(
-	param?: Static<typeof offsetBasedPaginationSchema>,
+	param?: Static<typeof OffsetBasedPaginationSchema>,
 ): FindOptions<Entity> {
 	return {
 		limit: param?.limit || DEFAULT_LIMIT,
@@ -49,7 +45,7 @@ export interface PaginatedResult<Entity> {
 export function serializeOffsetBasedPaginationResult<Entity>(
 	results: Entity[],
 	totalCount: number,
-	paginationParams?: Static<typeof offsetBasedPaginationSchema>,
+	paginationParams?: Static<typeof OffsetBasedPaginationSchema>,
 ): PaginatedResult<Entity> {
 	if (!paginationParams)
 		paginationParams = {
