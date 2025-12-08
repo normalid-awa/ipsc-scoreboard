@@ -243,6 +243,99 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 			params: t.Object({ requestId: t.String({ format: "uuid" }) }),
 		},
 	)
+	//promote user as an admin
+	.post(
+		"/:clubId/promoteAdmin/:userId",
+		async ({ params: { clubId, userId }, user: { id: operatorId } }) => {
+			if (userId == operatorId) return status(409);
+			const club = await orm.em.findOne(
+				Club,
+				{
+					id: clubId,
+				},
+				{ populate: ["admins"] },
+			);
+			if (!club) return status(404);
+			if (club.owner.id != operatorId) return status(403);
+			if (club.admins.exists((a) => a.id == userId))
+				return status(
+					409,
+					"Conflict: User was already an admin of this club",
+				);
+
+			const user = await orm.em.findOne(User, {
+				id: userId,
+			});
+			if (!user) return status(404);
+			const userManagedClub = await orm.em.count(Club, {
+				$or: [
+					{
+						owner: {
+							id: userId,
+						},
+					},
+					{
+						admins: {
+							$some: {
+								id: userId,
+							},
+						},
+					},
+				],
+			});
+			if (userManagedClub > 0) {
+				return status(
+					409,
+					"Conflict: User is an admin or an owner of the another club",
+				);
+			}
+
+			club.admins.add(user);
+			await orm.em.flush();
+			return club;
+		},
+		{
+			requiredAuth: true,
+			params: t.Object({
+				clubId: t.Integer(),
+				userId: t.String({ format: "uuid" }),
+			}),
+		},
+	)
+	//demote user
+	.post(
+		"/:clubId/demoteAdmin/:userId",
+		async ({ params: { clubId, userId }, user: { id: operatorId } }) => {
+			if (userId == operatorId) return status(409);
+			const club = await orm.em.findOne(
+				Club,
+				{
+					id: clubId,
+				},
+				{ populate: ["admins"] },
+			);
+			if (!club) return status(404);
+			if (club.owner.id != operatorId) return status(403);
+
+			const user = club.admins.find((a) => a.id == userId);
+			if (!user)
+				return status(
+					404,
+					"Bad Request: User is not an admin of this club",
+				);
+
+			club.admins.remove(user);
+			await orm.em.flush();
+			return club;
+		},
+		{
+			requiredAuth: true,
+			params: t.Object({
+				clubId: t.Integer(),
+				userId: t.String({ format: "uuid" }),
+			}),
+		},
+	)
 	.delete(
 		"/:id",
 		async ({ user, params: { id } }) => {

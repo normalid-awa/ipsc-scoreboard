@@ -1,4 +1,5 @@
 import {
+	Cascade,
 	Collection,
 	Embeddable,
 	Entity,
@@ -76,10 +77,10 @@ export class JoinClubRequest {
 	@PrimaryKey({ type: "uuid", defaultRaw: "gen_random_uuid()" })
 	uuid!: string;
 
-	@ManyToOne()
+	@ManyToOne({ cascade: [Cascade.REMOVE] })
 	club!: Club;
 
-	@OneToOne()
+	@OneToOne({ cascade: [Cascade.REMOVE] })
 	from!: ShooterProfile;
 
 	@Property()
