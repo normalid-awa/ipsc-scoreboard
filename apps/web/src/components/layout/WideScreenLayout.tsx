@@ -4,7 +4,6 @@ import Paper from "@mui/material/Paper";
 import Toolbar from "@mui/material/Toolbar";
 import AppTopBar from "./AppTopBar";
 import { LayoutProps } from "./Layout";
-import { ScrollTargetProvider } from "./LayoutViewScrollTargetProvider";
 import NavBar from "./NavBar";
 
 export default function WideScreenLayout(props: LayoutProps) {
@@ -48,9 +47,7 @@ export default function WideScreenLayout(props: LayoutProps) {
 						maxWidth: "100%",
 					}}
 				>
-					<ScrollTargetProvider>
-						{props.children}
-					</ScrollTargetProvider>
+					{props.children}
 				</Paper>
 			</Paper>
 		</Paper>

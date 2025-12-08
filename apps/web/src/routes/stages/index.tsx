@@ -1,5 +1,8 @@
+import { ButtonLink, Link } from "@/components/MuiWrapper";
+import { SportFilter } from "@/components/SportFilter";
 import { StageCard } from "@/components/StageCard";
-import Masonry from "@mui/lab/Masonry";
+import { ListedRouteStaticData } from "@/router";
+import { wrapArray } from "@/utils/wrapArray";
 import {
 	App,
 	FieldFilter,
@@ -8,30 +11,25 @@ import {
 	SportEnum,
 	UnionStage,
 } from "@ipsc_scoreboard/api";
-import { createFileRoute } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import z from "zod";
+import SnippetFolderIcon from "@mui/icons-material/SnippetFolder";
+import VerticalAlignTopIcon from "@mui/icons-material/VerticalAlignTop";
+import Masonry from "@mui/lab/Masonry";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { ButtonLink, Link } from "@/components/MuiWrapper";
-import Typography from "@mui/material/Typography";
+import Fab from "@mui/material/Fab";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import { SportFilter } from "@/components/SportFilter";
-import Paper from "@mui/material/Paper";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import Box from "@mui/material/Box";
-import { wrapArray } from "@/utils/wrapArray";
-import { debounce } from "@mui/material/utils";
-import Fab from "@mui/material/Fab";
+import Typography from "@mui/material/Typography";
 import Zoom from "@mui/material/Zoom";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
-import { useScrollTarget } from "@/components/layout/LayoutViewScrollTargetProvider";
-import { ClientOnly } from "@tanstack/react-router";
-import VerticalAlignTopIcon from "@mui/icons-material/VerticalAlignTop";
-import { ListedRouteStaticData } from "@/router";
-import SnippetFolderIcon from "@mui/icons-material/SnippetFolder";
-import Slider from "@mui/material/Slider";
-import Grid from "@mui/material/Grid";
+import { debounce } from "@mui/material/utils";
+import { ClientOnly, createFileRoute } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
+import z from "zod";
 
 const MINIMUM_ROUNDS_INFINITY = 40;
 
@@ -278,9 +276,7 @@ function FilterBar() {
 }
 
 function ScrollTop() {
-	const scrollTarget = useScrollTarget();
 	const showScrollToTopButton = useScrollTrigger({
-		target: scrollTarget,
 		disableHysteresis: true,
 		threshold: 100,
 	});
@@ -299,7 +295,7 @@ function ScrollTop() {
 				size={largeFab ? "large" : "medium"}
 				variant={largeFab ? "extended" : "circular"}
 				onClick={() => {
-					scrollTarget?.scrollTo({ top: 0, behavior: "smooth" });
+					window.scrollTo({ top: 0, behavior: "smooth" });
 				}}
 			>
 				<VerticalAlignTopIcon />
