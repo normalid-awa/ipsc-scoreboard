@@ -234,8 +234,8 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 				return status(403);
 
 			request.club.members.add(request.from);
+			orm.em.remove(request);
 			orm.em.flush();
-			orm.em.removeAndFlush(request);
 			return status(204);
 		},
 		{
