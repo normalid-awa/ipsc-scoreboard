@@ -11,14 +11,14 @@ export interface ExpandMoreButtonProps extends IconButtonProps {
 
 export function ExpandMoreButton(props: ExpandMoreButtonProps) {
 	const theme = useTheme();
+	const { icon, expanded, ...iconProps } = props;
+
 	return (
-		<IconButton {...props}>
+		<IconButton {...iconProps}>
 			<Icon
-				color={props.expanded ? "secondary" : "inherit"}
+				color={expanded ? "secondary" : "inherit"}
 				sx={{
-					transform: props.expanded
-						? "rotateX(180deg)"
-						: "rotateX(0deg)",
+					transform: expanded ? "rotateX(180deg)" : "rotateX(0deg)",
 					transition: theme.transitions.create(["transform"], {
 						easing: theme.transitions.easing.easeInOut,
 						duration: theme.transitions.duration.standard,
@@ -28,7 +28,7 @@ export function ExpandMoreButton(props: ExpandMoreButtonProps) {
 					justifyContent: "center",
 				}}
 			>
-				{props.icon || <ExpandMoreIcon />}
+				{icon || <ExpandMoreIcon />}
 			</Icon>
 		</IconButton>
 	);

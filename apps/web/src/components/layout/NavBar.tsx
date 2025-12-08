@@ -32,12 +32,12 @@ export default function NavBar(props: NavBarProps) {
 	return (
 		<>
 			<List disablePadding sx={{ width: 250 }}>
-				{props.topItems?.map((v) => {
+				{props.topItems?.map((v, i) => {
 					return (
 						<ListItem
 							disableGutters
 							disablePadding
-							key={v.key}
+							key={i}
 							sx={{ overflow: "auto" }}
 						>
 							{v}

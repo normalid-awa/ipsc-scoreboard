@@ -10,7 +10,7 @@ export interface CarouselProps extends StackProps {
 }
 
 export function Carousel(props: CarouselProps) {
-	const { children, ...stackProps } = props;
+	const { children, hideButtons, ...stackProps } = props;
 	const stackRef = useRef<HTMLDivElement>(null);
 	const isHorizontal =
 		stackProps.direction == "row" || stackProps.direction == "row-reverse";
@@ -66,7 +66,7 @@ export function Carousel(props: CarouselProps) {
 					</Box>
 				))}
 			</Stack>
-			{props.hideButtons ? (
+			{hideButtons ? (
 				<> </>
 			) : (
 				<Box
