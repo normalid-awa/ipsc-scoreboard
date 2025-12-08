@@ -3,6 +3,7 @@ import {
 	Embeddable,
 	Entity,
 	Enum,
+	ManyToOne,
 	OneToMany,
 	OneToOne,
 	PrimaryKey,
@@ -60,8 +61,26 @@ export class Club {
 	@OneToOne()
 	owner!: User;
 
+	@OneToMany(() => JoinClubRequest, (request) => request.club)
+	pendingRequests = new Collection<JoinClubRequest>(this);
+
 	@OneToMany(() => User, (user) => user.clubAdmin)
 	admins = new Collection<User>(this);
+
+	@Property()
+	createdAt = new Date();
+}
+
+@Entity()
+export class JoinClubRequest {
+	@PrimaryKey({ type: "uuid", defaultRaw: "gen_random_uuid()" })
+	uuid!: string;
+
+	@ManyToOne()
+	club!: Club;
+
+	@OneToOne()
+	from!: ShooterProfile;
 
 	@Property()
 	createdAt = new Date();

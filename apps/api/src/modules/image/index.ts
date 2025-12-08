@@ -34,7 +34,7 @@ export const imageRoute = new Elysia({
 			return image;
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			body: t.Object({
 				file: t.File({
 					type: "image/*",
@@ -52,7 +52,7 @@ export const imageRoute = new Elysia({
 			return status(204);
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			params: t.Object({
 				id: t.String({ format: "uuid" }),
 			}),

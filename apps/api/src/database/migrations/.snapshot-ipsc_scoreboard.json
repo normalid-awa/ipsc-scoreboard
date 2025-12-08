@@ -1126,6 +1126,122 @@
     },
     {
       "columns": {
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
+        },
+        "club_id": {
+          "name": "club_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "from_id": {
+          "name": "from_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "join_club_request",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "from_id"
+          ],
+          "composite": false,
+          "keyName": "join_club_request_from_id_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "join_club_request_pkey",
+          "columnNames": [
+            "uuid"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "join_club_request_club_id_foreign": {
+          "constraintName": "join_club_request_club_id_foreign",
+          "columnNames": [
+            "club_id"
+          ],
+          "localTableName": "public.join_club_request",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.club",
+          "createForeignKeyConstraint": true,
+          "updateRule": "cascade"
+        },
+        "join_club_request_from_id_foreign": {
+          "constraintName": "join_club_request_from_id_foreign",
+          "columnNames": [
+            "from_id"
+          ],
+          "localTableName": "public.join_club_request",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.shooter_profile",
+          "createForeignKeyConstraint": true,
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        }
+      }
+    },
+    {
+      "columns": {
         "id": {
           "name": "id",
           "type": "uuid",

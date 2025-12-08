@@ -101,7 +101,7 @@ export const shooterProfileRoute = new Elysia({
 			return shooterProfile;
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			body: createShooterDto,
 		},
 	)
@@ -146,7 +146,7 @@ export const shooterProfileRoute = new Elysia({
 			return shooterProfile;
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			params: t.Object({ id: t.Numeric({ minimum: 1 }) }),
 			body: t.Partial(createShooterDto),
 		},
@@ -165,7 +165,7 @@ export const shooterProfileRoute = new Elysia({
 			return status(204);
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			params: t.Object({ id: t.Numeric({ minimum: 1 }) }),
 		},
 	);
