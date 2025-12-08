@@ -739,6 +739,159 @@
           "nullable": false,
           "mappedType": "integer"
         },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "third_party_links": {
+          "name": "third_party_links",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "json"
+        },
+        "icon_uuid": {
+          "name": "icon_uuid",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "banner_uuid": {
+          "name": "banner_uuid",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "club",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "icon_uuid"
+          ],
+          "composite": false,
+          "keyName": "club_icon_uuid_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "banner_uuid"
+          ],
+          "composite": false,
+          "keyName": "club_banner_uuid_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "club_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "club_icon_uuid_foreign": {
+          "constraintName": "club_icon_uuid_foreign",
+          "columnNames": [
+            "icon_uuid"
+          ],
+          "localTableName": "public.club",
+          "referencedColumnNames": [
+            "uuid"
+          ],
+          "referencedTableName": "public.image",
+          "createForeignKeyConstraint": true,
+          "updateRule": "cascade"
+        },
+        "club_banner_uuid_foreign": {
+          "constraintName": "club_banner_uuid_foreign",
+          "columnNames": [
+            "banner_uuid"
+          ],
+          "localTableName": "public.club",
+          "referencedColumnNames": [
+            "uuid"
+          ],
+          "referencedTableName": "public.image",
+          "createForeignKeyConstraint": true,
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
         "deleted_at": {
           "name": "deleted_at",
           "type": "timestamptz",
@@ -792,6 +945,15 @@
           "primary": false,
           "nullable": true,
           "mappedType": "uuid"
+        },
+        "club_id": {
+          "name": "club_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         },
         "created_at": {
           "name": "created_at",
@@ -864,6 +1026,20 @@
             "uuid"
           ],
           "referencedTableName": "public.image",
+          "createForeignKeyConstraint": true,
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "shooter_profile_club_id_foreign": {
+          "constraintName": "shooter_profile_club_id_foreign",
+          "columnNames": [
+            "club_id"
+          ],
+          "localTableName": "public.shooter_profile",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.club",
           "createForeignKeyConstraint": true,
           "deleteRule": "set null",
           "updateRule": "cascade"
