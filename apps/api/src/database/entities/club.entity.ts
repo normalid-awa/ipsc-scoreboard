@@ -26,7 +26,7 @@ export enum ThirdPartyPlatform {
 @Embeddable()
 export class ThirdPartyLink {
 	@Enum({
-		items: () => ThirdPartyLink,
+		items: () => ThirdPartyPlatform,
 		nativeEnumName: "thirdparty_platform",
 	})
 	platform!: ThirdPartyPlatform;
