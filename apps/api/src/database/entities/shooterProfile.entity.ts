@@ -31,7 +31,7 @@ export class ShooterProfile extends SoftDeletableEntity {
 	@OneToOne({ cascade: [Cascade.PERSIST] })
 	image?: Image;
 
-	@ManyToOne()
+	@ManyToOne({ cascade: [Cascade.PERSIST] })
 	club?: Rel<Club>;
 
 	@Property()

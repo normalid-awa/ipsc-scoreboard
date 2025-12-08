@@ -1,4 +1,5 @@
 import {
+	Cascade,
 	Config,
 	DefineConfig,
 	Entity,
@@ -29,7 +30,7 @@ export class User {
 	@Property({ type: "text", nullable: true })
 	image?: string;
 
-	@ManyToOne()
+	@ManyToOne({ cascade: [Cascade.PERSIST] })
 	clubAdmin?: Rel<Club>;
 
 	@Property({

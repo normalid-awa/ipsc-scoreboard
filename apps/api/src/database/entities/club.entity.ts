@@ -43,7 +43,7 @@ export class Club {
 	name!: string;
 
 	@Property({ type: "text" })
-	description!: string;
+	description?: string;
 
 	@Property({ type: "json" })
 	thirdPartyLinks: ThirdPartyLink[] = [];
