@@ -1,14 +1,9 @@
 import { betterAuth, BetterAuthOptions } from "better-auth";
-import { reactStartCookies } from "better-auth/react-start";
-import {
-	emailOTP,
-	multiSession,
-	organization,
-	openAPI,
-} from "better-auth/plugins";
-import nodemailer from "nodemailer";
 import { mikroOrmAdapter } from "better-auth-mikro-orm";
+import { emailOTP, multiSession, openAPI } from "better-auth/plugins";
+import { reactStartCookies } from "better-auth/react-start";
 import { readFile } from "fs/promises";
+import nodemailer from "nodemailer";
 import path from "path";
 import orm from "./database/orm.js";
 import env from "./env.js";
@@ -132,9 +127,6 @@ const authConfig: BetterAuthOptions = {
 			},
 		}),
 		multiSession(),
-		organization({
-			allowUserToCreateOrganization: true,
-		}),
 		openAPI(),
 		reactStartCookies(),
 	],

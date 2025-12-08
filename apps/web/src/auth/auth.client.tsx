@@ -18,12 +18,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 export const authClient = createAuthClient({
 	baseURL: env.VITE_BACKEND_API_URL,
-	plugins: [
-		usernameClient(),
-		emailOTPClient(),
-		multiSessionClient(),
-		organizationClient(),
-	],
+	plugins: [usernameClient(), emailOTPClient(), multiSessionClient()],
 });
 export const { signIn, signUp, useSession } = authClient;
 
