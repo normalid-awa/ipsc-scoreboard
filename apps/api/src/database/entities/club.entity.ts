@@ -12,7 +12,15 @@ import { Image } from "./image.entity.js";
 import { ShooterProfile } from "./shooterProfile.entity.js";
 import { User } from "./user.entity.js";
 
-export const enum ThirdPartyPlatform {}
+export enum ThirdPartyPlatform {
+	Instagram = "Instagram",
+	Facebook = "Facebook",
+	YouTube = "YouTube",
+	GoogleMap = "Google Map",
+	WhatsApp = "WhatsApp",
+	Email = "Email",
+	WebSite = "WebSite",
+}
 
 @Embeddable()
 export class ThirdPartyLink {
@@ -44,7 +52,7 @@ export class Club {
 	icon!: Image;
 
 	@OneToOne()
-	banner!: Image;
+	banner?: Image;
 
 	@OneToMany(() => ShooterProfile, (shooterProfile) => shooterProfile.club)
 	members = new Collection<ShooterProfile>(this);
@@ -53,7 +61,7 @@ export class Club {
 	owner!: User;
 
 	@OneToMany(() => User, (user) => user.clubAdmin)
-	admins = new Collection<ShooterProfile>(this);
+	admins = new Collection<User>(this);
 
 	@Property()
 	createdAt = new Date();

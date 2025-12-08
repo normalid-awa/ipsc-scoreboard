@@ -806,7 +806,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "uuid"
         },
         "owner_id": {
@@ -899,6 +899,7 @@
           ],
           "referencedTableName": "public.image",
           "createForeignKeyConstraint": true,
+          "deleteRule": "set null",
           "updateRule": "cascade"
         },
         "club_owner_id_foreign": {
