@@ -1,11 +1,15 @@
-import { calculateMinimumRounds, UspsaStage } from "@ipsc_scoreboard/api";
+import { UspsaStage } from "@ipsc_scoreboard/api";
 import { StageModule } from "./stageModule.js";
 
 export class UspsaStageModule extends StageModule<UspsaStage> {
 	getMinimumRounds(): number {
-		return calculateMinimumRounds(
-			this.stage.uspsaPaperTargets,
-			this.stage.uspsaSteelTargets,
-		);
+		let rounds = 0;
+		this.stage.uspsaPaperTargets.forEach((v) => {
+			rounds += v.requiredHits;
+		});
+		this.stage.uspsaSteelTargets.forEach((v) => {
+			if (!v.isNoShoot) rounds++;
+		});
+		return rounds;
 	}
 }
