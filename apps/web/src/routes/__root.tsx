@@ -111,19 +111,19 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
 function Layout({ children }: Readonly<{ children: ReactNode }>) {
 	const theme = useTheme();
-	const mobileLayout = useMediaQuery(theme.breakpoints.down("sm"));
+	const desktopLayout = useMediaQuery(theme.breakpoints.up("sm"));
 	const [fold, setFold] = useState(false);
 
 	return (
 		<>
-			{mobileLayout ? (
-				<MobileLayout fold={fold} setFold={setFold}>
-					{children}
-				</MobileLayout>
-			) : (
+			{desktopLayout ? (
 				<WideScreenLayout fold={fold} setFold={setFold}>
 					{children}
 				</WideScreenLayout>
+			) : (
+				<MobileLayout fold={fold} setFold={setFold}>
+					{children}
+				</MobileLayout>
 			)}
 		</>
 	);
