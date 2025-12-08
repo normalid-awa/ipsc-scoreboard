@@ -2,10 +2,13 @@ import {
 	Config,
 	DefineConfig,
 	Entity,
+	ManyToOne,
 	type Opt,
 	PrimaryKey,
 	Property,
+	type Rel,
 } from "@mikro-orm/core";
+import { Club } from "./club.entity.js";
 
 @Entity()
 export class User {
@@ -25,6 +28,9 @@ export class User {
 
 	@Property({ type: "text", nullable: true })
 	image?: string;
+
+	@ManyToOne()
+	clubAdmin?: Rel<Club>;
 
 	@Property({
 		fieldName: "createdAt",

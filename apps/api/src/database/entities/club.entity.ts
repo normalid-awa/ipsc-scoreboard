@@ -10,6 +10,7 @@ import {
 } from "@mikro-orm/core";
 import { Image } from "./image.entity.js";
 import { ShooterProfile } from "./shooterProfile.entity.js";
+import { User } from "./user.entity.js";
 
 export const enum ThirdPartyPlatform {}
 
@@ -47,6 +48,12 @@ export class Club {
 
 	@OneToMany(() => ShooterProfile, (shooterProfile) => shooterProfile.club)
 	members = new Collection<ShooterProfile>(this);
+
+	@OneToOne()
+	owner!: User;
+
+	@OneToMany(() => User, (user) => user.clubAdmin)
+	admins = new Collection<ShooterProfile>(this);
 
 	@Property()
 	createdAt = new Date();

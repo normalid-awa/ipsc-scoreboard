@@ -52,6 +52,15 @@
           "nullable": true,
           "mappedType": "text"
         },
+        "club_admin_id": {
+          "name": "club_admin_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp(6)",
@@ -100,7 +109,22 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {},
+      "foreignKeys": {
+        "user_club_admin_id_foreign": {
+          "constraintName": "user_club_admin_id_foreign",
+          "columnNames": [
+            "club_admin_id"
+          ],
+          "localTableName": "public.user",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.club",
+          "createForeignKeyConstraint": true,
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      },
       "nativeEnums": {
         "uspsa_scoring_method": {
           "name": "uspsa_scoring_method",
@@ -785,6 +809,15 @@
           "nullable": false,
           "mappedType": "uuid"
         },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamptz",
@@ -815,6 +848,16 @@
           ],
           "composite": false,
           "keyName": "club_banner_uuid_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "owner_id"
+          ],
+          "composite": false,
+          "keyName": "club_owner_id_unique",
           "constraint": true,
           "primary": false,
           "unique": true
@@ -855,6 +898,19 @@
             "uuid"
           ],
           "referencedTableName": "public.image",
+          "createForeignKeyConstraint": true,
+          "updateRule": "cascade"
+        },
+        "club_owner_id_foreign": {
+          "constraintName": "club_owner_id_foreign",
+          "columnNames": [
+            "owner_id"
+          ],
+          "localTableName": "public.club",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
           "createForeignKeyConstraint": true,
           "updateRule": "cascade"
         }
