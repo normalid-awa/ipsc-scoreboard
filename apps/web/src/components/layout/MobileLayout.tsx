@@ -46,8 +46,10 @@ export default function MobileLayout(props: LayoutProps) {
 					mobileLayout
 				/>
 			</HideOnScroll>
-			<Toolbar />
-			<Paper sx={{ p: 1 }}>{props.children}</Paper>
+			<Paper sx={{ p: 1, minHeight: "100vh" }}>
+				<Toolbar />
+				{props.children}
+			</Paper>
 		</>
 	);
 }
