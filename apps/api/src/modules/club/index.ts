@@ -14,7 +14,7 @@ import {
 	serializeOffsetBasedPaginationResult,
 } from "@/util/offsetBasedPagination.js";
 import { convertQueryFilter, QueryFilter } from "@/util/queryFilter.js";
-import { rel } from "@mikro-orm/core";
+import { ref, rel } from "@mikro-orm/core";
 import { Elysia, status, t } from "elysia";
 
 export const createClubDto = t.Object({
@@ -333,6 +333,49 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 			params: t.Object({
 				clubId: t.Integer(),
 				userId: t.String({ format: "uuid" }),
+			}),
+		},
+	)
+	//kick member from club
+	.post(
+		"/:clubId/kickMember/:shooterProfileId",
+		async ({
+			user: { id: operatorUserId },
+			params: { clubId, shooterProfileId },
+		}) => {
+			const club = await orm.em.findOne(
+				Club,
+				{
+					id: clubId,
+				},
+				{
+					populate: ["admins", "members:ref"],
+				},
+			);
+			if (!club) return status(404);
+
+			if (
+				club.owner.id != operatorUserId &&
+				!club.admins.exists((a) => a.id == operatorUserId)
+			) {
+				return status(403);
+			}
+
+			const shooterProfileInClub = club.members.find(
+				(p) => p.id == shooterProfileId,
+			);
+			if (!shooterProfileInClub)
+				return status(404, "Not Found: Shooter not found in this club");
+
+			club.members.remove(shooterProfileInClub);
+			await orm.em.flush();
+			return status(204);
+		},
+		{
+			requiredAuth: true,
+			params: t.Object({
+				clubId: t.Integer(),
+				shooterProfileId: t.Integer(),
 			}),
 		},
 	)
