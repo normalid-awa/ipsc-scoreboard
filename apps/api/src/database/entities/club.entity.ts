@@ -81,10 +81,10 @@ export class JoinClubRequest {
 	@PrimaryKey({ type: "uuid", defaultRaw: "gen_random_uuid()" })
 	uuid!: string;
 
-	@ManyToOne({ cascade: [Cascade.REMOVE] })
+	@ManyToOne({ cascade: [Cascade.PERSIST] })
 	club!: Club;
 
-	@OneToOne({ cascade: [Cascade.REMOVE] })
+	@OneToOne({ cascade: [Cascade.PERSIST] })
 	from!: ShooterProfile;
 
 	@Property()
