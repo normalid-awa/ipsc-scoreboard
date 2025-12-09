@@ -1,3 +1,4 @@
+import { SportEnum } from "@/sport.js";
 import {
 	Cascade,
 	Collection,
@@ -9,11 +10,11 @@ import {
 	OneToOne,
 	PrimaryKey,
 	Property,
+	type Rel,
 } from "@mikro-orm/core";
 import { Image } from "./image.entity.js";
 import { ShooterProfile } from "./shooterProfile.entity.js";
 import { User } from "./user.entity.js";
-import { SportEnum } from "@/sport.js";
 
 export enum ThirdPartyPlatform {
 	Instagram = "Instagram",
@@ -63,8 +64,8 @@ export class Club {
 	@OneToMany(() => ShooterProfile, (shooterProfile) => shooterProfile.club)
 	members = new Collection<ShooterProfile>(this);
 
-	@OneToOne()
-	owner!: User;
+	@ManyToOne()
+	owner!: Rel<User>;
 
 	@OneToMany(() => JoinClubRequest, (request) => request.club)
 	pendingRequests = new Collection<JoinClubRequest>(this);

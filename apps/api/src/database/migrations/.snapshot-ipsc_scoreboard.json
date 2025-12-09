@@ -120,7 +120,6 @@
             "id"
           ],
           "referencedTableName": "public.club",
-          "createForeignKeyConstraint": true,
           "deleteRule": "set null",
           "updateRule": "cascade"
         }
@@ -383,7 +382,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "updateRule": "cascade"
         }
       },
@@ -534,7 +532,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }
@@ -658,7 +655,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "updateRule": "cascade"
         }
       },
@@ -751,7 +747,6 @@
             "id"
           ],
           "referencedTableName": "public.stage",
-          "createForeignKeyConstraint": true,
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
@@ -765,7 +760,6 @@
             "uuid"
           ],
           "referencedTableName": "public.image",
-          "createForeignKeyConstraint": true,
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }
@@ -919,16 +913,6 @@
           "unique": true
         },
         {
-          "columnNames": [
-            "owner_id"
-          ],
-          "composite": false,
-          "keyName": "club_owner_id_unique",
-          "constraint": true,
-          "primary": false,
-          "unique": true
-        },
-        {
           "keyName": "club_pkey",
           "columnNames": [
             "id"
@@ -951,7 +935,6 @@
             "uuid"
           ],
           "referencedTableName": "public.image",
-          "createForeignKeyConstraint": true,
           "updateRule": "cascade"
         },
         "club_banner_uuid_foreign": {
@@ -964,7 +947,6 @@
             "uuid"
           ],
           "referencedTableName": "public.image",
-          "createForeignKeyConstraint": true,
           "deleteRule": "set null",
           "updateRule": "cascade"
         },
@@ -978,7 +960,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "updateRule": "cascade"
         }
       },
@@ -1145,7 +1126,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "deleteRule": "set null",
           "updateRule": "cascade"
         },
@@ -1159,7 +1139,6 @@
             "uuid"
           ],
           "referencedTableName": "public.image",
-          "createForeignKeyConstraint": true,
           "deleteRule": "set null",
           "updateRule": "cascade"
         },
@@ -1173,7 +1152,6 @@
             "id"
           ],
           "referencedTableName": "public.club",
-          "createForeignKeyConstraint": true,
           "deleteRule": "set null",
           "updateRule": "cascade"
         }
@@ -1228,7 +1206,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "mappedType": "integer"
         },
         "from_id": {
@@ -1237,7 +1215,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "mappedType": "integer"
         },
         "created_at": {
@@ -1287,8 +1265,7 @@
             "id"
           ],
           "referencedTableName": "public.club",
-          "createForeignKeyConstraint": true,
-          "deleteRule": "cascade"
+          "updateRule": "cascade"
         },
         "join_club_request_from_id_foreign": {
           "constraintName": "join_club_request_from_id_foreign",
@@ -1300,8 +1277,7 @@
             "id"
           ],
           "referencedTableName": "public.shooter_profile",
-          "createForeignKeyConstraint": true,
-          "deleteRule": "cascade"
+          "updateRule": "cascade"
         }
       },
       "nativeEnums": {
@@ -1487,7 +1463,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }
