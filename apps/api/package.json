@@ -22,28 +22,28 @@
 	"license": "ISC",
 	"dependencies": {
 		"@elysiajs/cors": "^1.4.0",
-		"@elysiajs/node": "^1.4.0",
-		"@faker-js/faker": "^10.0.0",
-		"@hono/node-server": "^1.19.4",
-		"@mikro-orm/core": "^6.5.6",
-		"@mikro-orm/migrations": "^6.5.6",
-		"@mikro-orm/postgresql": "^6.5.6",
-		"@mikro-orm/reflection": "^6.5.6",
-		"@mikro-orm/seeder": "^6.5.6",
+		"@elysiajs/node": "^1.4.2",
+		"@faker-js/faker": "^10.1.0",
+		"@hono/node-server": "^1.19.7",
+		"@mikro-orm/core": "^6.6.2",
+		"@mikro-orm/migrations": "^6.6.2",
+		"@mikro-orm/postgresql": "^6.6.2",
+		"@mikro-orm/reflection": "^6.6.2",
+		"@mikro-orm/seeder": "^6.6.2",
 		"@sinclair/typebox": "^0.34.41",
 		"better-auth-mikro-orm": "^0.4.3",
-		"dotenv": "^17.2.2",
-		"elysia": "1.4.8",
+		"dotenv": "^17.2.3",
+		"elysia": "1.4.18",
 		"mikro-orm-soft-delete": "^1.0.0-alpha.1",
-		"nodemailer": "^7.0.6"
+		"nodemailer": "^7.0.11"
 	},
 	"devDependencies": {
-		"@mikro-orm/cli": "^6.5.6",
-		"@types/nodemailer": "^7.0.1",
+		"@mikro-orm/cli": "^6.6.2",
+		"@types/nodemailer": "^7.0.4",
 		"ts-node": "^10.9.2",
 		"ts-patch": "^3.3.0",
 		"typescript-transform-paths": "^3.5.5",
-		"vitest": "^3.2.4"
+		"vitest": "^4.0.15"
 	},
 	"mikro-orm": {
 		"configPaths": [
