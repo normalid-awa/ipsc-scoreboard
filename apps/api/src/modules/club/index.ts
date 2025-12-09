@@ -8,6 +8,7 @@ import { ShooterProfile } from "@/database/entities/shooterProfile.entity.js";
 import { User } from "@/database/entities/user.entity.js";
 import orm from "@/database/orm.js";
 import { authPlugin } from "@/plugins/auth.js";
+import { SportEnum } from "@/sport.js";
 import {
 	OffsetBasedPaginationSchema,
 	parseOffsetBasedPaginationParams,
@@ -20,6 +21,7 @@ import { Elysia, status, t } from "elysia";
 export const createClubDto = t.Object({
 	name: t.String(),
 	description: t.Optional(t.String()),
+	sport: t.Enum(SportEnum),
 	thirdPartyLinks: t.Optional(
 		t.ArrayString(
 			t.Object({
@@ -190,7 +192,10 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 			params: t.Object({
 				clubId: t.Integer(),
 			}),
-			body: t.Partial(createClubDto),
+			body: t.Omit(
+				t.Partial(createClubDto),
+				t.Union([t.Literal("sport")]),
+			),
 		},
 	)
 	//request joining a club
@@ -241,6 +246,12 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 				return status(
 					409,
 					"Conflict: You've already requested to join this club",
+				);
+
+			if (club.sport !== shooterProfile.sport)
+				return status(
+					409,
+					"Conflict: Shooter's sport not match with club's sport",
 				);
 
 			const request = new JoinClubRequest();

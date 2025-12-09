@@ -13,6 +13,7 @@ import {
 import { Image } from "./image.entity.js";
 import { ShooterProfile } from "./shooterProfile.entity.js";
 import { User } from "./user.entity.js";
+import { SportEnum } from "@/sport.js";
 
 export enum ThirdPartyPlatform {
 	Instagram = "Instagram",
@@ -43,6 +44,9 @@ export class Club {
 
 	@Property()
 	name!: string;
+
+	@Enum({ items: () => SportEnum, nativeEnumName: "sports" })
+	sport!: SportEnum;
 
 	@Property({ type: "text" })
 	description?: string;

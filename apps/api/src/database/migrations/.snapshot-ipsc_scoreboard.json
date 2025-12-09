@@ -135,6 +135,16 @@
             "Fixed Time"
           ]
         },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
@@ -387,6 +397,16 @@
             "Fixed Time"
           ]
         },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
@@ -529,6 +549,16 @@
             "Fixed Time"
           ]
         },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
@@ -642,6 +672,16 @@
             "Fixed Time"
           ]
         },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
@@ -740,6 +780,16 @@
             "Fixed Time"
           ]
         },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
@@ -772,6 +822,22 @@
           "nullable": false,
           "length": 255,
           "mappedType": "string"
+        },
+        "sport": {
+          "name": "sport",
+          "type": "sports",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "nativeEnumName": "sports",
+          "enumItems": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ],
+          "mappedType": "enum"
         },
         "description": {
           "name": "description",
@@ -924,6 +990,16 @@
             "Comstock",
             "Virginia Count",
             "Fixed Time"
+          ]
+        },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
           ]
         },
         "shooter_profile_sport": {
@@ -1112,6 +1188,16 @@
             "Fixed Time"
           ]
         },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
@@ -1142,7 +1228,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "integer"
         },
         "from_id": {
@@ -1151,7 +1237,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "integer"
         },
         "created_at": {
@@ -1202,7 +1288,7 @@
           ],
           "referencedTableName": "public.club",
           "createForeignKeyConstraint": true,
-          "updateRule": "cascade"
+          "deleteRule": "cascade"
         },
         "join_club_request_from_id_foreign": {
           "constraintName": "join_club_request_from_id_foreign",
@@ -1215,7 +1301,7 @@
           ],
           "referencedTableName": "public.shooter_profile",
           "createForeignKeyConstraint": true,
-          "updateRule": "cascade"
+          "deleteRule": "cascade"
         }
       },
       "nativeEnums": {
@@ -1226,6 +1312,16 @@
             "Comstock",
             "Virginia Count",
             "Fixed Time"
+          ]
+        },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
           ]
         },
         "shooter_profile_sport": {
@@ -1406,6 +1502,16 @@
             "Fixed Time"
           ]
         },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
@@ -1507,6 +1613,16 @@
             "Fixed Time"
           ]
         },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
@@ -1528,6 +1644,16 @@
         "Comstock",
         "Virginia Count",
         "Fixed Time"
+      ]
+    },
+    "sports": {
+      "name": "sports",
+      "schema": "public",
+      "items": [
+        "IPSC",
+        "IDPA",
+        "USPSA",
+        "AAIPSC"
       ]
     },
     "shooter_profile_sport": {
