@@ -1,29 +1,22 @@
-import { createAuthClient } from "better-auth/react";
-import LoginForm from "../components/LoginForm";
-import { ReactElement } from "react";
+import env from "@/env";
 import Card from "@mui/material/Card";
+import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
+import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Skeleton from "@mui/material/Skeleton";
 import {
 	emailOTPClient,
-	usernameClient,
-	organizationClient,
 	multiSessionClient,
+	usernameClient,
 } from "better-auth/client/plugins";
-import env from "@/env";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
+import { createAuthClient } from "better-auth/react";
+import { ReactElement } from "react";
+import LoginForm from "../components/LoginForm";
 
 export const authClient = createAuthClient({
 	baseURL: env.VITE_BACKEND_API_URL,
-	plugins: [
-		usernameClient(),
-		emailOTPClient(),
-		multiSessionClient(),
-		organizationClient(),
-	],
+	plugins: [usernameClient(), emailOTPClient(), multiSessionClient()],
 });
 export const { signIn, signUp, useSession } = authClient;
 

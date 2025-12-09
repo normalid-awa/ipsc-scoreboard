@@ -68,3 +68,5 @@ export { type Loaded } from "@mikro-orm/postgresql";
 export { type PaginatedResult } from "./util/offsetBasedPagination.js";
 
 export { type ShooterProfile } from "./database/entities/shooterProfile.entity.js";
+
+export { type Club } from "./database/entities/club.entity.js";

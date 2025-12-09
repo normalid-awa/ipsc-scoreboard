@@ -1,3 +1,5 @@
+# This project is still in dev stage, so any breaking changes is possible, and might cause data loss during database migration
+
 # Development Setup
 1. run `npm install` in the root directory.
 2. Generate SSL certificate and place `server.crt`, `server.key` and `ca.crt` files in the root directory.

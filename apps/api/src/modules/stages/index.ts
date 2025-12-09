@@ -341,7 +341,7 @@ export const stagesRoute = new Elysia({
 			return stage;
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			body: createIpscStageSchema,
 		},
 	)
@@ -360,7 +360,7 @@ export const stagesRoute = new Elysia({
 			return stage;
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			body: createIdpaStageSchema,
 		},
 	)
@@ -379,7 +379,7 @@ export const stagesRoute = new Elysia({
 			return stage;
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			body: createAaipscStageSchema,
 		},
 	)
@@ -399,7 +399,7 @@ export const stagesRoute = new Elysia({
 			return stage;
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			body: createUspsaStageSchema,
 		},
 	)
@@ -414,7 +414,7 @@ export const stagesRoute = new Elysia({
 			>(params.id, body, user.id, SportEnum.IPSC);
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			params: t.Object({ id: t.Integer() }),
 			body: t.Partial(createIpscStageSchema),
 		},
@@ -428,7 +428,7 @@ export const stagesRoute = new Elysia({
 			>(params.id, body, user.id, SportEnum.IDPA);
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			params: t.Object({ id: t.Integer() }),
 			body: t.Partial(createIdpaStageSchema),
 		},
@@ -442,7 +442,7 @@ export const stagesRoute = new Elysia({
 			>(params.id, body, user.id, SportEnum.AAIPSC);
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			params: t.Object({ id: t.Integer() }),
 			body: t.Partial(createAaipscStageSchema),
 		},
@@ -456,7 +456,7 @@ export const stagesRoute = new Elysia({
 			>(params.id, body, user.id, SportEnum.USPSA);
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			params: t.Object({ id: t.Integer() }),
 			body: t.Partial(createUspsaStageSchema),
 		},
@@ -472,7 +472,7 @@ export const stagesRoute = new Elysia({
 			return status(204);
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			params: t.Object({ id: t.Integer() }),
 		},
 	);
