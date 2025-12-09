@@ -98,25 +98,32 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 		"/",
 		async ({ user, body }) => {
 			const userManagedClub = await orm.em.count(Club, {
-				$or: [
+				$and: [
 					{
-						owner: {
-							id: user.id,
-						},
+						$or: [
+							{
+								owner: {
+									id: user.id,
+								},
+							},
+							{
+								admins: {
+									$some: {
+										id: user.id,
+									},
+								},
+							},
+						],
 					},
 					{
-						admins: {
-							$some: {
-								id: user.id,
-							},
-						},
+						sport: body.sport,
 					},
 				],
 			});
 			if (userManagedClub > 0) {
 				return status(
 					409,
-					"Conflict: You should not manage other club while creating another club",
+					"Conflict: You should not manage other club while creating another club or create a club that has same sport as the club that you are mangaging",
 				);
 			}
 

@@ -1,11 +1,9 @@
 import {
 	Cascade,
-	Collection,
 	Config,
 	DefineConfig,
 	Entity,
 	ManyToOne,
-	OneToMany,
 	type Opt,
 	PrimaryKey,
 	Property,

@@ -1,6 +1,10 @@
-import { createServerOnlyFn } from "@tanstack/react-start";
-import { getRequest } from "@tanstack/react-start/server";
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { getRequestHeader } from "@tanstack/react-start/server";
 
-export const getHeaders = createServerOnlyFn(() => {
-	return getRequest();
-});
+export const getCookie = createIsomorphicFn()
+	.client(() => {
+		return document.cookie;
+	})
+	.server(() => {
+		return getRequestHeader("Cookie") ?? "";
+	});

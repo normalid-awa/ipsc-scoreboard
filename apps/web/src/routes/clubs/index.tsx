@@ -2,7 +2,7 @@ import { authClient } from "@/auth/auth.client";
 import { FeaturePlaceHolder } from "@/components/FeaturePlaceholder";
 import env from "@/env";
 import { ListedRouteStaticData } from "@/router";
-import { getHeaders } from "@/utils/getHeaders";
+import { getCookie } from "@/utils/getHeaders";
 import { getImageUrlFromId } from "@/utils/imageApi";
 import { EntityDTO, ShooterProfile } from "@ipsc_scoreboard/api";
 import Diversity2Icon from "@mui/icons-material/Diversity2";
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/clubs/")({
 		const session = await authClient.getSession({
 			fetchOptions: {
 				headers: {
-					Cookie: getHeaders().headers.get("Cookie")!,
+					Cookie: getCookie(),
 				},
 			},
 		});
@@ -85,6 +85,7 @@ function CurrentClub(props: { shooterProfiles: EntityDTO<ShooterProfile>[] }) {
 				>
 					{props.shooterProfiles.map((profile) => (
 						<Card
+							key={profile.id}
 							elevation={5}
 							sx={{ maxWidth: 450, width: "100%", minWidth: 250 }}
 						>
