@@ -75,7 +75,7 @@ export const Route = createFileRoute("/shooters/")({
 		displayName: "Shooters list",
 		icon: <PeopleIcon />,
 		needAuth: false,
-		order: 1,
+		order: 2,
 	} satisfies ListedRouteStaticData,
 	head: () => ({
 		meta: [{ title: `${env.VITE_TITLE_PREFIX} Shooters list` }],

@@ -15,6 +15,7 @@ import { Route as NewUserRouteImport } from './routes/newUser'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StagesIndexRouteImport } from './routes/stages/index'
 import { Route as ShootersIndexRouteImport } from './routes/shooters/index'
+import { Route as ClubsIndexRouteImport } from './routes/clubs/index'
 import { Route as StagesCreateRouteImport } from './routes/stages/create'
 import { Route as StagesStageIdRouteImport } from './routes/stages/$stageId'
 import { Route as AccountShooterProfileManagementRouteImport } from './routes/account/shooterProfileManagement'
@@ -49,6 +50,11 @@ const StagesIndexRoute = StagesIndexRouteImport.update({
 const ShootersIndexRoute = ShootersIndexRouteImport.update({
   id: '/shooters/',
   path: '/shooters/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClubsIndexRoute = ClubsIndexRouteImport.update({
+  id: '/clubs/',
+  path: '/clubs/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StagesCreateRoute = StagesCreateRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
   '/stages/$stageId': typeof StagesStageIdRoute
   '/stages/create': typeof StagesCreateRoute
+  '/clubs': typeof ClubsIndexRoute
   '/shooters': typeof ShootersIndexRoute
   '/stages': typeof StagesIndexRoute
 }
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
   '/stages/$stageId': typeof StagesStageIdRoute
   '/stages/create': typeof StagesCreateRoute
+  '/clubs': typeof ClubsIndexRoute
   '/shooters': typeof ShootersIndexRoute
   '/stages': typeof StagesIndexRoute
 }
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
   '/stages/$stageId': typeof StagesStageIdRoute
   '/stages/create': typeof StagesCreateRoute
+  '/clubs/': typeof ClubsIndexRoute
   '/shooters/': typeof ShootersIndexRoute
   '/stages/': typeof StagesIndexRoute
 }
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/account/shooterProfileManagement'
     | '/stages/$stageId'
     | '/stages/create'
+    | '/clubs'
     | '/shooters'
     | '/stages'
   fileRoutesByTo: FileRoutesByTo
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/account/shooterProfileManagement'
     | '/stages/$stageId'
     | '/stages/create'
+    | '/clubs'
     | '/shooters'
     | '/stages'
   id:
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/account/shooterProfileManagement'
     | '/stages/$stageId'
     | '/stages/create'
+    | '/clubs/'
     | '/shooters/'
     | '/stages/'
   fileRoutesById: FileRoutesById
@@ -170,6 +182,7 @@ export interface RootRouteChildren {
   AccountShooterProfileManagementRoute: typeof AccountShooterProfileManagementRoute
   StagesStageIdRoute: typeof StagesStageIdRoute
   StagesCreateRoute: typeof StagesCreateRoute
+  ClubsIndexRoute: typeof ClubsIndexRoute
   ShootersIndexRoute: typeof ShootersIndexRoute
   StagesIndexRoute: typeof StagesIndexRoute
 }
@@ -216,6 +229,13 @@ declare module '@tanstack/react-router' {
       path: '/shooters'
       fullPath: '/shooters'
       preLoaderRoute: typeof ShootersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clubs/': {
+      id: '/clubs/'
+      path: '/clubs'
+      fullPath: '/clubs'
+      preLoaderRoute: typeof ClubsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/stages/create': {
@@ -266,6 +286,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountShooterProfileManagementRoute: AccountShooterProfileManagementRoute,
   StagesStageIdRoute: StagesStageIdRoute,
   StagesCreateRoute: StagesCreateRoute,
+  ClubsIndexRoute: ClubsIndexRoute,
   ShootersIndexRoute: ShootersIndexRoute,
   StagesIndexRoute: StagesIndexRoute,
 }
