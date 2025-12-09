@@ -14,14 +14,14 @@ import {
 	serializeOffsetBasedPaginationResult,
 } from "@/util/offsetBasedPagination.js";
 import { convertQueryFilter, QueryFilter } from "@/util/queryFilter.js";
-import { ref, rel } from "@mikro-orm/core";
+import { rel, wrap } from "@mikro-orm/core";
 import { Elysia, status, t } from "elysia";
 
 export const createClubDto = t.Object({
 	name: t.String(),
 	description: t.Optional(t.String()),
 	thirdPartyLinks: t.Optional(
-		t.Array(
+		t.ArrayString(
 			t.Object({
 				platform: t.Enum(ThirdPartyPlatform),
 				link: t.String({ format: "uri" }),
@@ -143,6 +143,54 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 		{
 			requiredAuth: true,
 			body: createClubDto,
+		},
+	)
+	//edit club
+	.patch(
+		"/:clubId",
+		async ({ params: { clubId }, body, user: { id: userId } }) => {
+			const club = await orm.em.findOne(
+				Club,
+				{
+					id: clubId,
+				},
+				{
+					populate: ["admins:ref"],
+				},
+			);
+			if (!club) return status(404);
+			if (
+				club.owner.id != userId &&
+				!club.admins.exists((a) => a.id == userId)
+			) {
+				return status(403);
+			}
+
+			const { icon, banner, ...directApplyProperties } = body;
+			const wrappedClub = wrap(club).assign(directApplyProperties);
+			if (icon) {
+				orm.em.remove(wrappedClub.icon);
+				wrappedClub.icon = await new Image().upload(
+					icon,
+					rel(User, userId),
+				);
+			}
+			if (banner) {
+				if (wrappedClub.banner) orm.em.remove(wrappedClub.banner);
+				wrappedClub.banner = await new Image().upload(
+					banner,
+					rel(User, userId),
+				);
+			}
+			await orm.em.flush();
+			return wrappedClub;
+		},
+		{
+			requiredAuth: true,
+			params: t.Object({
+				clubId: t.Integer(),
+			}),
+			body: t.Partial(createClubDto),
 		},
 	)
 	//request joining a club
