@@ -53,6 +53,13 @@ export function SportFilter(props: {
 			gap={smallVariant ? 0.5 : 1}
 			flexWrap={"wrap"}
 		>
+			<SportFilterChip
+				size={smallVariant ? "small" : "medium"}
+				label={"All"}
+				onEnable={() => props.setFilters([])}
+				enabled={props.filters.length == 0}
+				onDisable={() => {}}
+			/>
 			{Object.values(SportEnum).map((v) => (
 				<SportFilterChip
 					size={smallVariant ? "small" : "medium"}
