@@ -5,6 +5,7 @@ import {
 	Embeddable,
 	Entity,
 	Enum,
+	Formula,
 	ManyToOne,
 	OneToMany,
 	OneToOne,
@@ -63,6 +64,15 @@ export class Club {
 
 	@OneToMany(() => ShooterProfile, (shooterProfile) => shooterProfile.club)
 	members = new Collection<ShooterProfile>(this);
+
+	@Formula(
+		(alias: string) =>
+			`(SELECT COUNT(DISTINCT shooter_profile.id) FROM shooter_profile WHERE shooter_profile.club_id=${alias}.id)`,
+		{
+			type: "numeric",
+		},
+	)
+	membersCount!: number;
 
 	@ManyToOne()
 	owner!: Rel<User>;
