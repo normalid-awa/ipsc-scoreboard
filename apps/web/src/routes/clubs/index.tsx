@@ -33,6 +33,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
+import TablePagination from "@mui/material/TablePagination";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -57,6 +58,7 @@ const clubSearchSchema = z.object({
 		.optional(z.union([z.literal("ASC"), z.literal("DESC")]))
 		.default("DESC"),
 	page: z.optional(z.number()).default(1),
+	limit: z.optional(z.number().min(1).max(100)).default(10),
 });
 
 export const Route = createFileRoute("/clubs/")({
@@ -126,6 +128,8 @@ export const Route = createFileRoute("/clubs/")({
 						],
 					},
 					pagination: {
+						limit: ctx.deps.limit,
+						offset: (ctx.deps.page - 1) * ctx.deps.limit,
 						sortField: ctx.deps.sortBy ?? "createdAt",
 						sortDirection: ctx.deps.sortDirection ?? "DESC",
 					},
@@ -435,12 +439,45 @@ function Clubs(props: { clubs: EntityDTO<Club>[] }) {
 
 function RouteComponent() {
 	const data = Route.useLoaderData();
+	const search = Route.useSearch();
+	const navigate = Route.useNavigate();
 
 	return (
 		<Stack spacing={1}>
 			<CurrentClub shooterProfiles={data.shooterProfiles} />
 			<SearchFilter />
 			<Clubs clubs={data.clubs.items} />
+			<div
+				style={{
+					width: "100%",
+					display: "flex",
+					justifyContent: "center",
+				}}
+			>
+				<TablePagination
+					component="div"
+					count={data.clubs.totalPages * data.clubs.limit}
+					page={search.page - 1}
+					onPageChange={(_, page) =>
+						navigate({
+							search: {
+								...search,
+								page: page + 1,
+							},
+						})
+					}
+					rowsPerPage={search.limit}
+					onRowsPerPageChange={(e) =>
+						navigate({
+							search: {
+								...search,
+								limit: parseInt(e.target.value),
+								page: 1,
+							},
+						})
+					}
+				/>
+			</div>
 		</Stack>
 	);
 }
