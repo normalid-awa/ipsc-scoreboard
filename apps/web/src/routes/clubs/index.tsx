@@ -1,4 +1,5 @@
 import { authClient } from "@/auth/auth.client";
+import { Link } from "@/components/MuiWrapper";
 import { SportFilter } from "@/components/SportFilter";
 import env from "@/env";
 import { ListedRouteStaticData } from "@/router";
@@ -357,7 +358,7 @@ function ClubCard({ club }: { club: EntityDTO<Club> }) {
 			}}
 			elevation={5}
 		>
-			<CardActionArea LinkComponent={"a"}>
+			<CardActionArea LinkComponent={Link} href={`./${club.id}`}>
 				<Grid container spacing={1}>
 					<Grid size={compact ? 12 : "auto"}>
 						<Box

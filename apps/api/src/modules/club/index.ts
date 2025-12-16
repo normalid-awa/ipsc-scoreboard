@@ -62,12 +62,12 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 		},
 	)
 	.get(
-		"/:id",
-		async ({ params: { id }, user }) => {
+		"/:clubId",
+		async ({ params: { clubId }, user }) => {
 			const club = await orm.em.findOne(
 				Club,
 				{
-					id,
+					id: clubId,
 				},
 				{
 					populate: ["admins:ref"],
@@ -88,7 +88,7 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 			return club;
 		},
 		{
-			params: t.Object({ id: t.Numeric({ minimum: 1 }) }),
+			params: t.Object({ clubId: t.Numeric({ minimum: 1 }) }),
 			isAuth: true,
 		},
 	)
@@ -446,10 +446,10 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 		},
 	)
 	.delete(
-		"/:id",
-		async ({ user, params: { id } }) => {
+		"/:clubId",
+		async ({ user, params: { clubId } }) => {
 			const club = await orm.em.findOne(Club, {
-				id,
+				id: clubId,
 			});
 			if (!club) return status(404);
 			if (club.owner.id != user.id)
@@ -460,7 +460,7 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 		{
 			requiredAuth: true,
 			params: t.Object({
-				id: t.Number(),
+				clubId: t.Number(),
 			}),
 		},
 	);
