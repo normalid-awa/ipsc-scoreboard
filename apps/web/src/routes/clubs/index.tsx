@@ -106,6 +106,11 @@ export const Route = createFileRoute("/clubs/")({
 						operator: "and",
 						value: [
 							{
+								field: "members",
+								operator: "nin",
+								value: shooterProfiles?.map((v) => v.id) ?? [],
+							},
+							{
 								operator: "or",
 								value: [
 									...wrapArray(!!ctx.deps.search, {

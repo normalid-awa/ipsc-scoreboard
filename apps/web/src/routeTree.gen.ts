@@ -18,6 +18,7 @@ import { Route as ShootersIndexRouteImport } from './routes/shooters/index'
 import { Route as ClubsIndexRouteImport } from './routes/clubs/index'
 import { Route as StagesCreateRouteImport } from './routes/stages/create'
 import { Route as StagesStageIdRouteImport } from './routes/stages/$stageId'
+import { Route as ClubsClubIdRouteImport } from './routes/clubs/$clubId'
 import { Route as AccountShooterProfileManagementRouteImport } from './routes/account/shooterProfileManagement'
 import { Route as AccountResetPasswordRouteImport } from './routes/account/resetPassword'
 import { Route as AccountManagementRouteImport } from './routes/account/management'
@@ -67,6 +68,11 @@ const StagesStageIdRoute = StagesStageIdRouteImport.update({
   path: '/stages/$stageId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClubsClubIdRoute = ClubsClubIdRouteImport.update({
+  id: '/clubs/$clubId',
+  path: '/clubs/$clubId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountShooterProfileManagementRoute =
   AccountShooterProfileManagementRouteImport.update({
     id: '/account/shooterProfileManagement',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/clubs/$clubId': typeof ClubsClubIdRoute
   '/stages/$stageId': typeof StagesStageIdRoute
   '/stages/create': typeof StagesCreateRoute
   '/clubs': typeof ClubsIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/clubs/$clubId': typeof ClubsClubIdRoute
   '/stages/$stageId': typeof StagesStageIdRoute
   '/stages/create': typeof StagesCreateRoute
   '/clubs': typeof ClubsIndexRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/account/management': typeof AccountManagementRoute
   '/account/resetPassword': typeof AccountResetPasswordRoute
   '/account/shooterProfileManagement': typeof AccountShooterProfileManagementRoute
+  '/clubs/$clubId': typeof ClubsClubIdRoute
   '/stages/$stageId': typeof StagesStageIdRoute
   '/stages/create': typeof StagesCreateRoute
   '/clubs/': typeof ClubsIndexRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/clubs/$clubId'
     | '/stages/$stageId'
     | '/stages/create'
     | '/clubs'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/clubs/$clubId'
     | '/stages/$stageId'
     | '/stages/create'
     | '/clubs'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/account/management'
     | '/account/resetPassword'
     | '/account/shooterProfileManagement'
+    | '/clubs/$clubId'
     | '/stages/$stageId'
     | '/stages/create'
     | '/clubs/'
@@ -180,6 +192,7 @@ export interface RootRouteChildren {
   AccountManagementRoute: typeof AccountManagementRoute
   AccountResetPasswordRoute: typeof AccountResetPasswordRoute
   AccountShooterProfileManagementRoute: typeof AccountShooterProfileManagementRoute
+  ClubsClubIdRoute: typeof ClubsClubIdRoute
   StagesStageIdRoute: typeof StagesStageIdRoute
   StagesCreateRoute: typeof StagesCreateRoute
   ClubsIndexRoute: typeof ClubsIndexRoute
@@ -252,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StagesStageIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/clubs/$clubId': {
+      id: '/clubs/$clubId'
+      path: '/clubs/$clubId'
+      fullPath: '/clubs/$clubId'
+      preLoaderRoute: typeof ClubsClubIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/shooterProfileManagement': {
       id: '/account/shooterProfileManagement'
       path: '/account/shooterProfileManagement'
@@ -284,6 +304,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountManagementRoute: AccountManagementRoute,
   AccountResetPasswordRoute: AccountResetPasswordRoute,
   AccountShooterProfileManagementRoute: AccountShooterProfileManagementRoute,
+  ClubsClubIdRoute: ClubsClubIdRoute,
   StagesStageIdRoute: StagesStageIdRoute,
   StagesCreateRoute: StagesCreateRoute,
   ClubsIndexRoute: ClubsIndexRoute,
