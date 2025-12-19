@@ -1,13 +1,16 @@
+import { api } from "@/api";
+import { authClient } from "@/auth/auth.client";
 import { FeaturePlaceHolder } from "@/components/FeaturePlaceholder";
 import env from "@/env";
+import { getCookie } from "@/utils/getHeaders";
 import { getImageUrlFromId } from "@/utils/imageApi";
 import { Club, EntityDTO, Loaded, ShooterProfile } from "@ipsc_scoreboard/api";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
@@ -38,13 +41,52 @@ export const Route = createFileRoute("/clubs/$clubId")({
 				},
 			})
 		).data as unknown as EntityDTO<Loaded<Club, "members">>;
+
+		const session = await authClient.getSession({
+			fetchOptions: {
+				headers: {
+					Cookie: getCookie(),
+				},
+			},
+		});
+
+		const shooterProfile = session.data?.user
+			? (
+					await ctx.context.api["shooter-profile"].get({
+						query: {
+							filter: {
+								operator: "and",
+								value: [
+									{
+										field: "user.id",
+										operator: "eq",
+										value: session.data?.user.id,
+									},
+									{
+										field: "club.id",
+										operator: "eq",
+										value: club.id,
+									},
+								],
+							},
+							populate: ["club"],
+						},
+					})
+				).data?.items
+			: [];
+
 		if (!club) throw notFound();
-		return club;
+		return {
+			club,
+			shooterProfile: shooterProfile?.[0] as
+				| EntityDTO<ShooterProfile>
+				| undefined,
+		};
 	},
 	head: (ctx) => ({
 		meta: [
 			{
-				title: `${env.VITE_TITLE_PREFIX} Viewing Club: ${ctx.loaderData?.name}`,
+				title: `${env.VITE_TITLE_PREFIX} Viewing Club: ${ctx.loaderData?.club.name}`,
 			},
 		],
 	}),
@@ -88,10 +130,38 @@ function ClubStatistics() {
 const ICON_SIZE = 120;
 
 function RouteComponent() {
-	const club = Route.useLoaderData();
+	const { club, shooterProfile } = Route.useLoaderData();
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const confirm = useConfirm();
+
+	function joinClub() {}
+
+	async function leaveClub() {
+		if (
+			!(await confirm({
+				title: "Leave Club",
+				content: `Are you sure you want to leave ${club.name}?`,
+			})) &&
+			!shooterProfile
+		)
+			return;
+
+		await api
+			.club({
+				clubId: club.id,
+			})
+			.leave.post({
+				shooterProfile: shooterProfile!.id,
+			});
+
+		confirm({
+			title: "Left Club",
+			content: `You have left ${club.name}.`,
+			hideCancelButton: true,
+		});
+		navigate({});
+	}
 
 	return (
 		<Container maxWidth="md">
@@ -141,6 +211,16 @@ function RouteComponent() {
 									club.sport
 								}
 							</Typography>
+							<Button
+								variant="outlined"
+								sx={{ mx: 2 }}
+								color={shooterProfile ? "error" : "primary"}
+								onClick={shooterProfile ? leaveClub : joinClub}
+							>
+								{shooterProfile
+									? "Leave Club"
+									: "Request to join"}
+							</Button>
 						</Stack>
 						<Card
 							variant="outlined"
