@@ -26,6 +26,10 @@ const createShooterDto = t.Object({
 	),
 });
 
+export const shooterProfilePopulateSchema = t.Array(
+	t.UnionEnum(["club"] as const),
+);
+
 export const shooterProfileRoute = new Elysia({
 	prefix: "/shooter-profile",
 })
@@ -36,7 +40,10 @@ export const shooterProfileRoute = new Elysia({
 			const [shooterProfiles, totalCount] = await orm.em.findAndCount(
 				ShooterProfile,
 				convertQueryFilter<ShooterProfile>(query.filter),
-				parseOffsetBasedPaginationParams(query.pagination),
+				{
+					...parseOffsetBasedPaginationParams(query.pagination),
+					populate: query.populate,
+				},
 			);
 			return serializeOffsetBasedPaginationResult(
 				shooterProfiles,
@@ -48,6 +55,7 @@ export const shooterProfileRoute = new Elysia({
 			query: t.Object({
 				pagination: t.Optional(OffsetBasedPaginationSchema),
 				filter: t.Optional(QueryFilter),
+				populate: t.Optional(shooterProfilePopulateSchema),
 			}),
 		},
 	)
@@ -101,7 +109,7 @@ export const shooterProfileRoute = new Elysia({
 			return shooterProfile;
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			body: createShooterDto,
 		},
 	)
@@ -146,7 +154,7 @@ export const shooterProfileRoute = new Elysia({
 			return shooterProfile;
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			params: t.Object({ id: t.Numeric({ minimum: 1 }) }),
 			body: t.Partial(createShooterDto),
 		},
@@ -165,7 +173,7 @@ export const shooterProfileRoute = new Elysia({
 			return status(204);
 		},
 		{
-			isAuth: true,
+			requiredAuth: true,
 			params: t.Object({ id: t.Numeric({ minimum: 1 }) }),
 		},
 	);

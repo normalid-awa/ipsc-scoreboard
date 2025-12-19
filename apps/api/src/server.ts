@@ -12,6 +12,7 @@ import { serve } from "@hono/node-server";
 import { createServer } from "node:https";
 import { readFileSync } from "node:fs";
 import { stagesRoute } from "./modules/stages/index.js";
+import { clubRoute } from "./modules/club/index.js";
 
 export const app = new Elysia({
 	adapter: node(),
@@ -34,6 +35,7 @@ export const app = new Elysia({
 	.use(shooterProfileRoute)
 	.use(stagesRoute)
 	.use(imageRoute)
+	.use(clubRoute)
 	.compile();
 
 serve({

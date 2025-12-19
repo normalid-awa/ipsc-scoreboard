@@ -12,6 +12,7 @@ export function FeaturePlaceHolder(props: { name: string }) {
 				alignItems: "center",
 				justifyContent: "center",
 				flexDirection: "column",
+				overflow: "auto",
 			}}
 		>
 			<ConstructionIcon sx={{ fontSize: 100 }} />

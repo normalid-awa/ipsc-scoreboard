@@ -25,113 +25,6 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "logo": {
-          "name": "logo",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp(6)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "metadata": {
-          "name": "metadata",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        }
-      },
-      "name": "organization",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": [
-            "slug"
-          ],
-          "composite": false,
-          "keyName": "organization_slug_key",
-          "constraint": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "organization_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {},
-      "nativeEnums": {
-        "uspsa_scoring_method": {
-          "name": "uspsa_scoring_method",
-          "schema": "public",
-          "items": [
-            "Comstock",
-            "Virginia Count",
-            "Fixed Time"
-          ]
-        },
-        "shooter_profile_sport": {
-          "name": "shooter_profile_sport",
-          "schema": "public",
-          "items": [
-            "IPSC",
-            "IDPA",
-            "USPSA",
-            "AAIPSC"
-          ]
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "gen_random_uuid()",
-          "mappedType": "uuid"
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
         "email": {
           "name": "email",
           "type": "text",
@@ -158,6 +51,15 @@
           "primary": false,
           "nullable": true,
           "mappedType": "text"
+        },
+        "club_admin_id": {
+          "name": "club_admin_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         },
         "createdAt": {
           "name": "createdAt",
@@ -207,7 +109,21 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {},
+      "foreignKeys": {
+        "user_club_admin_id_foreign": {
+          "constraintName": "user_club_admin_id_foreign",
+          "columnNames": [
+            "club_admin_id"
+          ],
+          "localTableName": "public.user",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.club",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      },
       "nativeEnums": {
         "uspsa_scoring_method": {
           "name": "uspsa_scoring_method",
@@ -216,6 +132,16 @@
             "Comstock",
             "Virginia Count",
             "Fixed Time"
+          ]
+        },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
           ]
         },
         "shooter_profile_sport": {
@@ -456,7 +382,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "updateRule": "cascade"
         }
       },
@@ -468,6 +393,16 @@
             "Comstock",
             "Virginia Count",
             "Fixed Time"
+          ]
+        },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
           ]
         },
         "shooter_profile_sport": {
@@ -559,15 +494,6 @@
           "primary": false,
           "nullable": false,
           "mappedType": "uuid"
-        },
-        "active_organization": {
-          "name": "active_organization",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
         }
       },
       "name": "session",
@@ -606,7 +532,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }
@@ -621,256 +546,14 @@
             "Fixed Time"
           ]
         },
-        "shooter_profile_sport": {
-          "name": "shooter_profile_sport",
+        "sports": {
+          "name": "sports",
           "schema": "public",
           "items": [
             "IPSC",
             "IDPA",
             "USPSA",
             "AAIPSC"
-          ]
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "gen_random_uuid()",
-          "mappedType": "uuid"
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "role": {
-          "name": "role",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp(6)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        }
-      },
-      "name": "member",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "member_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "member_organization_id_foreign": {
-          "constraintName": "member_organization_id_foreign",
-          "columnNames": [
-            "organization_id"
-          ],
-          "localTableName": "public.member",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.organization",
-          "createForeignKeyConstraint": true,
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        },
-        "member_user_id_foreign": {
-          "constraintName": "member_user_id_foreign",
-          "columnNames": [
-            "user_id"
-          ],
-          "localTableName": "public.member",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      },
-      "nativeEnums": {
-        "uspsa_scoring_method": {
-          "name": "uspsa_scoring_method",
-          "schema": "public",
-          "items": [
-            "Comstock",
-            "Virginia Count",
-            "Fixed Time"
-          ]
-        },
-        "shooter_profile_sport": {
-          "name": "shooter_profile_sport",
-          "schema": "public",
-          "items": [
-            "IPSC",
-            "IDPA",
-            "USPSA",
-            "AAIPSC"
-          ]
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "gen_random_uuid()",
-          "mappedType": "uuid"
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "role": {
-          "name": "role",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "expiresAt": {
-          "name": "expiresAt",
-          "type": "timestamp(6)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "inviter_id": {
-          "name": "inviter_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        }
-      },
-      "name": "invitation",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "invitation_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "invitation_organization_id_foreign": {
-          "constraintName": "invitation_organization_id_foreign",
-          "columnNames": [
-            "organization_id"
-          ],
-          "localTableName": "public.invitation",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.organization",
-          "createForeignKeyConstraint": true,
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        },
-        "invitation_inviter_id_foreign": {
-          "constraintName": "invitation_inviter_id_foreign",
-          "columnNames": [
-            "inviter_id"
-          ],
-          "localTableName": "public.invitation",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      },
-      "nativeEnums": {
-        "uspsa_scoring_method": {
-          "name": "uspsa_scoring_method",
-          "schema": "public",
-          "items": [
-            "Comstock",
-            "Virginia Count",
-            "Fixed Time"
           ]
         },
         "shooter_profile_sport": {
@@ -972,7 +655,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "updateRule": "cascade"
         }
       },
@@ -984,6 +666,16 @@
             "Comstock",
             "Virginia Count",
             "Fixed Time"
+          ]
+        },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
           ]
         },
         "shooter_profile_sport": {
@@ -1055,7 +747,6 @@
             "id"
           ],
           "referencedTableName": "public.stage",
-          "createForeignKeyConstraint": true,
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
@@ -1069,7 +760,6 @@
             "uuid"
           ],
           "referencedTableName": "public.image",
-          "createForeignKeyConstraint": true,
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }
@@ -1082,6 +772,215 @@
             "Comstock",
             "Virginia Count",
             "Fixed Time"
+          ]
+        },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "sport": {
+          "name": "sport",
+          "type": "sports",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "nativeEnumName": "sports",
+          "enumItems": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ],
+          "mappedType": "enum"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "third_party_links": {
+          "name": "third_party_links",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "json"
+        },
+        "icon_uuid": {
+          "name": "icon_uuid",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "banner_uuid": {
+          "name": "banner_uuid",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "club",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "icon_uuid"
+          ],
+          "composite": false,
+          "keyName": "club_icon_uuid_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "banner_uuid"
+          ],
+          "composite": false,
+          "keyName": "club_banner_uuid_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "club_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "club_icon_uuid_foreign": {
+          "constraintName": "club_icon_uuid_foreign",
+          "columnNames": [
+            "icon_uuid"
+          ],
+          "localTableName": "public.club",
+          "referencedColumnNames": [
+            "uuid"
+          ],
+          "referencedTableName": "public.image",
+          "updateRule": "cascade"
+        },
+        "club_banner_uuid_foreign": {
+          "constraintName": "club_banner_uuid_foreign",
+          "columnNames": [
+            "banner_uuid"
+          ],
+          "localTableName": "public.club",
+          "referencedColumnNames": [
+            "uuid"
+          ],
+          "referencedTableName": "public.image",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "club_owner_id_foreign": {
+          "constraintName": "club_owner_id_foreign",
+          "columnNames": [
+            "owner_id"
+          ],
+          "localTableName": "public.club",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
           ]
         },
         "shooter_profile_sport": {
@@ -1161,6 +1060,15 @@
           "nullable": true,
           "mappedType": "uuid"
         },
+        "club_id": {
+          "name": "club_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamptz",
@@ -1218,7 +1126,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "deleteRule": "set null",
           "updateRule": "cascade"
         },
@@ -1232,7 +1139,19 @@
             "uuid"
           ],
           "referencedTableName": "public.image",
-          "createForeignKeyConstraint": true,
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "shooter_profile_club_id_foreign": {
+          "constraintName": "shooter_profile_club_id_foreign",
+          "columnNames": [
+            "club_id"
+          ],
+          "localTableName": "public.shooter_profile",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.club",
           "deleteRule": "set null",
           "updateRule": "cascade"
         }
@@ -1245,6 +1164,140 @@
             "Comstock",
             "Virginia Count",
             "Fixed Time"
+          ]
+        },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
+        "shooter_profile_sport": {
+          "name": "shooter_profile_sport",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        }
+      }
+    },
+    {
+      "columns": {
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
+        },
+        "club_id": {
+          "name": "club_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "from_id": {
+          "name": "from_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "join_club_request",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "from_id"
+          ],
+          "composite": false,
+          "keyName": "join_club_request_from_id_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "join_club_request_pkey",
+          "columnNames": [
+            "uuid"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "join_club_request_club_id_foreign": {
+          "constraintName": "join_club_request_club_id_foreign",
+          "columnNames": [
+            "club_id"
+          ],
+          "localTableName": "public.join_club_request",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.club",
+          "updateRule": "cascade"
+        },
+        "join_club_request_from_id_foreign": {
+          "constraintName": "join_club_request_from_id_foreign",
+          "columnNames": [
+            "from_id"
+          ],
+          "localTableName": "public.join_club_request",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.shooter_profile",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "uspsa_scoring_method": {
+          "name": "uspsa_scoring_method",
+          "schema": "public",
+          "items": [
+            "Comstock",
+            "Virginia Count",
+            "Fixed Time"
+          ]
+        },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
           ]
         },
         "shooter_profile_sport": {
@@ -1410,7 +1463,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "createForeignKeyConstraint": true,
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }
@@ -1423,6 +1475,16 @@
             "Comstock",
             "Virginia Count",
             "Fixed Time"
+          ]
+        },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
           ]
         },
         "shooter_profile_sport": {
@@ -1526,6 +1588,16 @@
             "Fixed Time"
           ]
         },
+        "sports": {
+          "name": "sports",
+          "schema": "public",
+          "items": [
+            "IPSC",
+            "IDPA",
+            "USPSA",
+            "AAIPSC"
+          ]
+        },
         "shooter_profile_sport": {
           "name": "shooter_profile_sport",
           "schema": "public",
@@ -1547,6 +1619,16 @@
         "Comstock",
         "Virginia Count",
         "Fixed Time"
+      ]
+    },
+    "sports": {
+      "name": "sports",
+      "schema": "public",
+      "items": [
+        "IPSC",
+        "IDPA",
+        "USPSA",
+        "AAIPSC"
       ]
     },
     "shooter_profile_sport": {

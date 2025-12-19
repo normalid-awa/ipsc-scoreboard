@@ -57,6 +57,7 @@ export class Image {
 		this.size = file.size;
 		this.hash = hashValue;
 		this.uploader = uploader;
+		return this;
 	}
 
 	async getImage(): Promise<[File, HTTPHeaders] | undefined> {

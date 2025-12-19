@@ -40,10 +40,4 @@ export class Session {
 		serializer: (user: User) => user.id,
 	})
 	user!: Rel<User>;
-
-	@Property({
-		type: "text",
-		nullable: true,
-	})
-	activeOrganization?: string;
 }
