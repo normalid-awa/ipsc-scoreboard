@@ -50,8 +50,8 @@ export const Route = createFileRoute("/clubs/$clubId")({
 			},
 		});
 
-		const shooterProfile = session.data?.user
-			? (
+		const shooterProfiles = session.data?.user
+			? ((
 					await ctx.context.api["shooter-profile"].get({
 						query: {
 							filter: {
@@ -62,25 +62,18 @@ export const Route = createFileRoute("/clubs/$clubId")({
 										operator: "eq",
 										value: session.data?.user.id,
 									},
-									{
-										field: "club.id",
-										operator: "eq",
-										value: club.id,
-									},
 								],
 							},
 							populate: ["club"],
 						},
 					})
-				).data?.items
+				).data?.items as EntityDTO<ShooterProfile>[])
 			: [];
 
 		if (!club) throw notFound();
 		return {
 			club,
-			shooterProfile: shooterProfile?.[0] as
-				| EntityDTO<ShooterProfile>
-				| undefined,
+			shooterProfiles,
 		};
 	},
 	head: (ctx) => ({
@@ -130,12 +123,59 @@ function ClubStatistics() {
 const ICON_SIZE = 120;
 
 function RouteComponent() {
-	const { club, shooterProfile } = Route.useLoaderData();
+	const { club, shooterProfiles } = Route.useLoaderData();
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const confirm = useConfirm();
 
-	function joinClub() {}
+	const shooterProfileInClub = shooterProfiles.find((sp) =>
+		sp.club ? sp.club.id === club.id : false,
+	);
+
+	async function joinClub() {
+		const sportSpecificShooterProfile = shooterProfiles.find(
+			//@ts-expect-error
+			(sp) => sp.sport == club.sport,
+		);
+		if (!sportSpecificShooterProfile) {
+			if (
+				(
+					await confirm({
+						title: "Cannot Join Club",
+						// @ts-expect-error
+						content: `You don't have a shooter profile for ${club.sport}. Would you like to create one now?`,
+						confirmationText: "Add Shooter Profile",
+					})
+				).confirmed
+			) {
+				navigate({
+					to: "/account/shooterProfileManagement",
+				});
+			}
+			return;
+		}
+		const res = await api
+			.club({
+				clubId: club.id,
+			})
+			.join.post({
+				shooterProfile: sportSpecificShooterProfile.id,
+			});
+
+		if (!res.error) {
+			confirm({
+				title: "Request Sent",
+				content: `Your request to join ${club.name} has been sent. You will be notified once it has been approved.`,
+				hideCancelButton: true,
+			});
+		} else {
+			confirm({
+				title: `There was an error sending your request to join ${club.name}`,
+				content: JSON.stringify(res.error.value),
+				hideCancelButton: true,
+			});
+		}
+	}
 
 	async function leaveClub() {
 		if (
@@ -143,7 +183,7 @@ function RouteComponent() {
 				title: "Leave Club",
 				content: `Are you sure you want to leave ${club.name}?`,
 			})) &&
-			!shooterProfile
+			!shooterProfileInClub
 		)
 			return;
 
@@ -152,7 +192,7 @@ function RouteComponent() {
 				clubId: club.id,
 			})
 			.leave.post({
-				shooterProfile: shooterProfile!.id,
+				shooterProfile: shooterProfileInClub!.id,
 			});
 
 		confirm({
@@ -214,10 +254,14 @@ function RouteComponent() {
 							<Button
 								variant="outlined"
 								sx={{ mx: 2 }}
-								color={shooterProfile ? "error" : "primary"}
-								onClick={shooterProfile ? leaveClub : joinClub}
+								color={
+									shooterProfileInClub ? "error" : "primary"
+								}
+								onClick={
+									shooterProfileInClub ? leaveClub : joinClub
+								}
 							>
-								{shooterProfile
+								{shooterProfileInClub
 									? "Leave Club"
 									: "Request to join"}
 							</Button>

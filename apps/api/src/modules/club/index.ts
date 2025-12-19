@@ -212,10 +212,10 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 	)
 	//request joining a club
 	.post(
-		"/join/:id",
+		"/:clubId/join",
 		async ({
-			params: { id: clubId },
-			body: { shooterProfileId },
+			params: { clubId },
+			body: { shooterProfile: shooterProfileId },
 			user: { id: userId },
 		}) => {
 			const shooterProfile = await orm.em.findOne(ShooterProfile, {
@@ -275,10 +275,10 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 		{
 			requiredAuth: true,
 			params: t.Object({
-				id: t.Integer(),
+				clubId: t.Integer(),
 			}),
 			body: t.Object({
-				shooterProfileId: t.Integer(),
+				shooterProfile: t.Integer(),
 			}),
 		},
 	)
