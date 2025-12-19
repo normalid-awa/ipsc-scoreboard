@@ -282,6 +282,43 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 			}),
 		},
 	)
+	.post(
+		"/:clubId/leave",
+		async ({
+			params: { clubId },
+			user: { id: userId },
+			body: { shooterProfile },
+		}) => {
+			const club = await orm.em.findOne(
+				Club,
+				{
+					id: clubId,
+				},
+				{
+					populate: ["members"],
+				},
+			);
+			if (!club) return status(404);
+			const shooterProfileInClub = club.members.find(
+				(p) => p.id == shooterProfile,
+			);
+			if (!shooterProfileInClub)
+				return status(404, "Not Found: Shooter not found in this club");
+			if (shooterProfileInClub.user?.id != userId) return status(403);
+			club.members.remove(shooterProfileInClub);
+			await orm.em.flush();
+			return status(204);
+		},
+		{
+			requiredAuth: true,
+			params: t.Object({
+				clubId: t.Integer(),
+			}),
+			body: t.Object({
+				shooterProfile: t.Integer(),
+			}),
+		},
+	)
 	//accept request
 	.post(
 		"/accept/:requestId",
