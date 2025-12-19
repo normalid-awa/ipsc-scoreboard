@@ -34,6 +34,8 @@ export const createClubDto = t.Object({
 	banner: t.Optional(t.File({ type: "image/*" })),
 });
 
+export const clubPopulateSchema = t.Array(t.Union([t.Literal("members")]));
+
 export const clubRoute = new Elysia({ prefix: "/club" })
 	.use(authPlugin)
 	//#region Read
@@ -63,14 +65,14 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 	)
 	.get(
 		"/:clubId",
-		async ({ params: { clubId }, user }) => {
+		async ({ params: { clubId }, user, query: { populate } }) => {
 			const club = await orm.em.findOne(
 				Club,
 				{
 					id: clubId,
 				},
 				{
-					populate: ["admins:ref"],
+					populate: ["admins:ref", ...(populate ?? [])],
 				},
 			);
 			if (!club) return status(404);
@@ -89,6 +91,9 @@ export const clubRoute = new Elysia({ prefix: "/club" })
 		},
 		{
 			params: t.Object({ clubId: t.Numeric({ minimum: 1 }) }),
+			query: t.Object({
+				populate: t.Optional(clubPopulateSchema),
+			}),
 			isAuth: true,
 		},
 	)

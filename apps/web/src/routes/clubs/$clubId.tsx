@@ -1,11 +1,15 @@
 import { FeaturePlaceHolder } from "@/components/FeaturePlaceholder";
 import env from "@/env";
 import { getImageUrlFromId } from "@/utils/imageApi";
-import { Club, EntityDTO } from "@ipsc_scoreboard/api";
+import { Club, EntityDTO, Loaded, ShooterProfile } from "@ipsc_scoreboard/api";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
 import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tab from "@mui/material/Tab";
@@ -28,19 +32,58 @@ export const Route = createFileRoute("/clubs/$clubId")({
 	loaderDeps: ({ ...search }) => ({ ...search }),
 	async loader(ctx) {
 		const club = (
-			await ctx.context.api.club({ clubId: ctx.params.clubId }).get()
-		).data as unknown as EntityDTO<Club>;
+			await ctx.context.api.club({ clubId: ctx.params.clubId }).get({
+				query: {
+					populate: ["members"],
+				},
+			})
+		).data as unknown as EntityDTO<Loaded<Club, "members">>;
 		if (!club) throw notFound();
 		return club;
 	},
 	head: (ctx) => ({
 		meta: [
 			{
-				title: `${env.VITE_TITLE_PREFIX} Viewing Club: ${ctx.params.clubId}`,
+				title: `${env.VITE_TITLE_PREFIX} Viewing Club: ${ctx.loaderData?.name}`,
 			},
 		],
 	}),
 });
+
+function ClubMemberList({
+	shooters,
+}: {
+	shooters: EntityDTO<ShooterProfile>[];
+}) {
+	return (
+		<Stack divider={<Divider />}>
+			{shooters.map((shooter) => (
+				<Card key={shooter.id}>
+					<CardActionArea>
+						<CardHeader
+							avatar={
+								<Avatar
+									src={getImageUrlFromId(shooter.image?.uuid)}
+								>
+									{shooter.identifier[0]}
+								</Avatar>
+							}
+							title={
+								<Typography variant="h6">
+									{shooter.identifier}
+								</Typography>
+							}
+						/>
+					</CardActionArea>
+				</Card>
+			))}
+		</Stack>
+	);
+}
+
+function ClubStatistics() {
+	return <FeaturePlaceHolder name={"Club Statistics"} />;
+}
 
 const ICON_SIZE = 120;
 
@@ -142,7 +185,6 @@ function RouteComponent() {
 									},
 								})
 							}
-							aria-label="basic tabs example"
 						>
 							{tabs._def.options.map((v) => (
 								<Tab
@@ -153,6 +195,10 @@ function RouteComponent() {
 							))}
 						</Tabs>
 					</Box>
+					{search.tab === "members" && (
+						<ClubMemberList shooters={club.members || []} />
+					)}
+					{search.tab === "statistics" && <ClubStatistics />}
 				</Paper>
 			</Stack>
 		</Container>
